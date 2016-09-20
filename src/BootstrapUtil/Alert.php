@@ -21,6 +21,12 @@ class Alert
 
 	}
 
+	public static function &gen()
+	{
+		$alert = new self();
+		return $alert;
+	}
+
 	public function &setContext($context)
 	{
 		//TODO: Validate
@@ -65,7 +71,7 @@ class Alert
 		return $html;
 	}
 
-	public static function success($alert, $html = false)
+	public static function rsuccess($alert, $html = false)
 	{
 		$a = new self();
 		$a->setContext('success')->setIcon('check');
@@ -73,10 +79,10 @@ class Alert
 		if ($html) $a->setHtml($alert);
 		else $a->setText($alert);
 
-		echo $a->getHtml();
+		return $a->getHtml();
 	}
 
-	public static function info($alert, $html = false)
+	public static function rinfo($alert, $html = false)
 	{
 		$a = new self();
 		$a->setContext('info')->setIcon('info');
@@ -84,10 +90,10 @@ class Alert
 		if ($html) $a->setHtml($alert);
 		else $a->setText($alert);
 
-		echo $a->getHtml();
+		return $a->getHtml();
 	}
 
-	public static function warning($alert, $html = false)
+	public static function rwarning($alert, $html = false)
 	{
 		$a = new self();
 		$a->setContext('warning')->setIcon('exclamation-triangle');
@@ -95,10 +101,10 @@ class Alert
 		if ($html) $a->setHtml($alert);
 		else $a->setText($alert);
 
-		echo $a->getHtml();
+		return $a->getHtml();
 	}
 
-	public static function danger($alert, $html = false)
+	public static function rdanger($alert, $html = false)
 	{
 		$a = new self();
 		$a->setContext('danger')->setIcon('exclamation');
@@ -106,7 +112,32 @@ class Alert
 		if ($html) $a->setHtml($alert);
 		else $a->setText($alert);
 
-		echo $a->getHtml();
+		return $a->getHtml();
+	}
+
+	public static function rerror($alert, $html = false)
+	{
+		return self::rdanger($alert, $html);
+	}
+
+	public static function success($alert, $html = false)
+	{
+		echo self::rsuccess($alert, $html);
+	}
+
+	public static function info($alert, $html = false)
+	{
+		echo self::rinfo($alert, $html);
+	}
+
+	public static function warning($alert, $html = false)
+	{
+		echo self::rwarning($alert, $html);
+	}
+
+	public static function danger($alert, $html = false)
+	{
+		echo self::rdanger($alert, $html);
 	}
 
 	public static function error($alert, $html = false)
