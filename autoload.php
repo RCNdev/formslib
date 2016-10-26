@@ -1,6 +1,5 @@
 <?php
 spl_autoload_register(function ($class) {
-
 	// project-specific namespace prefix
 	$prefix = 'formslib\\';
 

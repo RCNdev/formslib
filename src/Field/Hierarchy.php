@@ -160,8 +160,15 @@ EOF;
 
 		if ($this->maxlevels > 0 && $level+1 >= $this->maxlevels) return '';
 
-		$json = new \Services_JSON();
-		$v = $json->decode($values);
+		if (!function_exists('json_decode'))
+		{
+			$json = new \Services_JSON();
+			$v = $json->decode($values);
+		}
+		else
+		{
+			$v = json_decode($values);
+		}
 
 		$vals = array();
 		foreach ($v as $valobj)

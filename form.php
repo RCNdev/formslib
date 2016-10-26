@@ -620,14 +620,14 @@ EOF;
 $(document).ready(function(){
 $('.formslib_jq_mand').focus(function(){
 	$(this).removeClass('formslibinvalid');
-	$(this).parent().parent().removeClass('has-error');
+	$(this).parents('.form-group').removeClass('has-error');
 });
 
 $('.formslib_jq_mand').blur(function(){
 	if ($(this).val() == '')
 	{
 		$(this).addClass('formslibinvalid');
-		$(this).parent().parent().addClass('has-error');
+		$(this).parents('.form-group').addClass('has-error');
 	}
 });
 EOF;
@@ -1275,5 +1275,10 @@ class formslib_fieldset
 		}
 
 		return $js;
+	}
+
+	public function getFieldCount()
+	{
+		return count($this->fields);
 	}
 }
