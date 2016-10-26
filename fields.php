@@ -1963,3 +1963,83 @@ class formslib_dateselecttimerange extends formslib_dateselecttime
 		return date($this->dateformat, strtotime($this->composite_values['date'])).' '.$this->composite_values['start'].'-'.$this->composite_values['end'];
 	}
 }
+
+class formslib_datepickertime extends formslib_composite
+{
+	protected $startyear, $endyear;
+	protected $startdate, $enddate;
+	protected $time;
+	protected $field_date;
+
+	public function __construct($name)
+	{
+		parent::__construct($name);
+		$this->_set_composites(array(
+				'date',
+				'time'
+		));
+
+		$this->field_date = new formslib_datepicker($name.'__date');
+
+		$this->addRule('composite_timerangeformat', null, 'Times must be in the 24-hour format hh:mm');
+	}
+
+	public function &set_years($start, $end)
+	{
+		$this->startyear = $start;
+		$this->endyear = $end;
+
+		return $this;
+	}
+
+	public function &setStartDate($date)
+	{
+		$this->startdate = $date;
+
+		return $this;
+	}
+
+	public function &setEndDate($date)
+	{
+		$this->enddate = $date;
+
+		return $this;
+	}
+
+	protected function _prepareOutput()
+	{
+		$this->field_date->value = $this->composite_values['date'];
+		$this->field_date->setClasses($this->getClasses());
+	}
+
+	public function getHTML()
+	{
+		$this->_prepareOutput();
+
+		$html = '';
+
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		{
+			$html .= '<div class="row">' . CRLF;
+			$html .= '<div class="col-sm-9">' . CRLF;
+			$html .= $this->field_date->getHTML();
+			$html .= '</div>' . CRLF;
+			$html .= '<div class="col-sm-3">' . CRLF;
+			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__time" value="' . htmlspecialchars($this->composite_values['time']) . '" />';
+			$html .= '</div><!-- /.col-sm-3 -->' . CRLF;
+			$html .= '</div><!-- /.row -->' . CRLF;
+		}
+		else
+		{
+			$html .= $this->field_date->getHTML().' - ';
+			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__time" value="' . htmlspecialchars($this->composite_values['time']) . '" />';
+		}
+
+		return $html;
+	}
+
+	public function getEmailValue()
+	{
+		return date($this->dateformat, strtotime($this->composite_values['date'])).' '.$this->composite_values['time'];
+	}
+}
