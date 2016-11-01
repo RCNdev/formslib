@@ -1468,14 +1468,17 @@ class formslib_carddate extends formslib_composite
 			'month',
 			'year'
 		));
-
-		// $this->startyear = date('Y', strtotime('-3 years'));
-		// $this->endyear = date('Y', strtotime('+3 years'));
 	}
 
 	public function getHTML()
 	{
 		$html = '';
+
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		{
+			$html .= '<div class="row">' . CRLF;
+			$html .= '<div class="col-xs-3">' . CRLF;
+		}
 
 		// Month
 		$html .= '<select' . $this->_custom_attr() . $this->_class_attr('formslib_date__month') . ' name="' . $this->name . '__month">' . CRLF;
@@ -1487,6 +1490,12 @@ class formslib_carddate extends formslib_composite
 			$html .= '>' . sprintf('%02d', $i) . '</option>' . CRLF; // TODO: Review use of this lookup here
 		}
 		$html .= '</select>' . CRLF;
+
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		{
+			$html .= '</div>' . CRLF;
+			$html .= '<div class="col-xs-3">' . CRLF;
+		}
 
 		// Year
 		$html .= '<select' . $this->_custom_attr() . $this->_class_attr('formslib_date__year') . ' name="' . $this->name . '__year">' . CRLF;
@@ -1502,6 +1511,12 @@ class formslib_carddate extends formslib_composite
 		}
 
 		$html .= '</select>' . CRLF;
+
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		{
+			$html .= '</div>' . CRLF;
+			$html .= '</div><!--/.row-->'.CRLF;
+		}
 
 		return $html;
 	}
