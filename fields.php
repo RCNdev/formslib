@@ -2004,6 +2004,8 @@ class formslib_datepickertime extends formslib_composite
 		$this->startyear = $start;
 		$this->endyear = $end;
 
+		$this->field_date->set_years($start, $end);
+
 		return $this;
 	}
 
@@ -2011,12 +2013,16 @@ class formslib_datepickertime extends formslib_composite
 	{
 		$this->startdate = $date;
 
+		$this->field_date->setStartDate($date);
+
 		return $this;
 	}
 
 	public function &setEndDate($date)
 	{
 		$this->enddate = $date;
+
+		$this->field_date->setEndDate($date);
 
 		return $this;
 	}
