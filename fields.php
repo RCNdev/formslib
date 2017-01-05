@@ -719,7 +719,7 @@ class formslib_radio extends formslib_options
 
 			$dis_str = ($disabled) ? ' disabled="disabled"' : '';
 
-			$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelclass . '"><input type="radio" name="' . htmlspecialchars($this->name) . '" id="' . $id . '"' . $selected .$dis_str. ' value="' . htmlspecialchars($value) . '" />' . htmlspecialchars($label) . '</label> ';
+			$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelclass . '"><input type="radio" name="' . htmlspecialchars($this->name) . '" id="' . $id . '"' . $selected .$dis_str. ' value="' . htmlspecialchars($value) . '" />&nbsp;' . htmlspecialchars($label) . '</label> ';
 		}
 
 		return $html;

@@ -270,6 +270,21 @@ class formslib_rule_composite_minselections extends formslib_rule
     }
 }
 
+class formslib_rule_composite_maxselections extends formslib_rule
+{
+	public function evaluate($value)
+	{
+		$count = 0;
+		foreach ($value as $val)
+		{
+			if (!is_null($val) && $val != '')
+				$count++;
+		}
+
+		return ($this->ruledfn >= $count) ? true : false;
+	}
+}
+
 class formslib_rule_date_format extends formslib_rule
 {
     public function __construct($ruledfn, $errormessage, &$field)
