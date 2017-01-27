@@ -1187,6 +1187,7 @@ class formslib_fieldset
 
 		foreach ($fieldname as $fn)
 		{
+			//TODO: [HIGH] Check this, there may be a bug that removes the first field if a non-existent name is passed in
 			unset($this->fields[array_search($fn, $this->fields)]);
 		}
 	}
