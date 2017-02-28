@@ -1354,7 +1354,7 @@ class formslib_date extends formslib_composite
 	{
 		if ($this->composite_values['year'] == 0 || $this->composite_values['month'] == 0 || $this->composite_values['day'] == 0) return null;
 
-		$date = \DateTime::createFromFormat('Y-m-d', $this->getEmailValue());
+		$date = \DateTime::createFromFormat('Y-m-d H:i:s', $this->getEmailValue().' 00:00:00');
 
 		return $date;
 	}
