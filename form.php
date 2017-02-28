@@ -1016,9 +1016,9 @@ $('[name=$name]').blur(function(){
 		{
 			if (is_a($this->fields[$field], 'formslib_hidden'))
 			{
-				if (! $this->fields[$field]->getDoNotEmail())
+				if (! $this->fields[$field]->getNoObject())
 				{
-					$result->{$field} = $this->fields[$field]->getEmailValue();
+					$result->{$field} = $this->fields[$field]->getObjectValue();
 				}
 			}
 		}
@@ -1361,9 +1361,9 @@ class formslib_fieldset
 	{
 		foreach ($this->fields as $fieldname)
 		{
-			if (! $form->fields[$fieldname]->getDoNotEmail())
+			if (! $form->fields[$fieldname]->getNoObject())
 			{
-				$result->{$fieldname} = $form->fields[$fieldname]->getEmailValue();
+				$result->{$fieldname} = $form->fields[$fieldname]->getObjectValue();
 			}
 		}
 	}

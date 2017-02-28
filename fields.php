@@ -16,7 +16,7 @@ abstract class formslib_field
 	protected $errorlist = array();
 	protected $rawoutput = false;
 	protected $htmlbefore, $htmlafter, $innerhtmlbefore, $innerhtmlafter, $helpinline, $helpblock;
-	protected $donotemail = false;
+	protected $donotemail = false, $noObject = false;
 	protected $group_classes = array();
 	protected $gridRatio = 3;
 	protected $starts_new_row = false;
@@ -531,6 +531,31 @@ abstract class formslib_field
 
 		return $this;
 	}
+
+	public function &getObjectValue()
+	{
+		$value = trim($this->getEmailValue());
+
+		return $value;
+	}
+
+	/**
+	 * Set whether a field should be included in a result object
+	 *
+	 * @param string $noObject
+	 * @return formslib_field
+	 */
+	public function &setNoObject($noObject = true)
+	{
+		$this->noObject = $noObject;
+
+		return $this;
+	}
+
+	public function getNoObject()
+	{
+		return $this->noObject;
+	}
 }
 
 
@@ -698,6 +723,13 @@ abstract class formslib_options extends formslib_field
 		}
 
 		return $valid;
+	}
+
+	public function &getObjectValue()
+	{
+		$value = $this->value;
+
+		return $value;
 	}
 }
 
@@ -927,6 +959,13 @@ class formslib_checkbox extends formslib_field
 		}
 
 		return $html;
+	}
+
+	public function &getObjectValue()
+	{
+		$value = ($this->value == $this->checkedvalue) ? true : false;
+
+		return $value;
 	}
 }
 
@@ -1194,6 +1233,11 @@ abstract class formslib_composite extends formslib_field
 	{
 		return '[Composite field function getEmailValue() not overwritten]';
 	}
+
+	public function &getObjectValue()
+	{
+		throw new \Exception('Composite field function getObjectValue() not overwritten');
+	}
 }
 
 class formslib_date extends formslib_composite
@@ -1304,6 +1348,15 @@ class formslib_date extends formslib_composite
 	public function getEmailValue()
 	{
 		return $this->composite_values['year'] . '-' . sprintf('%02d', $this->composite_values['month']) . '-' . sprintf('%02d', $this->composite_values['day']);
+	}
+
+	public function &getObjectValue()
+	{
+		if ($this->composite_values['year'] == 0 || $this->composite_values['month'] == 0 || $this->composite_values['day'] == 0) return null;
+
+		$date = \DateTime::createFromFormat('Y-m-d', $this->getEmailValue());
+
+		return $date;
 	}
 }
 
@@ -1816,6 +1869,15 @@ EOF;
         $this->enddate = $date;
 
         return $this;
+    }
+
+    public function &getObjectValue()
+    {
+    	if ($this->value == '') return null;
+
+    	$date = \DateTime::createFromFormat('Y-m-d', $this->getEmailValue());
+
+    	return $date;
     }
 }
 
