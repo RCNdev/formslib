@@ -1032,6 +1032,16 @@ $('[name=$name]').blur(function(){
 
 		return $result;
 	}
+
+	/**
+	 * Does a named fieldset exist?
+	 * @param string $fsname
+	 * @return boolean
+	 */
+	public function doesFieldsetExist($fsname)
+	{
+		return (isset($this->fieldsets[$fsname])) ? true : false;
+	}
 }
 
 /**
