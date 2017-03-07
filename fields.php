@@ -112,6 +112,13 @@ abstract class formslib_field
 		return $this;
 	}
 
+	public function &setAttributes($attrib)
+	{
+		$this->attrib = $attrib;
+
+		return $this;
+	}
+
 	public function display(formslib_form &$form)
 	{
 		$this->outputstyle = $outputstyle = $form->outputstyle;
@@ -515,6 +522,14 @@ abstract class formslib_field
 		$this->classes = $classes;
 	}
 
+	public function addClasses(array $classes)
+	{
+		foreach ($classes as $class)
+		{
+			if (!in_array($class, $this->classes)) $this->classes[] = $class;
+		}
+	}
+
 	public function getClasses()
 	{
 		return $this->classes;
@@ -686,9 +701,14 @@ abstract class formslib_options extends formslib_field
 		return $data;
 	}
 
-	public function &setOptionsRange($start, $end)
+	public function &setOptionsRange($start, $end, $default = false)
 	{
 		$this->options = array();
+
+		if ($default !== false)
+		{
+			$this->options[''] = $default;
+		}
 
 		if ($start < $end)
 		{

@@ -140,4 +140,14 @@ abstract class formslib_field_paramset extends formslib_field
 	{
 		return $this;
 	}
+
+	public function &setStartEnd($startMonth, $startYear, $endMonth, $endYear)
+	{
+		return $this;
+	}
+
+	public function &setReturnType($type)
+	{
+		return $this;
+	}
 }
