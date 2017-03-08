@@ -105,6 +105,9 @@ class MonthYear extends Composite
 
 		$this->fieldYear->setOptionsRange($startYear, $endYear, '- Year -');
 
+		$this->addRule('Composite_MonthYearMin', array('month' => $startMonth, 'year' => $startYear), 'Cannot be earlier than '.$this->months[$startMonth].' '.$startYear);
+		$this->addRule('Composite_MonthYearMax', array('month' => $endMonth, 'year' => $endYear), 'Cannot be later than '.$this->months[$endMonth].' '.$endYear);
+
 		return $this;
 	}
 

@@ -78,9 +78,20 @@ abstract class formslib_field
 
 	public function &addRule($ruletype, $ruledfn, $errormessage, $return_rule_oject = false)
 	{
+		$ruleclassnamespace = 'formslib\Rule\\'.str_replace('_', '\\', $ruletype);
 		$ruleclass = 'formslib_rule_' . $ruletype;
 
-		if (class_exists($ruleclass))
+		if (class_exists($ruleclassnamespace))
+		{
+			$therule = new $ruleclassnamespace($ruledfn, $errormessage, $this);
+			if ($therule !== false)
+			{
+				$this->rules[] = &$therule;
+			}
+
+			if ($return_rule_oject) return $therule;
+		}
+		elseif (class_exists($ruleclass))
 		{
 			$therule = new $ruleclass($ruledfn, $errormessage, $this);
 			if ($therule !== false)
