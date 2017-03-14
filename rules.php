@@ -241,7 +241,6 @@ class formslib_rule_minlength extends formslib_rule
 	public function formslib_rule_minlength($ruledfn, $errormessage, &$field)
 	{
 		parent::__construct($ruledfn, $errormessage, $field);
-		//$field->addAttr('maxlength', $ruledfn);
 	}
 
 	public function evaluate($value)

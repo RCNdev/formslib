@@ -50,4 +50,11 @@ abstract class MultiValue extends Field
 
 		return $js;
 	}
+
+	public function &getObjectValue()
+	{
+		$value = $this->composite_values;
+
+		return $value;
+	}
 }

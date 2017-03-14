@@ -1,4 +1,6 @@
 <?php
+use formslib\Result\ResultObject;
+
 class formslib_form
 {
 	private $name, $id, $action, $method;
@@ -19,6 +21,7 @@ class formslib_form
 	private $types_used = array();
 	private $submitclass = array('btn', 'btn-primary');
 	private $submit_grid_ratio = null;
+	private $resultClass = '\formslib\Result\ResultObject';
 
 	public function __construct($name)
 	{
@@ -167,7 +170,7 @@ class formslib_form
 	 * @param string $html
 	 *        	HTML code for mandatory fields
 	 * @param string $semimandatoryhtml
-	 *        	HTML code for fields where at least one of a set is required
+	 *        	HTML code for fields where at least one of a set is requiredS
 	 */
 	public function setMandatoryHTML($html, $semimandatoryhtml = '')
 	{
@@ -312,11 +315,11 @@ class formslib_form
 				}
 			}
 			elseif (is_a($this->fields[$name], 'formslib\Field\MultiValue'))
-			{			
+			{
 				if ($mandatory)
 				{
 					$missing = false;
-					
+
 					if(!isset($vars[ $name . '__0']) || ($vars[ $name . '__0']) == '')
 					{
 						$missing = true;
@@ -326,10 +329,10 @@ class formslib_form
 					{
 						$this->fields[$name]->valid = false;
 						$this->fields[$name]->addClass('formslibinvalid');
-					
+
 						if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
 						if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE) $this->fields[$name]->addGroupClass('has-error');
-					
+
 						// Add field to error list
 						$label = $this->fields[$name]->label;
 						$this->errorlist[] = array(
@@ -990,6 +993,55 @@ $('[name=$name]').blur(function(){
 
 		return $this;
 	}
+
+	/**
+	 * Sets the PHP class to create result objects from
+	 *
+	 * @var string $class Fully qualified class name
+	 */
+	public function setResultClass($class)
+	{
+		$this->resultClass = $class;
+	}
+
+	/**
+	 * @return formslib\Result\ResultObject
+	 */
+	public function getResultObject()
+	{
+		$result = new $this->resultClass();
+
+		$fields = array_keys($this->fields);
+		foreach ($fields as $field)
+		{
+			if (is_a($this->fields[$field], 'formslib_hidden'))
+			{
+				if (! $this->fields[$field]->getNoObject())
+				{
+					$result->{$field} = $this->fields[$field]->getObjectValue();
+				}
+			}
+		}
+
+		// Go through the fieldsets
+		$fieldsets = array_keys($this->fieldsets);
+		foreach ($fieldsets as $fieldset)
+		{
+			$this->fieldsets[$fieldset]->buildResultObject($this, $result);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Does a named fieldset exist?
+	 * @param string $fsname
+	 * @return boolean
+	 */
+	public function doesFieldsetExist($fsname)
+	{
+		return (isset($this->fieldsets[$fsname])) ? true : false;
+	}
 }
 
 /**
@@ -1303,5 +1355,16 @@ class formslib_fieldset
 	public function getFieldCount()
 	{
 		return count($this->fields);
+	}
+
+	public function buildResultObject(&$form, &$result)
+	{
+		foreach ($this->fields as $fieldname)
+		{
+			if (! $form->fields[$fieldname]->getNoObject())
+			{
+				$result->{$fieldname} = $form->fields[$fieldname]->getObjectValue();
+			}
+		}
 	}
 }
