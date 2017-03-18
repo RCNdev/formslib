@@ -76,8 +76,15 @@ class formslib_form
 			return false;
 		}
 
-		$classnamespace = 'formslib\Field\\'.$type;
-		$classname = 'formslib_' . $type;
+		if (substr($type, 0, 1) == '\\')
+		{
+			$classnamespace = $type;
+		}
+		else
+		{
+			$classnamespace = 'formslib\Field\\'.$type;
+			$classname = 'formslib_' . $type;
+		}
 
 		if (class_exists($classnamespace))
 		{
@@ -880,7 +887,14 @@ $('[name=$name]').blur(function(){
 
 			if (version_compare(PHP_VERSION, '5.3.0', '>='))
 			{
-				$class = class_exists('formslib\Field\\'.$type) ? 'formslib\Field\\'.$type : 'formslib_'.$type;
+				if (substr($type, 0, 1) == '\\')
+				{
+					$class = $type;
+				}
+				else
+				{
+					$class = class_exists('formslib\Field\\'.$type) ? 'formslib\Field\\'.$type : 'formslib_'.$type;
+				}
 
 				$hdr = $class::getHeader($class_set);
 			}
