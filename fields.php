@@ -767,6 +767,8 @@ abstract class formslib_options extends formslib_field
 class formslib_radio extends formslib_options
 {
 	private $labelclass = array();
+	protected $requireEquivalency = false;
+	protected $ignoreNull = false;
 
 	public function getHTML()
 	{
@@ -777,7 +779,19 @@ class formslib_radio extends formslib_options
 		{
 			$id = $this->name . '__' . htmlspecialchars($value);
 
-			$selected = ($this->value == $value) ? ' checked="checked"' : '';
+			if ($this->requireEquivalency)
+			{
+				$selected = ($this->value === $value) ? ' checked="checked"' : '';
+			}
+			elseif ($this->ignoreNull)
+			{
+				$selected = (!is_null($this->value) && $this->value == $value) ? ' checked="checked"' : '';
+			}
+			else
+			{
+				$selected = ($this->value == $value) ? ' checked="checked"' : '';
+			}
+
 			$labelclass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
 
 			$dis_str = ($disabled) ? ' disabled="disabled"' : '';
@@ -791,6 +805,20 @@ class formslib_radio extends formslib_options
 	public function &addLabelClass($class)
 	{
 		$this->labelclass[] = $class;
+
+		return $this;
+	}
+
+	public function &requireEquivalency($in = true)
+	{
+		$this->requireEquivalency = $in;
+
+		return $this;
+	}
+
+	public function &ignoreNull($in = true)
+	{
+		$this->ignoreNull = $in;
 
 		return $this;
 	}
@@ -1267,7 +1295,7 @@ abstract class formslib_composite extends formslib_field
 
 	public function &getObjectValue()
 	{
-		throw new \Exception('Composite field function getObjectValue() not overwritten');
+		throw new \Exception('Composite field function getObjectValue() not overwritten for field type '.get_class($this));
 	}
 }
 
@@ -1542,6 +1570,18 @@ class formslib_ticklist extends formslib_composite
 		$this->delimiter = $delimiter;
 
 		return $this;
+	}
+
+	public function getObjectValue()
+	{
+		$checked = array();
+
+		foreach ($this->composites as $value)
+		{
+			if (isset($this->composite_values[$value]) && $this->composite_values[$value] == $this->checkedvalue) $checked[$value] = $this->ticklist[$value];
+		}
+
+		return $checked;
 	}
 }
 
