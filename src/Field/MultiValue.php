@@ -53,7 +53,7 @@ abstract class MultiValue extends Field
 
 	public function &getObjectValue()
 	{
-		$value = $this->composite_values;
+		$value = $this->multi_values;
 
 		return $value;
 	}
