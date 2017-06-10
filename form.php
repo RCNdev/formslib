@@ -1166,7 +1166,7 @@ class formslib_fieldset
 				if (is_object($form->fields[$fieldname]))
 				{
 					/* @var $fld formslib_field */
-					$fld = & $form->fields[$fieldname];
+					$fld =& $form->fields[$fieldname];
 
 					if ($fld->isRowStarter())
 					{
