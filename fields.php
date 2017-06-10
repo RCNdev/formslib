@@ -582,6 +582,11 @@ abstract class formslib_field
 	{
 		return $this->noObject;
 	}
+
+	public function forceOutputStyle($style)
+	{
+		$this->outputstyle = $style;
+	}
 }
 
 

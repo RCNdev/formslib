@@ -38,9 +38,9 @@ class Hierarchy extends MultiValue
 
 	private function _recurseGetHTML($tree, $level)
 	{
-		if (isset($this->composite_values[$level]))
+		if (isset($this->multi_values[$level]))
 		{
-			$value = $this->composite_values[$level];
+			$value = $this->multi_values[$level];
 
 			$output = $this->_buildDropdown($tree['children'], $level, $value);
 
@@ -204,6 +204,6 @@ EOF;
 
 	public function getEmailValue()
 	{
-		return implode(' > ', $this->composite_values);
+		return implode(' > ', $this->multi_values);
 	}
 }
