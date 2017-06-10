@@ -3,23 +3,26 @@ namespace formslib\Field;
 
 abstract class GenericMulti extends MultiValue
 {
+	protected $indices = array();
+
 	protected function _getAddButton()
 	{
-		return '<div class="col-xs-12 formslib-multi-add"><a class="btn btn-sm btn-success" href="#" id="add_'.$this->name.'"><i class="fa fa-plus"></i> Add</a></a>';
+		return '<div class="col-xs-12 formslib-multiadd"><a class="btn btn-sm btn-success" href="#" data-formslib-field="'.$this->name.'"><i class="fa fa-plus"></i> Add</a></a>';
 	}
 
 	public function getHTML()
 	{
 		$this->_preProcessValues();
 
-		$html = '<div class="row">';
+		$html = '<input type="hidden" name="'.$this->name.'__control" value="'.implode(',', $this->indices).'" />';
+		$html .= '<div class="row">';
 
 		foreach ($this->indices as $i)
 		{
-			$html .= '	<div class="col-xs-12">' . CRLF;
+			$html .= '	<div class="col-xs-12 formslib-multi-item">' . CRLF;
 			$html .= '	<div class="row"><div class="col-xs-11">' . CRLF;
-			$html .= $this->getSingleInstance($i);
-			$html .= '    </div><div class="col-xs-1"><a class="btn btm-sm btn-danger" title="Remove"><i class="fa fa-times"></i></a></div>';
+			$html .= $this->getSingleInstance($i, true);
+			$html .= '    </div><div class="col-xs-1"><a class="btn btm-sm btn-danger formslib-multiremove" data-formslib-field="'.$this->name.'" title="Remove" data-index="'.$i.'"><i class="fa fa-times"></i></a></div>';
 			$html .= '  </div><!--/.row-->'.CRLF;
 			$html .= '	</div><!--/.col-xs-12-->' . CRLF;
 		}
@@ -37,58 +40,53 @@ abstract class GenericMulti extends MultiValue
 	{
 		$js = parent::getJs();
 
-		$path = FORMSLIB_AJAX_SERVICE;
+		//$path = FORMSLIB_AJAX_SERVICE;
 
-		//TODO: Generate addition javascript
+		$html = '';
+		$html .= '	<div class="col-xs-12 formslib-multi-item">' . CRLF;
+		$html .= '	<div class="row"><div class="col-xs-11">' . CRLF;
+		$html .= $this->getSingleInstance('!!new!!');
+		$html .= '    </div><div class="col-xs-1"><a class="btn btm-sm btn-danger formslib-multiremove" data-formslib-field="'.$this->name.'" title="Remove" data-index="!!new!!"><i class="fa fa-times"></i></a></div>';
+		$html .= '  </div><!--/.row-->'.CRLF;
+		$html .= '	</div><!--/.col-xs-12-->' . CRLF;
+
+		$new = json_encode($html);
 
 		$js[] = <<<EOF
-$(document).on('change', 'select[data-formslib-field="{$this->name}"]', function(e){
-	var caller = this;
-	field = $(this).attr('data-formslib-field');
-	subfield = $(this).attr('name');
-	value = $(this).val();
+$(document).on('click', 'a.btn.formslib-multiremove[data-formslib-field="{$this->name}"]', function(e){
+	field = $(this).data('formslib-field');
+	index = $(this).data('index');
 
-	// Get ALL the values
-	var values = [];
-	$('select[data-formslib-field="{$this->name}"]').each(function(index){
-		values.push({ name: $(this).attr('name'), val: $(this).val() })
-	});
+	var indices_str = $('input[name="'+field+'__control"').val();
+	indices_str = ','+indices_str+',';
+	indices_str = indices_str.replace(','+index+',', ',');
+	indices_str = indices_str.substr(1, indices_str.length-2);
+	$('input[name="'+field+'__control"').val(indices_str);
 
-	param = {
-		formslib_action: 'getNextLevel',
-		formslib_form_identifier: '{$this->ajaxFormIdentifier}',
-		field: field,
-		subfield: subfield,
-		value: value,
-		vals: JSON.stringify(values)
-	};
+	$(this).closest('.formslib-multi-item').remove();
+});
 
-	//TODO: If data held locally, deal with it here
+$(document).on('click', '.formslib-multiadd a.btn[data-formslib-field="{$this->name}"]', function(e){
+	field = $(this).data('formslib-field');
 
-	$.ajax({
-		url: '$path',
-		data: param,
-		method: 'POST',
-		dataType: 'json',
-		error: function (XMLHttpRequest, textStatus, errorThrown)
-		{
-			if (textStatus == 'parsererror')
-			{
-				alert('Returned: '+XMLHttpRequest.responseText);
-			}
-			else
-			{
-				alert('Communication error: '+textStatus+' '+XMLHttpRequest.status+' - '+errorThrown);
-			}
-		},
-		success: function(rtndata)
-		{
-			$(caller).parent().nextAll().remove();
-			$(caller).parent().after(rtndata.html);
+	var indices_str = $('input[name="'+field+'__control"').val();
 
-			// TODO: Or visually indicate furthest branch reached if applicable
-		}
-	});
+	indices = indices_str.split(',');
+	var largest = Math.max.apply(Math, indices);
+	var next = largest+1;
+
+	indices.push(next);
+
+	indices_str = indices.join(',');
+	$('input[name="'+field+'__control"').val(indices_str);
+
+	var newblock = $new;
+
+	newblock = newblock.replace(/!!new!!/g, next);
+
+	$(this).parent().before(newblock);
+
+	return false;
 });
 EOF;
 

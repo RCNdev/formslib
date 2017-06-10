@@ -4,40 +4,54 @@ namespace formslib\Field;
 class MultiPair extends GenericMulti
 {
 	protected $indices = array();
+	private $preprocessed = false;
 
 	protected function _preProcessValues()
 	{
+		if (!$this->preprocessed)
+		{
+			$indices_str = trim($this->multi_values['control']);
+			$indices = explode(',', $indices_str);
 
+			foreach ($indices as $i)
+			{
+				if (preg_match('/^[0-9]+$/', trim($i)))
+				{
+					$this->indices[] = trim($i);
+				}
+			}
+
+			$this->preprocessed = true;
+		}
 	}
 
 	public function __construct($name)
 	{
 		parent::__construct($name);
 
-		$this->indices = array(1, 2, 4, 5, 6, 7, 9, 15);
+		$this->indices = array();
 	}
 
-	protected function getSingleInstance($i)
+	protected function getSingleInstance($i, $setValue = false)
 	{
 		$field = new Pair($this->name.'__'.$i);
 		$field->forceOutputStyle($this->outputstyle);
 		$field->addClass('form-control');
-		// 			$field->value = $selected;
+		$field->addAttr('data-index', $i);
+
+		if ($setValue) $field->composite_values = array(1 => $this->multi_values[$i.'__1'], 2 => $this->multi_values[$i.'__2']);
 
 		return $field->getHTML() . CRLF;
 	}
 
+	/*
 	public function getEmailValue()
 	{
 		$this->_preProcessValues();
 
-		/*
-		foreach ($this->indices as $i)
-		{
-
-		}
-		*/
+		// TODO: Implement email values
 	}
+	*/
 
 	public function &getObjectValue()
 	{
@@ -45,12 +59,10 @@ class MultiPair extends GenericMulti
 
 		$data = null;
 
-		/*
 		foreach ($this->indices as $i)
 		{
-
+			$data[$i] = array($this->multi_values[$i.'__1'], $this->multi_values[$i.'__2']);
 		}
-		*/
 
 		return $data;
 	}

@@ -166,7 +166,19 @@ class formslib_form
 				$field = substr($name, 0, stripos($name, '__'));
 				$composite = substr($name, stripos($name, '__') + 2);
 
-				if (isset($this->fields[$field])) $this->fields[$field]->composite_values[$composite] = $value;
+				if (isset($this->fields[$field]))
+				{
+					$fld = $this->getField($field);
+
+					if (is_a($fld, 'formslib_composite'))
+					{
+						$this->fields[$field]->composite_values[$composite] = $value;
+					}
+					elseif (is_a($fld, 'formslib\Field\MultiValue'))
+					{
+						$this->fields[$field]->multi_values[$composite] = $value;
+					}
+				}
 			}
 		}
 	}
