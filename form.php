@@ -365,7 +365,7 @@ class formslib_form
 			}
 			elseif (! is_a($this->fields[$name], 'formslib_file'))
 			{
-				if ($mandatory && (! isset($vars[$name]) || $vars[$name] == ''))
+				if ($mandatory && (! isset($vars[$name]) || $vars[$name] === ''))
 				{
 					$this->fields[$name]->valid = false;
 					$this->fields[$name]->addClass('formslibinvalid');
@@ -1166,7 +1166,7 @@ class formslib_fieldset
 				if (is_object($form->fields[$fieldname]))
 				{
 					/* @var $fld formslib_field */
-					$fld = & $form->fields[$fieldname];
+					$fld =& $form->fields[$fieldname];
 
 					if ($fld->isRowStarter())
 					{
