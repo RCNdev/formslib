@@ -22,6 +22,7 @@ abstract class formslib_field
 	protected $starts_new_row = false;
 	protected $outputstyle = null;
 	protected $ajaxFormIdentifier;
+	protected $disabled = false;
 
 	public function __construct($name)
 	{
@@ -586,6 +587,16 @@ abstract class formslib_field
 	public function forceOutputStyle($style)
 	{
 		$this->outputstyle = $style;
+	}
+
+	public function setDisabled($disabled = true)
+	{
+		$this->disabled = $disabled;
+
+		if ($disabled)
+		{
+			$this->addAttr('disabled', 'disabled');
+		}
 	}
 }
 
