@@ -2204,4 +2204,13 @@ class formslib_datepickertime extends formslib_composite
 	{
 		return date($this->dateformat, strtotime($this->composite_values['date'])).' '.$this->composite_values['time'];
 	}
+
+	public function &getObjectValue()
+	{
+		if ($this->composite_values['date'] == '' || $this->composite_values['time'] == '') return null;
+
+		$date = \DateTime::createFromFormat('d/m/Y H:i', $this->composite_values['date'].' '.$this->composite_values['time']);
+
+		return $date;
+	}
 }
