@@ -1068,6 +1068,20 @@ $('[name=$name]').blur(function(){
 	{
 		return (isset($this->fieldsets[$fsname])) ? true : false;
 	}
+
+	public function &disableAllFields()
+	{
+		$fields = array_keys($this->fields);
+		foreach ($fields as $field)
+		{
+			if (!is_a($this->fields[$field], 'formslib_hidden'))
+			{
+				$this->fields[$field]->setDisabled();
+			}
+		}
+
+		return $this;
+	}
 }
 
 /**
