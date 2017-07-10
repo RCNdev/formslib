@@ -589,7 +589,7 @@ abstract class formslib_field
 		$this->outputstyle = $style;
 	}
 
-	public function setDisabled($disabled = true)
+	public function &setDisabled($disabled = true)
 	{
 		$this->disabled = $disabled;
 
@@ -597,6 +597,8 @@ abstract class formslib_field
 		{
 			$this->addAttr('disabled', 'disabled');
 		}
+
+		return $this;
 	}
 }
 
