@@ -1,6 +1,4 @@
 <?php
-use formslib\Result\ResultObject;
-
 class formslib_form
 {
 	private $name, $id, $action, $method;
@@ -1031,7 +1029,7 @@ $('[name=$name]').blur(function(){
 	}
 
 	/**
-	 * @return formslib\Result\ResultObject
+	 * @return \formslib\Result\ResultObject
 	 */
 	public function getResultObject()
 	{
