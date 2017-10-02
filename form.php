@@ -1,6 +1,4 @@
 <?php
-use formslib\Result\ResultObject;
-
 class formslib_form
 {
 	private $name, $id, $action, $method;
@@ -22,6 +20,7 @@ class formslib_form
 	private $submitclass = array('btn', 'btn-primary');
 	private $submit_grid_ratio = null;
 	private $resultClass = '\formslib\Result\ResultObject';
+	private $doubleClickTimeout = null;
 
 	public function __construct($name)
 	{
@@ -245,7 +244,7 @@ class formslib_form
 		$field_js = array();
 		foreach ($fieldsets as $fieldset)
 		{
-			/* @var formslib_fieldset $fs */
+			/** @var formslib_fieldset $fs */
 			$fs =& $this->fieldsets[$fieldset];
 
 			$submit = ($fieldset == $this->submitfieldset) ? true : false;
@@ -267,21 +266,7 @@ class formslib_form
 			echo $this->getSubmitHtml();
 		}
 
-		echo $this->htmlbottom . CRLF . CRLF;
-
-		echo '</form>' . CRLF . CRLF;
-
-		if ($this->jqueryvalidate)
-		{
-			echo '<script type="text/javascript">' . CRLF . '<!--' . CRLF;
-			echo $this->_generate_jquery_validation() . CRLF;
-			echo $this->customjs . CRLF;
-			foreach ($field_js as $fjs)
-			{
-				echo $fjs.CRLF; //TODO: Obfuscate?
-			}
-			echo '//-->' . CRLF . '</script>' . CRLF . CRLF;
-		}
+		$this->_displayBottom($field_js);
 	}
 
 	public function validate()
@@ -815,7 +800,7 @@ $('[name=$name]').blur(function(){
 		}
 	}
 
-	public function displayBottomOnly()
+	private function _displayBottom(&$field_js)
 	{
 		echo $this->htmlbottom . CRLF . CRLF;
 
@@ -825,8 +810,44 @@ $('[name=$name]').blur(function(){
 		{
 			echo '<script type="text/javascript">' . CRLF . '<!--' . CRLF;
 			echo $this->_generate_jquery_validation() . CRLF;
+			echo $this->customjs . CRLF;
+			foreach ($field_js as $fjs)
+			{
+				echo $fjs.CRLF; //TODO: Obfuscate?
+			}
+
+			if (!is_null($this->doubleClickTimeout))
+			{
+				$name = $this->name;
+				$timeout = $this->doubleClickTimeout * 1000;
+				$class = implode(' ', $this->submitclass);
+
+				echo <<<EOF
+$(document).ready(function(){
+	$('form[name="$name"] input[type="submit"]').click(function(e){
+		var btn = $(e.target);
+
+		btn.parent().append('<a id="submitting" class="$class" disabled="disabled"><i class="fa fa-spinner fa-pulse"></i> Processing...</a>');
+		btn.hide();
+
+		window.setTimeout(function(){
+			$(e.target).parent().children('a#submitting').hide();
+			$(e.target).show();
+		}, $timeout);
+	});
+});
+EOF;
+			}
+
 			echo '//-->' . CRLF . '</script>' . CRLF . CRLF;
 		}
+	}
+
+	public function displayBottomOnly()
+	{
+		$js = array();
+
+		$this->_displayBottom($js);
 	}
 
 	public function displayRawLabel($fieldname)
@@ -1031,7 +1052,7 @@ $('[name=$name]').blur(function(){
 	}
 
 	/**
-	 * @return formslib\Result\ResultObject
+	 * @return \formslib\Result\ResultObject
 	 */
 	public function getResultObject()
 	{
@@ -1079,6 +1100,13 @@ $('[name=$name]').blur(function(){
 				$this->fields[$field]->setDisabled();
 			}
 		}
+
+		return $this;
+	}
+
+	public function &setDoubleClickProtection($timeout = 30)
+	{
+		$this->doubleClickTimeout = $timeout;
 
 		return $this;
 	}

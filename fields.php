@@ -398,7 +398,7 @@ abstract class formslib_field
 
 	/**
 	 *
-	 * @param unknown $help_html
+	 * @param string $help_html
 	 * @return formslib_field
 	 */
 	public function &setHelpBlock($help_html)
@@ -1632,7 +1632,7 @@ class formslib_carddate extends formslib_composite
 		{
 			$html .= '<option value="' . $i . '"';
 			if ($this->composite_values['month'] == $i) $html .= ' selected="selected"';
-			$html .= '>' . sprintf('%02d', $i) . '</option>' . CRLF; // TODO: Review use of this lookup here
+			$html .= '>' . sprintf('%02d', $i) . '</option>' . CRLF;
 		}
 		$html .= '</select>' . CRLF;
 
