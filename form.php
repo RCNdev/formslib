@@ -820,13 +820,14 @@ $('[name=$name]').blur(function(){
 			{
 				$name = $this->name;
 				$timeout = $this->doubleClickTimeout * 1000;
+				$class = implode(' ', $this->submitclass);
 
 				echo <<<EOF
 $(document).ready(function(){
 	$('form[name="$name"] input[type="submit"]').click(function(e){
 		var btn = $(e.target);
 
-		btn.parent().append('<a id="submitting" class="btn btn-primary" disabled="disabled"><i class="fa fa-spinner fa-pulse"></i> Processing...</a>');
+		btn.parent().append('<a id="submitting" class="$class" disabled="disabled"><i class="fa fa-spinner fa-pulse"></i> Processing...</a>');
 		btn.hide();
 
 		window.setTimeout(function(){
