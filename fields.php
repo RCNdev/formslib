@@ -1967,7 +1967,7 @@ EOF;
     {
     	if ($this->value == '') return null;
 
-    	$date = \DateTime::createFromFormat('Y-m-d', $this->getEmailValue());
+    	$date = \DateTime::createFromFormat('d/m/Y', $this->value);
 
     	return $date;
     }
