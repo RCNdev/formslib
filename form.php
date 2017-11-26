@@ -21,6 +21,7 @@ class formslib_form
 	private $submit_grid_ratio = null;
 	private $resultClass = '\formslib\Result\ResultObject';
 	private $doubleClickTimeout = null;
+	private $fsorder = array();
 
 	public function __construct($name)
 	{
@@ -137,6 +138,7 @@ class formslib_form
 		if (is_object($fieldset))
 		{
 			$this->fieldsets[$name] = &$fieldset;
+			$this->fsorder[] = $name;
 		}
 		else
 		{
@@ -240,9 +242,8 @@ class formslib_form
 		}
 
 		// Go through the fieldsets
-		$fieldsets = array_keys($this->fieldsets);
 		$field_js = array();
-		foreach ($fieldsets as $fieldset)
+		foreach ($this->fsorder as $fieldset)
 		{
 			/** @var formslib_fieldset $fs */
 			$fs =& $this->fieldsets[$fieldset];
@@ -475,8 +476,7 @@ class formslib_form
 		}
 
 		// Go through the fieldsets
-		$fieldsets = array_keys($this->fieldsets);
-		foreach ($fieldsets as $fieldset)
+		foreach ($this->fsorder as $fieldset)
 		{
 			$data += $this->fieldsets[$fieldset]->getDataDump($this);
 		}
@@ -528,8 +528,7 @@ class formslib_form
 		}
 
 		// Go through the fieldsets
-		$fieldsets = array_keys($this->fieldsets);
-		foreach ($fieldsets as $fieldset)
+		foreach ($this->fsorder as $fieldset)
 		{
 			$body .= $this->fieldsets[$fieldset]->getEmailBody($this, $style);
 		}
@@ -603,7 +602,7 @@ class formslib_form
 		}
 		else
 		{
-			return false;
+			return false; //TODO: Throw exception?
 		}
 	}
 
@@ -1071,8 +1070,7 @@ EOF;
 		}
 
 		// Go through the fieldsets
-		$fieldsets = array_keys($this->fieldsets);
-		foreach ($fieldsets as $fieldset)
+		foreach ($this->fsorder as $fieldset)
 		{
 			$this->fieldsets[$fieldset]->buildResultObject($this, $result);
 		}
@@ -1110,6 +1108,45 @@ EOF;
 
 		return $this;
 	}
+
+	public function positionFieldsetTo($fsname, $location)
+	{
+		if ($location < 1 || $location > count($this->fsorder)) throw new \Exception('Invalid fieldset position');
+
+		$oldpos = (array_search($fsname, $this->fsorder));
+
+		if ($oldpos === false) throw new \Exception('Field not found');
+
+		unset($this->fsorder[$oldpos]);
+
+		array_splice($this->fsorder, $location-1, 0, array($fsname));
+	}
+
+	public function positionFieldsetBelow($fsname, $below)
+	{
+		$orig = array_search($fsname, $this->fsorder);
+		if ($orig === false) throw new \Exception('Fieldset not found');
+
+		$pos = array_search($below, $this->fsorder);
+		if ($pos === false) throw new \Exception('Reference fieldset not found');
+
+		$location = ($pos >= $orig) ? $pos + 1 : $pos + 2;
+
+		$this->positionFieldsetTo($fsname, $location);
+	}
+
+	public function positionFieldsetAbove($fsname, $above)
+	{
+		$orig = array_search($fsname, $this->fsorder);
+		if ($orig === false) throw new \Exception('Fieldset not found');
+
+		$pos = array_search($above, $this->fsorder);
+		if ($pos === false) throw new \Exception('Reference fieldset not found');
+
+		$location = ($pos > $orig) ? $pos : $pos + 1;
+
+		$this->positionFieldsetTo($fsname, $location);
+	}
 }
 
 /**
@@ -1129,6 +1166,7 @@ class formslib_fieldset
 	private $table_columns = array();
 	private $htmlbefore, $htmlafter;
 	private $legendclass = array();
+	private $fieldorder = array();
 
 	public function __construct($name)
 	{
@@ -1146,6 +1184,7 @@ class formslib_fieldset
 	public function attachField($name)
 	{
 		$this->fields[] = $name;
+		$this->fieldorder[] = $name;
 	}
 
 	public function display(formslib_form &$form, $submitbutton = false, $encasing_html = true)
@@ -1169,7 +1208,7 @@ class formslib_fieldset
 
 		if (! $this->layout_table)
 		{
-			foreach ($this->fields as $fieldname)
+			foreach ($this->fieldorder as $fieldname)
 			{
 				if (is_object($form->fields[$fieldname]))
 				{
@@ -1177,7 +1216,7 @@ class formslib_fieldset
 				}
 				else
 				{
-					echo '<p class="error">Field ' . htmlspecialchars($fieldname) . ' is not an object.</p>';
+					echo '<p class="error">Field ' . htmlspecialchars($fieldname) . ' is not an object.</p>'; // TODO: Throw exception?
 				}
 			}
 		}
@@ -1203,7 +1242,7 @@ class formslib_fieldset
 
 			$first = true;
 			$outputted = false;
-			foreach ($this->fields as $fieldname)
+			foreach ($this->fieldorder as $fieldname)
 			{
 				if (is_object($form->fields[$fieldname]))
 				{
@@ -1229,7 +1268,7 @@ class formslib_fieldset
 				}
 				else
 				{
-					echo '<td class="error">Field ' . htmlspecialchars($fieldname) . ' is not an object.</td>';
+					echo '<td class="error">Field ' . htmlspecialchars($fieldname) . ' is not an object.</td>'; //TODO: Throw exception?
 				}
 			}
 			if ($outputted) echo '</tr>' . CRLF;
@@ -1257,7 +1296,7 @@ class formslib_fieldset
 	public function getDataDump(&$form)
 	{
 		$data = array();
-		foreach ($this->fields as $fieldname)
+		foreach ($this->fieldorder as $fieldname)
 		{
 			$data[$fieldname] = $form->fields[$fieldname]->getDataDump();
 		}
@@ -1293,7 +1332,7 @@ class formslib_fieldset
 			$body .= CRLF . CRLF . CRLF . '***** ' . $this->legend . ' *****' . CRLF . CRLF;
 		}
 
-		foreach ($this->fields as $fieldname)
+		foreach ($this->fieldorder as $fieldname)
 		{
 			if (! $form->fields[$fieldname]->getDoNotEmail())
 			{
@@ -1329,8 +1368,11 @@ class formslib_fieldset
 
 		foreach ($fieldname as $fn)
 		{
-			//TODO: [HIGH] Check this, there may be a bug that removes the first field if a non-existent name is passed in
-			unset($this->fields[array_search($fn, $this->fields)]);
+			$index = array_search($fn, $this->fields);
+			if ($index === false) return false; // TODO: Throw exception on attempting to remove a non-existent field?
+
+			unset($this->fields[$index]);
+			unset($this->fieldorder[$index]);
 		}
 	}
 
@@ -1434,5 +1476,44 @@ class formslib_fieldset
 				$result->{$fieldname} = $form->fields[$fieldname]->getObjectValue();
 			}
 		}
+	}
+
+	public function positionFieldTo($fieldname, $location)
+	{
+		if ($location < 1 || $location > count($this->fieldorder)) throw new \Exception('Invalid field position');
+
+		$oldpos = (array_search($fieldname, $this->fieldorder));
+
+		if ($oldpos === false) throw new \Exception('Field not found');
+
+		unset($this->fieldorder[$oldpos]);
+
+		array_splice($this->fieldorder, $location-1, 0, array($fieldname));
+	}
+
+	public function positionFieldBelow($fieldname, $below)
+	{
+		$orig = array_search($fieldname, $this->fieldorder);
+		if ($orig === false) throw new \Exception('Field not found');
+
+		$pos = array_search($below, $this->fieldorder);
+		if ($pos === false) throw new \Exception('Reference field not found');
+
+		$location = ($pos >= $orig) ? $pos + 1 : $pos + 2;
+
+		$this->positionFieldTo($fieldname, $location);
+	}
+
+	public function positionFieldAbove($fieldname, $above)
+	{
+		$orig = array_search($fieldname, $this->fieldorder);
+		if ($orig === false) throw new \Exception('Field not found');
+
+		$pos = array_search($above, $this->fieldorder);
+		if ($pos === false) throw new \Exception('Reference field not found');
+
+		$location = ($pos > $orig) ? $pos : $pos + 1;
+
+		$this->positionFieldTo($fieldname, $location);
 	}
 }
