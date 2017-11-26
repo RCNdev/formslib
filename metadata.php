@@ -151,3 +151,8 @@ abstract class formslib_field_paramset extends formslib_field
 		return $this;
 	}
 }
+
+class Services_JSON
+{
+
+}
