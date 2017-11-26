@@ -92,7 +92,7 @@ class Modal
 
 	/**
 	 * Set JavaScript to fire when the modal is shown
-	 * @param unknown $js
+	 * @param string $js
 	 */
 	public function &setJsOnShow($js)
 	{

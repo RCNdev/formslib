@@ -1965,9 +1965,9 @@ EOF;
 
     public function &getObjectValue()
     {
-    	if ($this->value == '') return null;
+    	$date = null;
 
-    	$date = \DateTime::createFromFormat('Y-m-d', $this->getEmailValue());
+    	if ($this->value != '') $date = \DateTime::createFromFormat('d/m/Y', $this->value);
 
     	return $date;
     }
