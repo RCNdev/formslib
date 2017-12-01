@@ -210,26 +210,8 @@ class formslib_form
 
 		echo $this->htmltop . CRLF . CRLF;
 
-		// TODO: Move error display to a separate function and call here
 		// Display any errors
-		if (count($this->errorlist) > 0)
-		{
-			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
-				$classes = 'alert alert-block alert-error';
-			elseif ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle = FORMSLIB_STYLE_BOOTSTRAP3_INLINE)
-				$classes = 'alert alert-block alert-danger';
-			else
-				$classes = '';
-
-			echo '<ul class="' . $classes . '">' . CRLF;
-			foreach ($this->errorlist as $err)
-			{
-				echo '<li class="error">';
-				echo $err['message'];
-				echo '</li>' . CRLF;
-			}
-			echo '</ul>' . CRLF;
-		}
+		$this->_displayErrors();
 
 		// Output any hidden fields
 		$fields = array_keys($this->fields);
@@ -765,28 +747,7 @@ $('[name=$name]').blur(function(){
 		echo $this->htmltop . CRLF . CRLF;
 
 		// Display any errors
-		//TODO: Functionise
-		if (count($this->errorlist) > 0)
-		{
-			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
-			{
-				echo '<div class="alert alert-block alert-error">' . CRLF;
-			}
-
-			echo '<ul>' . CRLF;
-			foreach ($this->errorlist as $err)
-			{
-				echo '<li class="error">';
-				echo $err['message'];
-				echo '</li>' . CRLF;
-			}
-			echo '</ul>' . CRLF;
-
-			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
-			{
-				echo '</div>' . CRLF;
-			}
-		}
+		$this->_displayErrors();
 
 		// Output any hidden fields
 		$fields = array_keys($this->fields);
@@ -796,6 +757,36 @@ $('[name=$name]').blur(function(){
 			{
 				echo $this->fields[$field]->getHTML() . CRLF;
 			}
+		}
+	}
+
+	private function _displayErrors()
+	{
+		if (count($this->errorlist) > 0)
+		{
+			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
+			{
+				$classes = 'alert alert-block alert-error';
+			}
+			elseif ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle = FORMSLIB_STYLE_BOOTSTRAP3_INLINE)
+			{
+				$classes = 'alert alert-block alert-danger';
+			}
+			else
+			{
+				$classes = '';
+			}
+
+			echo '<ul class="' . $classes . '">' . CRLF;
+
+			foreach ($this->errorlist as $err)
+			{
+				echo '<li class="error">';
+				echo $err['message'];
+				echo '</li>' . CRLF;
+			}
+
+			echo '</ul>' . CRLF;
 		}
 	}
 
