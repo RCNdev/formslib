@@ -1075,6 +1075,17 @@ class formslib_phone extends formslib_text
 	}
 }
 
+class formslib_postalcode extends formslib_text
+{
+
+	public function __construct($name)
+	{
+		parent::__construct($name);
+		$this->addRule('maxlength', 12, 'Postal codes must be 12 characters or less');
+		$this->addRule('regex', '/^[a-z0-9\s-]*$/i', 'Please enter the postal code using only letters, numbers, dashes and spaces');
+	}
+}
+
 class formslib_postcode extends formslib_text
 {
 
