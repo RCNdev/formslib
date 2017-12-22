@@ -584,9 +584,11 @@ abstract class formslib_field
 		return $this->noObject;
 	}
 
-	public function forceOutputStyle($style)
+	public function &forceOutputStyle($style)
 	{
 		$this->outputstyle = $style;
+
+		return $this;
 	}
 
 	public function &setDisabled($disabled = true)
@@ -2076,6 +2078,13 @@ class formslib_dateselecttime extends formslib_composite
 	public function getEmailValue()
 	{
 		return date($this->dateformat, strtotime($this->composite_values['date'])).' '.$this->composite_values['time'];
+	}
+
+	public function &getObjectValue()
+	{
+		$date = \DateTime::createFromFormat('d/m/Y H:i', $this->composite_values['date'].' '.$this->composite_values['time']);
+
+		return $date;
 	}
 }
 
