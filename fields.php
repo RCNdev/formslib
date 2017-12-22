@@ -123,6 +123,12 @@ abstract class formslib_field
 
 		return $this;
 	}
+	
+	public function getAttributes()
+	{
+		return $this->attrib;
+	}
+	
 
 	public function &setAttributes($attrib)
 	{
@@ -2205,6 +2211,7 @@ class formslib_datepickertime extends formslib_composite
 	{
 		$this->field_date->value = $this->composite_values['date'];
 		$this->field_date->setClasses($this->getClasses());
+		$this->field_date->setAttributes($this->getAttributes());
 	}
 
 	public function getHTML()
