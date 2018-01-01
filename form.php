@@ -1309,6 +1309,13 @@ class formslib_fieldset
 		return $this;
 	}
 
+	public function &appendFooter($html)
+	{
+		$this->footertext .= $html;
+
+		return $this;
+	}
+
 	public function getEmailBody(&$form, &$style)
 	{
 		$body = '';
