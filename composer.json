@@ -1,0 +1,15 @@
+{
+	"name" : "rcn/formslib",
+	"description" : "PHP form generation and validation library",
+	"keywords" : [
+		"forms"
+	],
+	"require" : {
+		"php" : ">=5.3.3"
+	},
+	"autoload" : {
+		"files" : [
+			"form_builder.php"
+		]
+	}
+}
