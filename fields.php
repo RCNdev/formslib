@@ -1603,7 +1603,7 @@ class formslib_ticklist extends formslib_composite
 		return $this;
 	}
 
-	public function getObjectValue()
+	public function &getObjectValue()
 	{
 		$checked = array();
 
