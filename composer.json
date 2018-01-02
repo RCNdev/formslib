@@ -15,5 +15,8 @@
 		"psr-4" : {
 			"formslib\\" : "src"
 		}
+	},
+	"suggest" : {
+		"rcn3rdparty/bootstrap-datepicker-dist" : "Bootstrap plugin used by datetime picker fields"
 	}
 }
