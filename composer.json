@@ -5,11 +5,15 @@
 		"forms"
 	],
 	"require" : {
-		"php" : ">=5.3.3"
+		"php" : ">=5.3.3",
+		"meenie/javascript-packer" : "~1.1"
 	},
 	"autoload" : {
 		"files" : [
-			"form_builder.php"
-		]
+			"composer-boot.php"
+		],
+		"psr-4" : {
+			"formslib\\" : "src"
+		}
 	}
 }

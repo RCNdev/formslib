@@ -25,11 +25,3 @@ require_once 'form.php';
 require_once 'fields.php';
 require_once 'custom_fields.php';
 require_once 'rules.php';
-
-if (!defined('LIBPATH')) define('LIBPATH', '');
-require_once(LIBPATH.'class.JavaScriptPacker.php');
-
-if (version_compare(PHP_VERSION, '5.3.0', '>='))
-{
-	require_once(__DIR__.'/autoload.php');
-}
