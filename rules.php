@@ -303,7 +303,7 @@ class formslib_rule_date_format extends formslib_rule
         switch ($this->ruledfn)
         {
             case 'uk':
-                return (preg_match('|^[0-9]{2}/[0-9]{2}/[0-9]{2,4}$|', trim($value)));
+                return (preg_match('|^[0-9]{2}/[0-9]{2}/[0-9]{4}$|', trim($value)));
                 break;
 
             default:

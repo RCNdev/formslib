@@ -41,6 +41,6 @@ class DateSelect extends \formslib_select
 
 	public function getObjectValue()
 	{
-		return \DateTime::createFromFormat('Y-m-d', $this->value);
+		return \DateTime::createFromFormat('!Y-m-d', $this->value);
 	}
 }

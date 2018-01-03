@@ -1902,14 +1902,15 @@ class formslib_datepicker extends formslib_text
 
         $this->addRule('date_format', 'uk', 'Dates must be in the format dd/mm/yyyy');
         $this->addRule('date_exists', 'uk', 'The date entered was incomplete or does not exist');
-    }
-
-    //TODO: Auto format validation rule
+	}
 
     public function &set_years($start, $end)
     {
         $this->startyear = $start;
         $this->endyear = $end;
+
+        $this->addRule('Dates_UkAfter', '01/01/'.$start, 'Must be after 01/01/'.$start);
+        $this->addRule('Dates_UkBefore', '31/12/'.$end, 'Must be before 31/12/'.$end);
 
         return $this;
     }
@@ -1931,20 +1932,32 @@ class formslib_datepicker extends formslib_text
         $id = $this->name; //TODO: Properly escape
 
         if (isset($this->startdate))
+        {
             $start = ', startDate: "'.$this->startdate.'"';
-            elseif (isset($this->startyear))
+        }
+        elseif (isset($this->startyear))
+        {
             $start = ', startDate: "01/01/'.$this->startyear.'"';
-            else
-                $start = '';
+        }
+        else
+        {
+			$start = '';
+        }
 
-                if (isset($this->enddate))
-                    $end = ', endDate: "'.$this->enddate.'"';
-                    elseif (isset($this->endyear))
+        if (isset($this->enddate))
+        {
+			$end = ', endDate: "'.$this->enddate.'"';
+        }
+        elseif (isset($this->endyear))
+        {
                     $end = ', endDate: "31/12/'.$this->endyear.'"';
-                    else
-                        $end = '';
+        }
+        else
+        {
+			$end = '';
+    	}
 
-                        return <<<EOF
+		return <<<EOF
 <script type="text/javascript">
 $(document).ready(function()
 {
@@ -1966,12 +1979,16 @@ EOF;
     {
         $this->startdate = $date;
 
+        $this->addRule('Dates_UkAfter', $date, 'Must be on or after '.$date);
+
         return $this;
     }
 
     public function &setEndDate($date)
     {
         $this->enddate = $date;
+
+        $this->addRule('Dates_UkBefore', $date, 'Must be on or before '.$date);
 
         return $this;
     }
@@ -1980,7 +1997,7 @@ EOF;
     {
     	$date = null;
 
-    	if ($this->value != '') $date = \DateTime::createFromFormat('d/m/Y', $this->value);
+    	if ($this->value != '') $date = Formslib::getUkDate($this->value);
 
     	return $date;
     }
@@ -2082,7 +2099,7 @@ class formslib_dateselecttime extends formslib_composite
 
 	public function &getObjectValue()
 	{
-		$date = \DateTime::createFromFormat('d/m/Y H:i', $this->composite_values['date'].' '.$this->composite_values['time']);
+		$date = \DateTime::createFromFormat('!d/m/Y H:i', $this->composite_values['date'].' '.$this->composite_values['time']);
 
 		return $date;
 	}
@@ -2242,7 +2259,7 @@ class formslib_datepickertime extends formslib_composite
 	{
 		if ($this->composite_values['date'] == '' || $this->composite_values['time'] == '') return null;
 
-		$date = \DateTime::createFromFormat('d/m/Y H:i', $this->composite_values['date'].' '.$this->composite_values['time']);
+		$date = \DateTime::createFromFormat('!d/m/Y H:i', $this->composite_values['date'].' '.$this->composite_values['time']);
 
 		return $date;
 	}
