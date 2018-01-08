@@ -1854,13 +1854,13 @@ class formslib_time extends formslib_composite
 		{
 			if($i == 0)
 			{
-				$html .= '<option value="' . $i . '"';
+				$html .= '<option value="00"';
 				if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
 				$html .= '>00</option>' . CRLF;
 			}
 			elseif($i < 10)
 			{
-				$html .= '<option value="' . $i . '"';
+				$html .= '<option value="0' . $i . '"';
 				if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
 				$html .= '>0' . $i . '</option>' . CRLF;
 			}
