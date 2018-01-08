@@ -123,6 +123,12 @@ abstract class formslib_field
 
 		return $this;
 	}
+	
+	public function getAttributes()
+	{
+		return $this->attrib;
+	}
+	
 
 	public function &setAttributes($attrib)
 	{
@@ -1809,12 +1815,13 @@ class formslib_time extends formslib_composite
 		// Hour
 		$html .= '<select' . $this->_custom_attr() . $this->_class_attr('formslib_date__hour input-mini') . ' name="' . $this->name . '__hour">' . CRLF;
 		$html .= '<option value="">Hour</option>';
+		
 		for ($i = 0; $i <= 23; $i++)
 		{
 			if($i == 0)
 			{
 				$html .= '<option value="00"';
-				//if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
+				if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
 				$html .= '>00</option>' . CRLF;
 
 
@@ -1822,13 +1829,13 @@ class formslib_time extends formslib_composite
 			elseif ($i <10)
 			{
 				$html .= '<option value="0' . $i . '"';
-				//if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
+				if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
 				$html .= '>0' . $i . '</option>' . CRLF;
 			}
 			else
 			{
 				$html .= '<option value="' . $i . '"';
-				//if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
+				if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
 				$html .= '>' . $i . '</option>' . CRLF;
 			}
 		}
@@ -1848,13 +1855,13 @@ class formslib_time extends formslib_composite
 			if($i == 0)
 			{
 				$html .= '<option value="00"';
-				//if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
+				if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
 				$html .= '>00</option>' . CRLF;
 			}
 			elseif($i < 10)
 			{
 				$html .= '<option value="0' . $i . '"';
-				//if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
+				if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
 				$html .= '>0' . $i . '</option>' . CRLF;
 			}
 			else
@@ -1863,10 +1870,8 @@ class formslib_time extends formslib_composite
 				if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
 				$html .= '>' . $i . '</option>' . CRLF;
 			}
-			/*
-			if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
-			$html .= '>' . $GLOBALS['mn'][$i] . '</option>' . CRLF; // TODO: Review use of this lookup here
-*/
+			
+
 		}
 		$html .= '</select>' . CRLF;
 
@@ -1885,6 +1890,11 @@ class formslib_time extends formslib_composite
 		}
 
 		return $html;
+	}
+	
+	public function getEmailValue()
+	{
+		return sprintf('%02d',$this->composite_values['hour']) . ':' . sprintf('%02d', $this->composite_values['minute']);
 	}
 }
 
@@ -2222,6 +2232,7 @@ class formslib_datepickertime extends formslib_composite
 	{
 		$this->field_date->value = $this->composite_values['date'];
 		$this->field_date->setClasses($this->getClasses());
+		$this->field_date->setAttributes($this->getAttributes());
 	}
 
 	public function getHTML()
