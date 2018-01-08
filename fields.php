@@ -1815,26 +1815,27 @@ class formslib_time extends formslib_composite
 		// Hour
 		$html .= '<select' . $this->_custom_attr() . $this->_class_attr('formslib_date__hour input-mini') . ' name="' . $this->name . '__hour">' . CRLF;
 		$html .= '<option value="">Hour</option>';
+		
 		for ($i = 0; $i <= 23; $i++)
 		{
 			if($i == 0)
 			{
-				$html .= '<option value="00"';
-				//if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
+				$html .= '<option value="' . $i . '"';
+				if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
 				$html .= '>00</option>' . CRLF;
 
 
 			}
 			elseif ($i <10)
 			{
-				$html .= '<option value="0' . $i . '"';
-				//if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
+				$html .= '<option value="' . $i . '"';
+				if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
 				$html .= '>0' . $i . '</option>' . CRLF;
 			}
 			else
 			{
 				$html .= '<option value="' . $i . '"';
-				//if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
+				if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
 				$html .= '>' . $i . '</option>' . CRLF;
 			}
 		}
@@ -1853,14 +1854,14 @@ class formslib_time extends formslib_composite
 		{
 			if($i == 0)
 			{
-				$html .= '<option value="00"';
-				//if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
+				$html .= '<option value="' . $i . '"';
+				if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
 				$html .= '>00</option>' . CRLF;
 			}
 			elseif($i < 10)
 			{
-				$html .= '<option value="0' . $i . '"';
-				//if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
+				$html .= '<option value="' . $i . '"';
+				if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
 				$html .= '>0' . $i . '</option>' . CRLF;
 			}
 			else
@@ -1869,10 +1870,8 @@ class formslib_time extends formslib_composite
 				if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
 				$html .= '>' . $i . '</option>' . CRLF;
 			}
-			/*
-			if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
-			$html .= '>' . $GLOBALS['mn'][$i] . '</option>' . CRLF; // TODO: Review use of this lookup here
-*/
+			
+
 		}
 		$html .= '</select>' . CRLF;
 
@@ -1895,7 +1894,7 @@ class formslib_time extends formslib_composite
 	
 	public function getEmailValue()
 	{
-		return $this->composite_values['hour'] . ':' . sprintf('%02d', $this->composite_values['minute']);
+		return sprintf('%02d',$this->composite_values['hour']) . ':' . sprintf('%02d', $this->composite_values['minute']);
 	}
 }
 
