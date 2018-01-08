@@ -123,6 +123,12 @@ abstract class formslib_field
 
 		return $this;
 	}
+	
+	public function getAttributes()
+	{
+		return $this->attrib;
+	}
+	
 
 	public function &setAttributes($attrib)
 	{
@@ -1809,12 +1815,13 @@ class formslib_time extends formslib_composite
 		// Hour
 		$html .= '<select' . $this->_custom_attr() . $this->_class_attr('formslib_date__hour input-mini') . ' name="' . $this->name . '__hour">' . CRLF;
 		$html .= '<option value="">Hour</option>';
+		
 		for ($i = 0; $i <= 23; $i++)
 		{
 			if($i == 0)
 			{
 				$html .= '<option value="00"';
-				//if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
+				if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
 				$html .= '>00</option>' . CRLF;
 
 
@@ -1822,13 +1829,13 @@ class formslib_time extends formslib_composite
 			elseif ($i <10)
 			{
 				$html .= '<option value="0' . $i . '"';
-				//if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
+				if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
 				$html .= '>0' . $i . '</option>' . CRLF;
 			}
 			else
 			{
 				$html .= '<option value="' . $i . '"';
-				//if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
+				if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
 				$html .= '>' . $i . '</option>' . CRLF;
 			}
 		}
@@ -1848,13 +1855,13 @@ class formslib_time extends formslib_composite
 			if($i == 0)
 			{
 				$html .= '<option value="00"';
-				//if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
+				if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
 				$html .= '>00</option>' . CRLF;
 			}
 			elseif($i < 10)
 			{
 				$html .= '<option value="0' . $i . '"';
-				//if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
+				if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
 				$html .= '>0' . $i . '</option>' . CRLF;
 			}
 			else
@@ -1863,10 +1870,8 @@ class formslib_time extends formslib_composite
 				if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
 				$html .= '>' . $i . '</option>' . CRLF;
 			}
-			/*
-			if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
-			$html .= '>' . $GLOBALS['mn'][$i] . '</option>' . CRLF; // TODO: Review use of this lookup here
-*/
+			
+
 		}
 		$html .= '</select>' . CRLF;
 
@@ -1886,6 +1891,11 @@ class formslib_time extends formslib_composite
 
 		return $html;
 	}
+	
+	public function getEmailValue()
+	{
+		return sprintf('%02d',$this->composite_values['hour']) . ':' . sprintf('%02d', $this->composite_values['minute']);
+	}
 }
 
 class formslib_datepicker extends formslib_text
@@ -1902,14 +1912,15 @@ class formslib_datepicker extends formslib_text
 
         $this->addRule('date_format', 'uk', 'Dates must be in the format dd/mm/yyyy');
         $this->addRule('date_exists', 'uk', 'The date entered was incomplete or does not exist');
-    }
-
-    //TODO: Auto format validation rule
+	}
 
     public function &set_years($start, $end)
     {
         $this->startyear = $start;
         $this->endyear = $end;
+
+        $this->addRule('Dates_UkAfter', '01/01/'.$start, 'Must be after 01/01/'.$start);
+        $this->addRule('Dates_UkBefore', '31/12/'.$end, 'Must be before 31/12/'.$end);
 
         return $this;
     }
@@ -1931,20 +1942,32 @@ class formslib_datepicker extends formslib_text
         $id = $this->name; //TODO: Properly escape
 
         if (isset($this->startdate))
+        {
             $start = ', startDate: "'.$this->startdate.'"';
-            elseif (isset($this->startyear))
+        }
+        elseif (isset($this->startyear))
+        {
             $start = ', startDate: "01/01/'.$this->startyear.'"';
-            else
-                $start = '';
+        }
+        else
+        {
+			$start = '';
+        }
 
-                if (isset($this->enddate))
-                    $end = ', endDate: "'.$this->enddate.'"';
-                    elseif (isset($this->endyear))
+        if (isset($this->enddate))
+        {
+			$end = ', endDate: "'.$this->enddate.'"';
+        }
+        elseif (isset($this->endyear))
+        {
                     $end = ', endDate: "31/12/'.$this->endyear.'"';
-                    else
-                        $end = '';
+        }
+        else
+        {
+			$end = '';
+    	}
 
-                        return <<<EOF
+		return <<<EOF
 <script type="text/javascript">
 $(document).ready(function()
 {
@@ -1966,12 +1989,16 @@ EOF;
     {
         $this->startdate = $date;
 
+        $this->addRule('Dates_UkAfter', $date, 'Must be on or after '.$date);
+
         return $this;
     }
 
     public function &setEndDate($date)
     {
         $this->enddate = $date;
+
+        $this->addRule('Dates_UkBefore', $date, 'Must be on or before '.$date);
 
         return $this;
     }
@@ -1980,7 +2007,7 @@ EOF;
     {
     	$date = null;
 
-    	if ($this->value != '') $date = \DateTime::createFromFormat('d/m/Y', $this->value);
+    	if ($this->value != '') $date = Formslib::getUkDate($this->value);
 
     	return $date;
     }
@@ -2082,7 +2109,7 @@ class formslib_dateselecttime extends formslib_composite
 
 	public function &getObjectValue()
 	{
-		$date = \DateTime::createFromFormat('d/m/Y H:i', $this->composite_values['date'].' '.$this->composite_values['time']);
+		$date = \DateTime::createFromFormat('!d/m/Y H:i', $this->composite_values['date'].' '.$this->composite_values['time']);
 
 		return $date;
 	}
@@ -2205,6 +2232,7 @@ class formslib_datepickertime extends formslib_composite
 	{
 		$this->field_date->value = $this->composite_values['date'];
 		$this->field_date->setClasses($this->getClasses());
+		$this->field_date->setAttributes($this->getAttributes());
 	}
 
 	public function getHTML()
@@ -2242,7 +2270,7 @@ class formslib_datepickertime extends formslib_composite
 	{
 		if ($this->composite_values['date'] == '' || $this->composite_values['time'] == '') return null;
 
-		$date = \DateTime::createFromFormat('d/m/Y H:i', $this->composite_values['date'].' '.$this->composite_values['time']);
+		$date = \DateTime::createFromFormat('!d/m/Y H:i', $this->composite_values['date'].' '.$this->composite_values['time']);
 
 		return $date;
 	}
