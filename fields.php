@@ -1892,6 +1892,11 @@ class formslib_time extends formslib_composite
 
 		return $html;
 	}
+	
+	public function getEmailValue()
+	{
+		return $this->composite_values['hour'] . ':' . sprintf('%02d', $this->composite_values['minute']);
+	}
 }
 
 class formslib_datepicker extends formslib_text
