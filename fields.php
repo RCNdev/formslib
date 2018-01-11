@@ -123,12 +123,12 @@ abstract class formslib_field
 
 		return $this;
 	}
-	
+
 	public function getAttributes()
 	{
 		return $this->attrib;
 	}
-	
+
 
 	public function &setAttributes($attrib)
 	{
@@ -1815,7 +1815,7 @@ class formslib_time extends formslib_composite
 		// Hour
 		$html .= '<select' . $this->_custom_attr() . $this->_class_attr('formslib_date__hour input-mini') . ' name="' . $this->name . '__hour">' . CRLF;
 		$html .= '<option value="">Hour</option>';
-		
+
 		for ($i = 0; $i <= 23; $i++)
 		{
 			if($i == 0)
@@ -1870,7 +1870,7 @@ class formslib_time extends formslib_composite
 				if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
 				$html .= '>' . $i . '</option>' . CRLF;
 			}
-			
+
 
 		}
 		$html .= '</select>' . CRLF;
@@ -1891,7 +1891,7 @@ class formslib_time extends formslib_composite
 
 		return $html;
 	}
-	
+
 	public function getEmailValue()
 	{
 		return sprintf('%02d',$this->composite_values['hour']) . ':' . sprintf('%02d', $this->composite_values['minute']);
