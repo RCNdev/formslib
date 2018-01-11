@@ -895,6 +895,11 @@ EOF;
 		$this->htmltop .= $html;
 	}
 
+	public function appendHTMLbottom($html)
+	{
+		$this->htmltop .= $html;
+	}
+
 	public function setCustomJS($js)
 	{
 		$this->customjs = $js;
