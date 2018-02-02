@@ -7,8 +7,16 @@ class UkBefore extends \formslib\Rule\Rule
 	{
 		if (trim($value) == '') return true;
 
-		$val = \Formslib::getUkDate($value);
 		$check = \Formslib::getUkDate($this->ruledfn);
+
+		try
+		{
+			$val = \Formslib::getUkDate($value);
+		}
+		catch (\Exception $e)
+		{
+			return false;
+		}
 
 		return ($val <= $check);
 	}
