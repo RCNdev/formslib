@@ -1707,7 +1707,7 @@ class formslib_carddate extends formslib_composite
 class formslib_wysiwyg_light extends formslib_textarea
 {
 	private $button_list;
-
+	
 	public function __construct($name)
 	{
 		parent::__construct($name);
@@ -1728,12 +1728,21 @@ class formslib_wysiwyg_light extends formslib_textarea
 	public function getHTML()
 	{
 		$buttonlist = implode('\',\'', $this->button_list);
+		
+		$disabled = (isset($this->attrib['disabled'])) ? true : false;
+		
+		$background = (isset($this->attrib['disabled'])) ? '"background-color", "#EEEEEE"': '';
+		
+		$nic_panel_display = (isset($this->attrib['disabled'])) ? "$('.nicEdit-panel').hide();": "" ;
 
 		$html = <<<EOF
 <script type="text/javascript">
 <!--
 bkLib.onDomLoaded(function() {
 	new nicEditor({buttonList: ['$buttonlist']}).panelInstance('fld_{$this->name}');
+    $('.nicEdit-main').parent().css($background);
+    $('.nicEdit-main').attr('contenteditable','$disabled')
+    $nic_panel_display
 });
 //-->
 </script>
