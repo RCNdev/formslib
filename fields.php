@@ -1727,29 +1727,32 @@ class formslib_wysiwyg_light extends formslib_textarea
 
 	public function getHTML()
 	{
-		$buttonlist = implode('\',\'', $this->button_list);
-		
-		$disabled = (isset($this->attrib['disabled'])) ? true : false;
-		
-		$background = (isset($this->attrib['disabled'])) ? '"background-color", "#EEEEEE"': '';
-		
-		$nic_panel_display = (isset($this->attrib['disabled'])) ? "$('.nicEdit-panel').hide();": "" ;
-
-		$html = <<<EOF
-<script type="text/javascript">
-<!--
-bkLib.onDomLoaded(function() {
-	new nicEditor({buttonList: ['$buttonlist']}).panelInstance('fld_{$this->name}');
-    $('.nicEdit-main').parent().css($background);
-    $('.nicEdit-main').attr('contenteditable','$disabled')
-    $nic_panel_display
-});
-//-->
-</script>
-EOF;
-
+	    $buttonlist = implode('\',\'', $this->button_list);
+	    
+	    $disabled = (isset($this->attrib['disabled'])) ? 1 : 0;
+	    
+	    $html = <<<EOF
+                <script type="text/javascript">
+                <!--
+                bkLib.onDomLoaded(function() {
+                    new nicEditor({buttonList: ['$buttonlist']}).panelInstance('fld_{$this->name}');
+                    
+                    if($disabled)
+                    {
+                     $('#fld_{$this->name}').addClass('no_edit');
+                    }
+                    
+                     $('.no_edit').each(function(){
+                        $(this).prev().find('.nicEdit-main').attr('contenteditable', 'false').parent().css("background-color", "#EEEEEE");
+                        $(this).prev().prev().hide();
+                    });;
+                });
+                //-->
+                </script>
+                EOF;
+                
 		$html .= parent::getHTML();
-
+		
 		return $html;
 	}
 
