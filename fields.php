@@ -1729,31 +1729,32 @@ class formslib_wysiwyg_light extends formslib_textarea
 	{
 	    $buttonlist = implode('\',\'', $this->button_list);
 	    
-	    $disabled = (isset($this->attrib['disabled'])) ? 1 : 0;
+	    $disable = null;
+	    
+	    if(isset($this->attrib['disabled']))
+	    {
+	        $disable = <<<EOF
+$('#fld_{$this->name}').prev().find('.nicEdit-main').attr('contenteditable', 'false').parent().addClass('disabled');
+$('#fld_{$this->name}').prev().prev().hide();
+EOF;
+	    }
 	    
 	    $html = <<<EOF
-                <script type="text/javascript">
-                <!--
-                bkLib.onDomLoaded(function() {
-                    new nicEditor({buttonList: ['$buttonlist']}).panelInstance('fld_{$this->name}');
-                    
-                    if($disabled)
-                    {
-                     $('#fld_{$this->name}').addClass('no_edit');
-                    }
-                    
-                     $('.no_edit').each(function(){
-                        $(this).prev().find('.nicEdit-main').attr('contenteditable', 'false').parent().css("background-color", "#EEEEEE");
-                        $(this).prev().prev().hide();
-                    });;
-                });
-                //-->
-                </script>
-                EOF;
-                
-		$html .= parent::getHTML();
-		
-		return $html;
+<script type="text/javascript">
+<!--
+bkLib.onDomLoaded(function() {
+    new nicEditor({buttonList: ['$buttonlist']}).panelInstance('fld_{$this->name}');
+    
+    $disable
+    
+});
+//-->
+</script>
+EOF;
+	    
+	    $html .= parent::getHTML();
+	    
+	    return $html;
 	}
 
 	public function &setButtons(array $buttons)
