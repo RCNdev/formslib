@@ -68,28 +68,9 @@ class formslib_rule_maxwords extends formslib_rule
 {
 	public function evaluate($value)
 	{
-		/*
-		for ($i = 0; $i < strlen($value); $i++)
-		{
-			$chr = mb_substr($value, $i, 1 , 'UTF-8');
-			$ord = ord($chr);
-			if ($ord < 65 || $ord > 122 || ($ord > 90 && $ord < 97))
-				d('Character '.$i, bin2hex($chr).':'.$chr);
-		}
-		*/
-
 		$value = str_replace("\xE2\x80\x99", "'", $value); // Replace UTF-8 rsquo with standard apostrophe
 
 		$count = str_word_count($value, 0);
-
-		/*
-		if (defined('DEBUG_MODE') && DEBUG_MODE === true)
-		{
-			d('Word count', str_word_count($value, 1, "'-"));
-		}
-
-		d('Actual count', $count);
-		*/
 
 		return ($count <= $this->ruledfn) ? true : false;
 	}
