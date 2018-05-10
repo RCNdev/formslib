@@ -1163,6 +1163,7 @@ class formslib_fieldset
 	private $htmlbefore, $htmlafter;
 	private $legendclass = array();
 	private $fieldorder = array();
+	private $isRawLegend = false;
 
 	public function __construct($name)
 	{
@@ -1190,14 +1191,15 @@ class formslib_fieldset
 		echo CRLF;
 		if ($this->nohtml == true) $encasing_html = false;
 
-		$lc = '';
-		if (count($this->legendclass))
-			$lc = ' class="'.implode(' ', $this->legendclass).'"';
-
 		if ($encasing_html)
 		{
+			$lc = (count($this->legendclass)) ? ' class="'.implode(' ', $this->legendclass).'"' : '';
+
 			echo '<fieldset name="' . $this->name . '"' . $this->_class_attr() . '>' . CRLF;
-			echo '<legend'.$lc.'>' . htmlspecialchars($this->legend) . '</legend>' . CRLF . CRLF;
+
+			$legend = ($this->isRawLegend) ? $this->legend : htmlspecialchars($this->legend);
+
+			echo '<legend'.$lc.'>' . $legend . '</legend>' . CRLF . CRLF;
 		}
 
 		echo $this->introtext . CRLF . CRLF;
@@ -1518,5 +1520,12 @@ class formslib_fieldset
 		$location = ($pos > $orig) ? $pos : $pos + 1;
 
 		$this->positionFieldTo($fieldname, $location);
+	}
+
+	public function &setIsRawLegend($raw = true)
+	{
+		$this->isRawLegend = $raw;
+
+		return $this;
 	}
 }
