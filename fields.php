@@ -1338,7 +1338,8 @@ abstract class formslib_composite extends formslib_field
 
 class formslib_date extends formslib_composite
 {
-	var $startyear, $endyear;
+    protected $startyear, $endyear;
+    protected $emaildateformat;
 
 	public function __construct($name)
 	{
@@ -1443,7 +1444,26 @@ class formslib_date extends formslib_composite
 
 	public function getEmailValue()
 	{
-		return $this->composite_values['year'] . '-' . sprintf('%02d', $this->composite_values['month']) . '-' . sprintf('%02d', $this->composite_values['day']);
+	    if($this->composite_values['year'] == '00')
+	    {
+	        return '';
+	    }
+	    elseif(isset($this->emaildateformat) && $this->emaildateformat == 'ddmmyyyy')
+		{
+		    return $this->composite_values['day'] . '-' . sprintf('%02d', $this->composite_values['month']) . '-' . sprintf('%02d', $this->composite_values['year']);
+		}
+		else 
+		{
+	       return $this->composite_values['year'] . '-' . sprintf('%02d', $this->composite_values['month']) . '-' . sprintf('%02d', $this->composite_values['day']);
+		}
+	    
+	}
+	
+	public function &setEmailDateFormat($format)
+	{
+	    $this->emaildateformat = $format;
+	    
+	    return $this;
 	}
 
 	public function &getObjectValue()

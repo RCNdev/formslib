@@ -219,7 +219,7 @@ class formslib_rule_compsite_sortcode extends formslib_rule
 
 class formslib_rule_minlength extends formslib_rule
 {
-	public function formslib_rule_minlength($ruledfn, $errormessage, &$field)
+	public function __construct($ruledfn, $errormessage, &$field)
 	{
 		parent::__construct($ruledfn, $errormessage, $field);
 	}
