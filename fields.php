@@ -1452,17 +1452,17 @@ class formslib_date extends formslib_composite
 		{
 		    return $this->composite_values['day'] . '-' . sprintf('%02d', $this->composite_values['month']) . '-' . sprintf('%02d', $this->composite_values['year']);
 		}
-		else 
+		else
 		{
 	       return $this->composite_values['year'] . '-' . sprintf('%02d', $this->composite_values['month']) . '-' . sprintf('%02d', $this->composite_values['day']);
 		}
-	    
+
 	}
-	
+
 	public function &setEmailDateFormat($format)
 	{
 	    $this->emaildateformat = $format;
-	    
+
 	    return $this;
 	}
 
@@ -1568,10 +1568,10 @@ class formslib_ticklist extends formslib_composite
 			$text = htmlspecialchars($label) . CRLF;
 			$input = '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr('formslib_ticklist') . ' name="' . htmlspecialchars($this->name . '__' . $index) . '" id="fld_' . htmlspecialchars($this->name . '__' . $index) . '" title="' . htmlspecialchars($label) . '" />' . CRLF;
 
-			// TODO: When fixing the CSS, re-establish the labels here
-			// $html .= '<label for="'.$this->name.'__'.$index.'" class="formslib_label_checkbox">'.CRLF;
-			$html .= $input . $text . '<br />';
-			// $html .= '</label><br />';
+			// TODO: More inline CSS
+			$html .= '<label for="fld_'.$this->name.'__'.$index.'" class="formslib_label_checkbox" style="display: inline; font-weight: normal;">';
+			$html .= $input . $text;
+			$html .= '</label><br />'.CRLF;
 		}
 
 		$html .= '</span>';
@@ -1591,9 +1591,7 @@ class formslib_ticklist extends formslib_composite
 			$checked = ($this->composite_values[$index] == $this->checkedvalue) ? '<span ' . $ids . ' class="colour-positive">&#10004;</span>' : '<span ' . $ids . ' class="colour-negative">&#10008;</span>';
 
 			$text = htmlspecialchars($label) . CRLF;
-			// $input = '<input type="checkbox" value="'.$this->checkedvalue.'"'.$checked.' '.$this->_custom_attr().$this->_class_attr('formslib_ticklist').' name="'.htmlspecialchars($this->name.'__'.$index).'" id="fld_'.htmlspecialchars($this->name.'__'.$index).'" title="'.htmlspecialchars($label).'" />'.CRLF;
 
-			// TODO: When fixing the CSS, re-establish the labels here
 			$html .= $checked . $text . '<br />' . CRLF;
 		}
 
@@ -1727,7 +1725,7 @@ class formslib_carddate extends formslib_composite
 class formslib_wysiwyg_light extends formslib_textarea
 {
 	private $button_list;
-	
+
 	public function __construct($name)
 	{
 		parent::__construct($name);
@@ -1748,9 +1746,9 @@ class formslib_wysiwyg_light extends formslib_textarea
 	public function getHTML()
 	{
 	    $buttonlist = implode('\',\'', $this->button_list);
-	    
+
 	    $disable = null;
-	    
+
 	    if(isset($this->attrib['disabled']))
 	    {
 	        $disable = <<<EOF
@@ -1758,22 +1756,22 @@ $('#fld_{$this->name}').prev().find('.nicEdit-main').attr('contenteditable', 'fa
 $('#fld_{$this->name}').prev().prev().hide();
 EOF;
 	    }
-	    
+
 	    $html = <<<EOF
 <script type="text/javascript">
 <!--
 bkLib.onDomLoaded(function() {
     new nicEditor({buttonList: ['$buttonlist']}).panelInstance('fld_{$this->name}');
-    
+
     $disable
-    
+
 });
 //-->
 </script>
 EOF;
-	    
+
 	    $html .= parent::getHTML();
-	    
+
 	    return $html;
 	}
 
