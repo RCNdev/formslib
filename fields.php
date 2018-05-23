@@ -1569,9 +1569,9 @@ class formslib_ticklist extends formslib_composite
 			$input = '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr('formslib_ticklist') . ' name="' . htmlspecialchars($this->name . '__' . $index) . '" id="fld_' . htmlspecialchars($this->name . '__' . $index) . '" title="' . htmlspecialchars($label) . '" />' . CRLF;
 
 			// TODO: More inline CSS
-			$html .= '<label for="'.$this->name.'__'.$index.'" class="formslib_label_checkbox" style="display: inline;">'.CRLF;
-			$html .= $input . $text . '<br />';
-			$html .= '</label><br />';
+			$html .= '<label for="'.$this->name.'__'.$index.'" class="formslib_label_checkbox" style="display: inline;">';
+			$html .= $input . $text;
+			$html .= '</label><br />'.CRLF;
 		}
 
 		$html .= '</span>';
