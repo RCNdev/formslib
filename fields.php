@@ -15,7 +15,7 @@ abstract class formslib_field
 	public $valid;
 	protected $errorlist = array();
 	protected $rawoutput = false;
-	protected $htmlbefore, $htmlafter, $innerhtmlbefore, $innerhtmlafter, $helpinline, $helpblock;
+	protected $htmlbefore, $htmlafter, $innerhtmlbefore, $innerhtmlafter, $helpinline, $helpblock, $helpbefore = false;
 	protected $donotemail = false, $noObject = false;
 	protected $group_classes = array();
 	protected $gridRatio = 3;
@@ -232,6 +232,34 @@ abstract class formslib_field
 // 					if ($this->helpblock) echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
 					echo $this->innerhtmlafter . CRLF;
 // 					echo '	</div><!--/.col-sm-' . $col_field . '-->' . CRLF;
+					echo '</div><!--/.form-group-->' . CRLF;
+					echo $this->htmlafter . CRLF;
+					break;
+
+				case FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL:
+					$col_label = ($this->gridRatio > 0) ? $this->gridRatio : 12;
+					$col_field = 12 - $this->gridRatio;
+
+					$group_class_str = implode(' ', $this->group_classes);
+					if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
+
+					if (! isset($this->classes['form-control']) && get_class($this) != 'formslib_ticklist') $this->addClass('form-control');
+
+					echo $this->htmlbefore . CRLF;
+					echo '<div class="form-group' . $group_class_str . '">' . CRLF;
+					echo $this->innerhtmlbefore . CRLF;
+
+					if ($this->helpblock && $this->helpbefore) echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
+
+					echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . $mand . '</label> ' . CRLF;
+
+					echo '		' . $this->getHTML() . CRLF;
+
+					if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with this
+					if ($this->helpblock && !$this->helpbefore) echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
+
+					echo $this->innerhtmlafter . CRLF;
+
 					echo '</div><!--/.form-group-->' . CRLF;
 					echo $this->htmlafter . CRLF;
 					break;
