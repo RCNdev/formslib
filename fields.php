@@ -636,6 +636,13 @@ abstract class formslib_field
 
 		return $this;
 	}
+
+	public function &setHelpBefore($before = true)
+	{
+		$this->helpbefore = $before;
+
+		return $this;
+	}
 }
 
 
