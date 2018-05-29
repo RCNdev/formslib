@@ -1602,7 +1602,7 @@ class formslib_ticklist extends formslib_composite
 	{
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
 		{
-			$html = '<div>';
+			$html = '<div class="formslib_ticklist_container">';
 		}
 		else
 		{
@@ -1620,7 +1620,7 @@ class formslib_ticklist extends formslib_composite
 
 			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
 			{
-				$input .= '<div class="checkbox">';
+				$input .= '<div>';
 			}
 
 			$input .= '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr('formslib_ticklist') . ' name="' . htmlspecialchars($this->name . '__' . $index) . '" id="fld_' . htmlspecialchars($this->name . '__' . $index) . '" title="' . htmlspecialchars($label) . '" />' . CRLF;
@@ -1632,7 +1632,7 @@ class formslib_ticklist extends formslib_composite
 
 			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
 			{
-				$html .= '</div><!--./checkbox-->'.CRLF;
+				$html .= '</div><!--/div-->'.CRLF;
 			}
 			else
 			{
@@ -1642,12 +1642,12 @@ class formslib_ticklist extends formslib_composite
 
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
 		{
-			$html .= '<div><!--/div-->';
+			$html .= '<div><!--/.formslib_ticklist_container-->';
 		}
 		else
 		{
-			$html .= '</span>';
-			$html .= '<span style="display: block; clear: both;"></span>';
+			$html .= '</span><!--/.formslib_ticklist_container-->';
+			$html .= '<span style="display: block; clear: both;"></span>'.CRLF;
 		}
 
 		return $html;
