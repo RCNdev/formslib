@@ -1593,25 +1593,55 @@ class formslib_ticklist extends formslib_composite
 
 	public function getHTML()
 	{
-		// TODO: Inline CSS, get this into a proper style sheet!
-		$html = '<span class="formslib_ticklist_container" style="display: block; float: left;">';
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+		{
+			$html = '<div>';
+		}
+		else
+		{
+			// TODO: Inline CSS, get this into a proper style sheet!
+			$html = '<span class="formslib_ticklist_container" style="display: block; float: left;">';
+		}
 
 		foreach ($this->ticklist as $index => $label)
 		{
 			$checked = ($this->composite_values[$index] == $this->checkedvalue) ? ' checked="checked"' : '';
 
 			$text = htmlspecialchars($label) . CRLF;
-			$input = '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr('formslib_ticklist') . ' name="' . htmlspecialchars($this->name . '__' . $index) . '" id="fld_' . htmlspecialchars($this->name . '__' . $index) . '" title="' . htmlspecialchars($label) . '" />' . CRLF;
+
+			$input = '';
+
+			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+			{
+				$input .= '<div class="checkbox">';
+			}
+
+			$input .= '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr('formslib_ticklist') . ' name="' . htmlspecialchars($this->name . '__' . $index) . '" id="fld_' . htmlspecialchars($this->name . '__' . $index) . '" title="' . htmlspecialchars($label) . '" />' . CRLF;
 
 			// TODO: More inline CSS
 			$html .= '<label for="fld_'.$this->name.'__'.$index.'" class="formslib_label_checkbox" style="display: inline; font-weight: normal;">';
 			$html .= $input . $text;
-			$html .= '</label><br />'.CRLF;
+			$html .= '</label>';
+
+			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+			{
+				$html .= '</div><!--./checkbox-->'.CRLF;
+			}
+			else
+			{
+				$html .= '<br />'.CRLF;
+			}
 		}
 
-		$html .= '</span>';
-
-		$html .= '<span style="display: block; clear: both;"></span>';
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+		{
+			$html = '<div><!--/div-->';
+		}
+		else
+		{
+			$html .= '</span>';
+			$html .= '<span style="display: block; clear: both;"></span>';
+		}
 
 		return $html;
 	}
