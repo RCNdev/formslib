@@ -1635,7 +1635,7 @@ class formslib_ticklist extends formslib_composite
 
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
 		{
-			$html = '<div><!--/div-->';
+			$html .= '<div><!--/div-->';
 		}
 		else
 		{
