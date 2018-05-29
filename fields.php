@@ -15,7 +15,7 @@ abstract class formslib_field
 	public $valid;
 	protected $errorlist = array();
 	protected $rawoutput = false;
-	protected $htmlbefore, $htmlafter, $innerhtmlbefore, $innerhtmlafter, $helpinline, $helpblock;
+	protected $htmlbefore, $htmlafter, $innerhtmlbefore, $innerhtmlafter, $helpinline, $helpblock, $helpbefore = false;
 	protected $donotemail = false, $noObject = false;
 	protected $group_classes = array();
 	protected $gridRatio = 3;
@@ -232,6 +232,34 @@ abstract class formslib_field
 // 					if ($this->helpblock) echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
 					echo $this->innerhtmlafter . CRLF;
 // 					echo '	</div><!--/.col-sm-' . $col_field . '-->' . CRLF;
+					echo '</div><!--/.form-group-->' . CRLF;
+					echo $this->htmlafter . CRLF;
+					break;
+
+				case FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL:
+					$col_label = ($this->gridRatio > 0) ? $this->gridRatio : 12;
+					$col_field = 12 - $this->gridRatio;
+
+					$group_class_str = implode(' ', $this->group_classes);
+					if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
+
+					if (! isset($this->classes['form-control']) && get_class($this) != 'formslib_ticklist') $this->addClass('form-control');
+
+					echo $this->htmlbefore . CRLF;
+					echo '<div class="form-group' . $group_class_str . '">' . CRLF;
+					echo $this->innerhtmlbefore . CRLF;
+
+					echo '	<label class="control-label for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . $mand . '</label> ' . CRLF;
+
+					if ($this->helpblock && $this->helpbefore) echo '		<p class="help-block">' . $this->helpblock . '</p>' . CRLF;
+
+					echo '		' . $this->getHTML() . CRLF;
+
+					if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with this
+					if ($this->helpblock && !$this->helpbefore) echo '		<p class="help-block">' . $this->helpblock . '</p>' . CRLF;
+
+					echo $this->innerhtmlafter . CRLF;
+
 					echo '</div><!--/.form-group-->' . CRLF;
 					echo $this->htmlafter . CRLF;
 					break;
@@ -608,6 +636,13 @@ abstract class formslib_field
 
 		return $this;
 	}
+
+	public function &setHelpBefore($before = true)
+	{
+		$this->helpbefore = $before;
+
+		return $this;
+	}
 }
 
 
@@ -801,6 +836,9 @@ class formslib_radio extends formslib_options
 		$disabled = (isset($this->attrib['disabled'])) ? true : false;
 
 		$html = '';
+
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '<div class="radio">';
+
 		foreach ($this->options as $value => $label)
 		{
 			$id = $this->name . '__' . htmlspecialchars($value);
@@ -818,12 +856,16 @@ class formslib_radio extends formslib_options
 				$selected = ($this->value == $value) ? ' checked="checked"' : '';
 			}
 
+			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $this->labelclass[] = 'radio-inline';
+
 			$labelclass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
 
 			$dis_str = ($disabled) ? ' disabled="disabled"' : '';
 
 			$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelclass . '"><input type="radio" name="' . htmlspecialchars($this->name) . '" id="' . $id . '"' . $selected .$dis_str. ' value="' . htmlspecialchars($value) . '" />&nbsp;' . htmlspecialchars($label) . '</label> ';
 		}
+
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '</div><!--/.radio-->';
 
 		return $html;
 	}
@@ -964,11 +1006,19 @@ class formslib_checkbox extends formslib_field
 
 				case FORMSLIB_STYLE_BOOTSTRAP3: //TODO: Review from upstream
 				    echo $this->htmlbefore;
-				    echo '<div>'.CRLF;
+				    echo '<div class="checkbox">'.CRLF;
 				    echo $this->getHTML() . CRLF;
 				    echo '</div>'.CRLF;
 				    echo $this->htmlafter;
 				    break;
+
+				case FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL:
+					echo $this->htmlbefore;
+					echo '<div class="checkbox">'.CRLF;
+					echo $this->getHTML() . CRLF;
+					echo '</div>'.CRLF;
+					echo $this->htmlafter;
+					break;
 			}
 		}
 		else
@@ -1558,25 +1608,55 @@ class formslib_ticklist extends formslib_composite
 
 	public function getHTML()
 	{
-		// TODO: Inline CSS, get this into a proper style sheet!
-		$html = '<span class="formslib_ticklist_container" style="display: block; float: left;">';
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+		{
+			$html = '<div class="formslib_ticklist_container">';
+		}
+		else
+		{
+			// TODO: Inline CSS, get this into a proper style sheet!
+			$html = '<span class="formslib_ticklist_container" style="display: block; float: left;">';
+		}
 
 		foreach ($this->ticklist as $index => $label)
 		{
 			$checked = ($this->composite_values[$index] == $this->checkedvalue) ? ' checked="checked"' : '';
 
 			$text = htmlspecialchars($label) . CRLF;
-			$input = '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr('formslib_ticklist') . ' name="' . htmlspecialchars($this->name . '__' . $index) . '" id="fld_' . htmlspecialchars($this->name . '__' . $index) . '" title="' . htmlspecialchars($label) . '" />' . CRLF;
+
+			$input = '';
+
+			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+			{
+				$input .= '<div>';
+			}
+
+			$input .= '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr('formslib_ticklist') . ' name="' . htmlspecialchars($this->name . '__' . $index) . '" id="fld_' . htmlspecialchars($this->name . '__' . $index) . '" title="' . htmlspecialchars($label) . '" />' . CRLF;
 
 			// TODO: More inline CSS
 			$html .= '<label for="fld_'.$this->name.'__'.$index.'" class="formslib_label_checkbox" style="display: inline; font-weight: normal;">';
 			$html .= $input . $text;
-			$html .= '</label><br />'.CRLF;
+			$html .= '</label>';
+
+			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+			{
+				$html .= '</div><!--/div-->'.CRLF;
+			}
+			else
+			{
+				$html .= '<br />'.CRLF;
+			}
 		}
 
-		$html .= '</span>';
-
-		$html .= '<span style="display: block; clear: both;"></span>';
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+		{
+			$html .= '<div><!--/.formslib_ticklist_container-->';
+		}
+		else
+		{
+			$html .= '</span><!--/.formslib_ticklist_container-->';
+			$html .= '<span style="display: block; clear: both;"></span>'.CRLF;
+		}
 
 		return $html;
 	}
