@@ -829,6 +829,9 @@ class formslib_radio extends formslib_options
 		$disabled = (isset($this->attrib['disabled'])) ? true : false;
 
 		$html = '';
+
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '<div class="radio-inline">';
+
 		foreach ($this->options as $value => $label)
 		{
 			$id = $this->name . '__' . htmlspecialchars($value);
@@ -852,6 +855,8 @@ class formslib_radio extends formslib_options
 
 			$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelclass . '"><input type="radio" name="' . htmlspecialchars($this->name) . '" id="' . $id . '"' . $selected .$dis_str. ' value="' . htmlspecialchars($value) . '" />&nbsp;' . htmlspecialchars($label) . '</label> ';
 		}
+
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '</div><!--/.radio-inline-->';
 
 		return $html;
 	}
