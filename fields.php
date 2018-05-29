@@ -249,14 +249,14 @@ abstract class formslib_field
 					echo '<div class="form-group' . $group_class_str . '">' . CRLF;
 					echo $this->innerhtmlbefore . CRLF;
 
-					if ($this->helpblock && $this->helpbefore) echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
+					if ($this->helpblock && $this->helpbefore) echo '		<p class="help-block">' . $this->helpblock . '</p>' . CRLF;
 
-					echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . $mand . '</label> ' . CRLF;
+					echo '	<label class="control-label for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . $mand . '</label> ' . CRLF;
 
 					echo '		' . $this->getHTML() . CRLF;
 
 					if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with this
-					if ($this->helpblock && !$this->helpbefore) echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
+					if ($this->helpblock && !$this->helpbefore) echo '		<p class="help-block">' . $this->helpblock . '</p>' . CRLF;
 
 					echo $this->innerhtmlafter . CRLF;
 
