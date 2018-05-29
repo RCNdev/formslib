@@ -249,9 +249,9 @@ abstract class formslib_field
 					echo '<div class="form-group' . $group_class_str . '">' . CRLF;
 					echo $this->innerhtmlbefore . CRLF;
 
-					if ($this->helpblock && $this->helpbefore) echo '		<p class="help-block">' . $this->helpblock . '</p>' . CRLF;
-
 					echo '	<label class="control-label for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . $mand . '</label> ' . CRLF;
+
+					if ($this->helpblock && $this->helpbefore) echo '		<p class="help-block">' . $this->helpblock . '</p>' . CRLF;
 
 					echo '		' . $this->getHTML() . CRLF;
 
