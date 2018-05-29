@@ -830,7 +830,7 @@ class formslib_radio extends formslib_options
 
 		$html = '';
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '<div class="radio-inline">';
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '<div class="radio">';
 
 		foreach ($this->options as $value => $label)
 		{
@@ -849,6 +849,8 @@ class formslib_radio extends formslib_options
 				$selected = ($this->value == $value) ? ' checked="checked"' : '';
 			}
 
+			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $this->labelclass[] = 'radio-inline';
+
 			$labelclass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
 
 			$dis_str = ($disabled) ? ' disabled="disabled"' : '';
@@ -856,7 +858,7 @@ class formslib_radio extends formslib_options
 			$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelclass . '"><input type="radio" name="' . htmlspecialchars($this->name) . '" id="' . $id . '"' . $selected .$dis_str. ' value="' . htmlspecialchars($value) . '" />&nbsp;' . htmlspecialchars($label) . '</label> ';
 		}
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '</div><!--/.radio-inline-->';
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '</div><!--/.radio-->';
 
 		return $html;
 	}
