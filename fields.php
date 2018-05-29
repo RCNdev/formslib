@@ -1006,11 +1006,19 @@ class formslib_checkbox extends formslib_field
 
 				case FORMSLIB_STYLE_BOOTSTRAP3: //TODO: Review from upstream
 				    echo $this->htmlbefore;
-				    echo '<div>'.CRLF;
+				    echo '<div class="checkbox">'.CRLF;
 				    echo $this->getHTML() . CRLF;
 				    echo '</div>'.CRLF;
 				    echo $this->htmlafter;
 				    break;
+
+				case FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL:
+					echo $this->htmlbefore;
+					echo '<div class="checkbox">'.CRLF;
+					echo $this->getHTML() . CRLF;
+					echo '</div>'.CRLF;
+					echo $this->htmlafter;
+					break;
 			}
 		}
 		else
