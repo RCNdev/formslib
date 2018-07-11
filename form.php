@@ -134,6 +134,8 @@ class formslib_form
 
 	public function &addFieldSet($name)
 	{
+		//TODO: Duplicate fieldset name check
+
 		$fieldset = new formslib_fieldset($name);
 		if (is_object($fieldset))
 		{
