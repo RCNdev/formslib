@@ -237,9 +237,6 @@ abstract class formslib_field
 					break;
 
 				case FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL:
-					$col_label = ($this->gridRatio > 0) ? $this->gridRatio : 12;
-					$col_field = 12 - $this->gridRatio;
-
 					$group_class_str = implode(' ', $this->group_classes);
 					if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
 
@@ -1650,7 +1647,7 @@ class formslib_ticklist extends formslib_composite
 
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
 		{
-			$html .= '<div><!--/.formslib_ticklist_container-->';
+			$html .= '</div><!--/.formslib_ticklist_container-->';
 		}
 		else
 		{
