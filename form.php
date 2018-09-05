@@ -1362,7 +1362,7 @@ class formslib_fieldset
 			}
 		}
 
-		if ($style == FORMSLIB_EMAILSTYLE_HTML || $style = FORMSLIB_EMAILSTYLE_HTML_TH) $body .= '</table>' . CRLF;
+		if ($style == FORMSLIB_EMAILSTYLE_HTML || $style == FORMSLIB_EMAILSTYLE_HTML_TH) $body .= '</table>' . CRLF;
 
 		return $body;
 	}
