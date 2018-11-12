@@ -3,7 +3,7 @@ namespace formslib\Field;
 
 abstract class GenericMulti extends MultiValue
 {
-	protected $indices = array();
+	protected $indices = [];
 
 	abstract protected function _preProcessValues();
 
