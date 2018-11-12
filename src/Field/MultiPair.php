@@ -3,7 +3,6 @@ namespace formslib\Field;
 
 class MultiPair extends GenericMulti
 {
-	protected $indices = array();
 	private $preprocessed = false;
 
 	protected function _preProcessValues()

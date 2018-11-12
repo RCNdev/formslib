@@ -5,9 +5,15 @@ class KeyValuePair extends MultiPair
 {
 	public function &getObjectValue()
 	{
-		//TODO: Return as a lookup array
-		$array = array();
+		$this->_preProcessValues();
 
-		return $array;
+		$data = [];
+
+		foreach ($this->indices as $i)
+		{
+			$data[$this->multi_values[$i.'__1']] = $this->multi_values[$i.'__2'];
+		}
+
+		return $data;
 	}
 }
