@@ -676,6 +676,15 @@ $('[name=$name]').focus(function(){
 	$(this).parent().parent().removeClass('error');
 });";
 				}
+				elseif ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE)
+				{
+					$jq .= <<<EOF
+$('[name=$name]').focus(function(){
+	$(this).removeClass('formslibinvalid');
+	$(this).parents('.form-group').removeClass('has-error');
+});
+EOF;
+				}
 				else
 				{
 					$jq .= "
@@ -701,6 +710,15 @@ $('[name=$name]').blur(function(){
 	}
 });
 ";
+					}
+					elseif ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE)
+					{
+						$jq .= <<<JS
+		$(this).addClass('formslibinvalid');
+		$(this).parents('.form-group').addClass('has-error');
+	}
+});
+JS;
 					}
 					else
 					{
