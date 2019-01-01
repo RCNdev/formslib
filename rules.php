@@ -131,7 +131,7 @@ class formslib_rule_positive extends formslib_rule
 
 	public function get_jquery_condition()
 	{
-		return 'if (!(val<0)){';
+		return 'if (val<0){';
 	}
 }
 
