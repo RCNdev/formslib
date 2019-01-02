@@ -43,6 +43,12 @@ class formslib_rule_regex extends formslib_rule
 			return false;
 		}
 	}
+
+	//TODO: test JQuery validation
+	public function get_jquery_condition()
+	{
+		return 'if (!('.$this->ruledfn.'.test(val){';
+	}
 }
 
 class formslib_rule_maxlength extends formslib_rule
@@ -98,7 +104,7 @@ class formslib_rule_maxval extends formslib_rule
 
 	public function get_jquery_condition()
 	{
-		return 'if (!(val>='.$this->ruledfn.')){';
+		return 'if (!(val<='.$this->ruledfn.')){';
 	}
 }
 
