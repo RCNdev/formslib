@@ -44,10 +44,22 @@ class formslib_rule_regex extends formslib_rule
 		}
 	}
 
-	//TODO: test JQuery validation
 	public function get_jquery_condition()
 	{
-		return 'if (!('.$this->ruledfn.'.test(val){';
+		$regex = $this->ruledfn;
+		$delimiter = substr($regex, 0, 1);
+
+		if ($delimiter !== '/')
+		{
+			$endpos = strrpos($regex, $delimiter);
+			$jsregex = '/'.str_replace('/', '\/', substr($regex, 1, $endpos-1)).'/'.substr($regex, $endpos+1);
+		}
+		else
+		{
+			$jsregex = $regex;
+		}
+
+		return 'if (!val.match('.$jsregex.')){';
 	}
 }
 
