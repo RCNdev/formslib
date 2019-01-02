@@ -43,6 +43,24 @@ class formslib_rule_regex extends formslib_rule
 			return false;
 		}
 	}
+
+	public function get_jquery_condition()
+	{
+		$regex = $this->ruledfn;
+		$delimiter = substr($regex, 0, 1);
+
+		if ($delimiter !== '/')
+		{
+			$endpos = strrpos($regex, $delimiter);
+			$jsregex = '/'.str_replace('/', '\/', substr($regex, 1, $endpos-1)).'/'.substr($regex, $endpos+1);
+		}
+		else
+		{
+			$jsregex = $regex;
+		}
+
+		return 'if (!val.match('.$jsregex.')){';
+	}
 }
 
 class formslib_rule_maxlength extends formslib_rule
@@ -98,7 +116,7 @@ class formslib_rule_maxval extends formslib_rule
 
 	public function get_jquery_condition()
 	{
-		return 'if (!(val>='.$this->ruledfn.')){';
+		return 'if (!(val<='.$this->ruledfn.')){';
 	}
 }
 
@@ -131,7 +149,7 @@ class formslib_rule_positive extends formslib_rule
 
 	public function get_jquery_condition()
 	{
-		return 'if (!(val<0)){';
+		return 'if (val<0){';
 	}
 }
 
