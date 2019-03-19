@@ -1,7 +1,7 @@
 <?php
 namespace formslib\Field;
 
-class Guid extends Field
+class Guid extends Text
 {
 	public function __construct($name)
 	{
