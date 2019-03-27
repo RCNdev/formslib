@@ -76,6 +76,8 @@ class formslib_form
 			return false;
 		}
 
+		if (isset($this->fields[$name])) throw new \Exception('FORMSLIB ERROR: Duplicate field name: ' . $name);
+
 		if (substr($type, 0, 1) == '\\')
 		{
 			$classnamespace = $type;
@@ -88,20 +90,15 @@ class formslib_form
 
 		if (class_exists($classnamespace))
 		{
-			/* @var $field formslib_field */
+			/** @var formslib_field $field */
 			$field = new $classnamespace($name);
-			if (is_object($field))
-			{
-				$this->fields[$name] = &$field;
-			}
-			else
-			{
-				throw new \Exception('FORMSLIB ERROR: Failed to create field object for: ' . $name);
-			}
+			if (!is_object($field)) throw new \Exception('FORMSLIB ERROR: Failed to create field object for: ' . $name);
+
+			$this->fields[$name] = &$field;
 		}
 		elseif (class_exists($classname))
 		{
-			/* @var $field formslib_field */
+			/** @var formslib_field $field */
 			$field = new $classname($name);
 			if (is_object($field))
 			{
