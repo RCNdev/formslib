@@ -150,6 +150,11 @@ abstract class formslib_field_paramset extends formslib_field
 	{
 		return $this;
 	}
+
+	public function &setAddDataLabels()
+	{
+		return $this;
+	}
 }
 
 class Services_JSON

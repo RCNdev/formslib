@@ -827,6 +827,7 @@ class formslib_radio extends formslib_options
 	private $labelclass = array();
 	protected $requireEquivalency = false;
 	protected $ignoreNull = false;
+	protected $addDataLabels = false;
 
 	public function getHTML()
 	{
@@ -859,7 +860,9 @@ class formslib_radio extends formslib_options
 
 			$dis_str = ($disabled) ? ' disabled="disabled"' : '';
 
-			$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelclass . '"><input type="radio" name="' . htmlspecialchars($this->name) . '" id="' . $id . '"' . $selected .$dis_str. ' value="' . htmlspecialchars($value) . '" />&nbsp;' . htmlspecialchars($label) . '</label> ';
+			$data_str = ($this->addDataLabels) ? ' data-label="'.htmlspecialchars($label).'"' : '';
+
+			$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelclass . '"><input type="radio" name="' . htmlspecialchars($this->name) . '" id="' . $id . '"' . $selected .$dis_str.$data_str. ' value="' . htmlspecialchars($value) . '" />&nbsp;' . htmlspecialchars($label) . '</label> ';
 		}
 
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '</div><!--/.radio-->';
@@ -884,6 +887,13 @@ class formslib_radio extends formslib_options
 	public function &ignoreNull($in = true)
 	{
 		$this->ignoreNull = $in;
+
+		return $this;
+	}
+
+	public function &setAddDataLabels($in = true)
+	{
+		$this->addDataLabels = $in;
 
 		return $this;
 	}
