@@ -695,6 +695,9 @@ $('[name=$name]').focus(function(){
 					$jq .= "
 $('[name=$name]').blur(function(){
 	val = $(this).val();
+
+	if (val == '') return;
+
 	";
 
 					$jq .= $condition;
