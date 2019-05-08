@@ -21,6 +21,13 @@ class Hierarchy extends MultiValue
 		return $this;
 	}
 
+	public function &setMinLevel($level)
+	{
+	    $this->minlevel = $level;
+	    
+	    return $this;
+	}	
+	
 	public function getHTML()
 	{
 		$class_str = 'formslib-multivalue-container';
@@ -72,9 +79,18 @@ class Hierarchy extends MultiValue
 			$options[$dat['value']] = $dat['label'];
 		}
 
-		$field = new \formslib_select($this->name.'__'.$level);
-		$field->setOptions($options)->addClass('form-control')->addAttr('data-formslib-field', $this->name);
-		$field->value = $selected;
+		if(isset($this->minlevel) && $this->minlevel >= $level + 1)
+		{
+		    $field = new \formslib_select($this->name.'__'.$level);
+    		$field->setOptions($options)->addClass('form-control')->addAttr('data-formslib-field', $this->name)->setMandatory();
+    		$field->value = $selected;
+		}
+		else
+		{
+		    $field = new \formslib_select($this->name.'__'.$level);
+		    $field->setOptions($options)->addClass('form-control')->addAttr('data-formslib-field', $this->name);
+		    $field->value = $selected;
+		}
 
 		$output = '';
 

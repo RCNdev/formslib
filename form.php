@@ -300,15 +300,27 @@ class formslib_form
 					}
 				}
 			}
-			elseif (is_a($this->fields[$name], 'formslib\Field\MultiValue'))
+			elseif (is_a($this->fields[$name], 'formslib\Field\Hierarchy'))
 			{
-				if ($mandatory)
+
+			    if ($mandatory)
 				{
 					$missing = false;
-
-					if(!isset($vars[ $name . '__0']) || ($vars[ $name . '__0']) == '')
+							
+					$obj= get_object_vars($this->fields[$name]);
+					
+                    if(!isset($vars[ $name . '__0']) || ($vars[ $name . '__0']) == '')
 					{
 						$missing = true;
+					}
+					elseif(isset($obj[minlevel]) && $obj[minlevel] != '')
+					{
+					    $level = $obj[minlevel] - 1;
+	
+					    if(!isset($vars[ $name . '__'. $level]) || ($vars[ $name . '__'. $level]) == '')
+                        {
+                            $missing = true;
+                        }
 					}
 
 					if ($missing)
@@ -324,11 +336,41 @@ class formslib_form
 						$this->errorlist[] = array(
 								'name' => $name,
 								'label' => $label,
-								'message' => (! is_a($this->fields[$name], 'formslib_checkbox')) ? 'You must enter a value for ' . $label : 'You must tick "' . $label . '" to be able to complete this form'
+						        'message' => (isset($obj[minlevel])) ? 'You must select a value for ' . $label . ' level ' .$obj[minlevel] . ' dropdown' : 'You must enter a value for ' . $label
 						);
 						$is_valid = false;
 					}
 				}
+			}
+			elseif (is_a($this->fields[$name], 'formslib\Field\MultiValue'))
+			{
+			    if ($mandatory)
+			    {
+			        $missing = false;
+			        
+			        if(!isset($vars[ $name . '__0']) || ($vars[ $name . '__0']) == '')
+			        {
+			            $missing = true;
+			        }
+			        
+			        if ($missing)
+			        {
+			            $this->fields[$name]->valid = false;
+			            $this->fields[$name]->addClass('formslibinvalid');
+			            
+			            if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
+			            if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE) $this->fields[$name]->addGroupClass('has-error');
+			            
+			            // Add field to error list
+			            $label = $this->fields[$name]->label;
+			            $this->errorlist[] = array(
+			                'name' => $name,
+			                'label' => $label,
+			                'message' => (! is_a($this->fields[$name], 'formslib_checkbox')) ? 'You must enter a value for ' . $label : 'You must tick "' . $label . '" to be able to complete this form'
+			            );
+			            $is_valid = false;
+			        }
+			    }
 			}
 			elseif (! is_a($this->fields[$name], 'formslib_file'))
 			{
