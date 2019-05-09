@@ -369,3 +369,11 @@ class formslib_rule_composite_timerangeorder extends formslib_rule
 		return true;
 	}
 }
+
+class formslib_rule_minlevel extends formslib_rule
+{ 
+    public function evaluate($value)
+    {
+        return ($value >= $this->ruledfn) ? true : false;   
+    }
+}

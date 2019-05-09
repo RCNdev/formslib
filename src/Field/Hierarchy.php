@@ -20,13 +20,6 @@ class Hierarchy extends MultiValue
 
 		return $this;
 	}
-
-	public function &setMinLevel($level)
-	{
-	    $this->minlevel = $level;
-	    
-	    return $this;
-	}	
 	
 	public function getHTML()
 	{
