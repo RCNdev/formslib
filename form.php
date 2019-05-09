@@ -2,11 +2,17 @@
 class formslib_form
 {
 	private $name, $id, $action, $method;
-	public $fields = array();
-	public $fieldsets = array();
+	
+	/** @var formslib_field[] */
+	public $fields = [];
+	
+	/** @var formslib_fieldset[] */
+	public $fieldsets = [];
+	
 	public $outputstyle;
 	public $submitlabel;
 	public $mandatoryHTML, $semimandatoryHTML;
+	
 	private $errorlist = array();
 	private $htmltop, $htmlbottom, $htmlbeforesubmit;
 	private $classes = array();
@@ -370,7 +376,7 @@ class formslib_form
 
 				$valid = $this->fields[$name]->validate($cv);
 
-				if (! $valid)
+				if (!$valid)
 				{
 					$this->fields[$name]->valid = false;
 					$this->fields[$name]->addClass('formslibinvalid');
@@ -387,19 +393,20 @@ class formslib_form
 			{
 				// TODO: Validate multiselect fields
 			}
-			elseif (is_a($this->fields[$name], 'formslib\Field\Hierarchy'))
+			elseif (is_a($this->fields[$name], 'formslib\Field\MultiValue'))
 			{              
 			    $count = 0;			    
 			    
-			    while(isset($vars[ $name . '__'. $count]) && ($vars[ $name . '__'. $count]) != '')
+			    $mv = [];
+			    while (isset($vars[$name . '__'. $count]) && ($vars[$name . '__'. $count]) != '')
 			    {
 			        $count++;
-			        $data = $count;
+			        $mv[] = $vars[$name . '__'. $count];
 			    }
 			    
-			    $valid = $this->fields[$name]->validate($data);
+			    $valid = $this->fields[$name]->validate($mv);
 			    
-			    if (! $valid)
+			    if (!$valid)
 			    {
 			        $this->fields[$name]->valid = false;
 			        $this->fields[$name]->addClass('formslibinvalid');
