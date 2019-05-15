@@ -2,11 +2,17 @@
 class formslib_form
 {
 	private $name, $id, $action, $method;
-	public $fields = array();
-	public $fieldsets = array();
+	
+	/** @var formslib_field[] */
+	public $fields = [];
+	
+	/** @var formslib_fieldset[] */
+	public $fieldsets = [];
+	
 	public $outputstyle;
 	public $submitlabel;
 	public $mandatoryHTML, $semimandatoryHTML;
+	
 	private $errorlist = array();
 	private $htmltop, $htmlbottom, $htmlbeforesubmit;
 	private $classes = array();
@@ -302,33 +308,33 @@ class formslib_form
 			}
 			elseif (is_a($this->fields[$name], 'formslib\Field\MultiValue'))
 			{
-				if ($mandatory)
-				{
-					$missing = false;
-
-					if(!isset($vars[ $name . '__0']) || ($vars[ $name . '__0']) == '')
-					{
-						$missing = true;
-					}
-
-					if ($missing)
-					{
-						$this->fields[$name]->valid = false;
-						$this->fields[$name]->addClass('formslibinvalid');
-
-						if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
-						if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE) $this->fields[$name]->addGroupClass('has-error');
-
-						// Add field to error list
-						$label = $this->fields[$name]->label;
-						$this->errorlist[] = array(
-								'name' => $name,
-								'label' => $label,
-								'message' => (! is_a($this->fields[$name], 'formslib_checkbox')) ? 'You must enter a value for ' . $label : 'You must tick "' . $label . '" to be able to complete this form'
-						);
-						$is_valid = false;
-					}
-				}
+			    if ($mandatory)
+			    {
+			        $missing = false;
+			        
+			        if(!isset($vars[ $name . '__0']) || ($vars[ $name . '__0']) == '')
+			        {
+			            $missing = true;
+			        }
+			        
+			        if ($missing)
+			        {
+			            $this->fields[$name]->valid = false;
+			            $this->fields[$name]->addClass('formslibinvalid');
+			            
+			            if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
+			            if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE) $this->fields[$name]->addGroupClass('has-error');
+			            
+			            // Add field to error list
+			            $label = $this->fields[$name]->label;
+			            $this->errorlist[] = array(
+			                'name' => $name,
+			                'label' => $label,
+			                'message' => (! is_a($this->fields[$name], 'formslib_checkbox')) ? 'You must enter a value for ' . $label : 'You must tick "' . $label . '" to be able to complete this form'
+			            );
+			            $is_valid = false;
+			        }
+			    }
 			}
 			elseif (! is_a($this->fields[$name], 'formslib_file'))
 			{
@@ -370,7 +376,7 @@ class formslib_form
 
 				$valid = $this->fields[$name]->validate($cv);
 
-				if (! $valid)
+				if (!$valid)
 				{
 					$this->fields[$name]->valid = false;
 					$this->fields[$name]->addClass('formslibinvalid');
@@ -387,6 +393,33 @@ class formslib_form
 			{
 				// TODO: Validate multiselect fields
 			}
+			elseif (is_a($this->fields[$name], 'formslib\Field\MultiValue'))
+			{              
+			    $count = 0;			    
+			    
+			    $mv = [];
+			    while (isset($vars[$name . '__'. $count]) && ($vars[$name . '__'. $count]) != '')
+			    {
+			        $count++;
+			        $mv[] = $vars[$name . '__'. $count];
+			    }
+			    
+			    $valid = $this->fields[$name]->validate($mv);
+			    
+			    if (!$valid)
+			    {
+			        $this->fields[$name]->valid = false;
+			        $this->fields[$name]->addClass('formslibinvalid');
+			        
+			        if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
+			        if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE) $this->fields[$name]->addGroupClass('has-error');
+			        
+			        $is_valid = false;
+			        
+			        $this->errorlist = array_merge($this->errorlist, $this->fields[$name]->getErrors());
+			    }
+
+ 			}
 			elseif (! is_a($this->fields[$name], 'formslib_file') && ! is_a($this->fields[$name], 'formslib_checkbox') && ! is_a($this->fields[$name], 'formslib_radio'))
 			{
 				$data = (isset($vars[$name])) ? $vars[$name] : null;
