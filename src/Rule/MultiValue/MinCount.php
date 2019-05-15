@@ -1,5 +1,5 @@
 <?php
-namespace src\Rule\MultiValue;
+namespace formslib\Rule\MultiValue;
 
 use formslib\Rule\Rule;
 
