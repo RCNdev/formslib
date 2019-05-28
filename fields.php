@@ -12,6 +12,7 @@ abstract class formslib_field
 	protected $rules = array();
 	protected $classes = array();
 	protected $attrib = array();
+	protected $labelclass = array();
 	public $valid;
 	protected $errorlist = array();
 	protected $rawoutput = false;
@@ -43,6 +44,7 @@ abstract class formslib_field
 
 		return $this;
 	}
+	
 
 	public function &setMandatory($mandatory = true)
 	{
@@ -108,6 +110,13 @@ abstract class formslib_field
 		}
 
 		return $this;
+	}
+	
+	public function &addLabelClass($class)
+	{
+	    $this->labelclass[] = $class;
+	    
+	    return $this;
 	}
 
 	public function &addClass($classname)
@@ -824,7 +833,6 @@ abstract class formslib_options extends formslib_field
 
 class formslib_radio extends formslib_options
 {
-	private $labelclass = array();
 	protected $requireEquivalency = false;
 	protected $ignoreNull = false;
 	protected $addDataLabels = false;
@@ -868,14 +876,7 @@ class formslib_radio extends formslib_options
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '</div><!--/.radio-->';
 
 		return $html;
-	}
-
-	public function &addLabelClass($class)
-	{
-		$this->labelclass[] = $class;
-
-		return $this;
-	}
+	}	
 
 	public function &requireEquivalency($in = true)
 	{
@@ -957,6 +958,8 @@ class formslib_checkbox extends formslib_field
 		$html = '';
 
 		$checked = ($this->value == $this->checkedvalue) ? ' checked="checked"' : '';
+		
+		$labelclass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
 
 		$text = htmlspecialchars($this->label) . CRLF;
 		$input = '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" id="fld_' . htmlspecialchars($this->name) . '" />' . CRLF;
@@ -967,7 +970,7 @@ class formslib_checkbox extends formslib_field
 		}
 		else
 		{
-			$html .= '<label for="fld_' . $this->name . '" class="formslib_label_checkbox">' . CRLF;
+		    $html .= '<label for="fld_' . $this->name . '" class="formslib_label_checkbox '. $labelclass . '">' . CRLF;
 			$html .= ($this->tickbefore) ? $input . $text : $text . $input;
 			$html .= '</label>';
 		}
