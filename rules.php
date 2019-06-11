@@ -349,7 +349,7 @@ class formslib_rule_composite_timerangeformat extends formslib_rule
 		$cs = array('start', 'end', 'time');
 		foreach ($cs as $c)
 		{
-			if (isset($value[$c]) && !preg_match('/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/', $value[$c]))
+			if (isset($value[$c]) && $value[$c] != '' &&  !preg_match('/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/', $value[$c]))
 				return false;
 		}
 		return true;
