@@ -1758,8 +1758,9 @@ class formslib_ticklist extends formslib_composite
 	    {
 	        $js[] = <<<JS
 $(document).ready(function(){
-	$('.formslib_ticklist_select_all').click(function(){
+	$('.formslib_ticklist_select_all a').click(function(){
         $(this).parents('.formslib_ticklist_container').find('input.formslib_ticklist').prop('checked', true);
+        $(this).parents('.formslib_ticklist_select_all').hide();
 		return false;
 	});
 });
