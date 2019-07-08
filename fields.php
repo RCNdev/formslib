@@ -45,7 +45,6 @@ abstract class formslib_field
 		return $this;
 	}
 	
-
 	public function &setMandatory($mandatory = true)
 	{
 		$this->mandatory = $mandatory;
@@ -255,7 +254,7 @@ abstract class formslib_field
 					echo '<div class="form-group' . $group_class_str . '">' . CRLF;
 					echo $this->innerhtmlbefore . CRLF;
 
-					echo '	<label class="control-label for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . $mand . '</label> ' . CRLF;
+					echo '	<label class="control-label" for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . $mand . '</label> ' . CRLF;
 
 					if ($this->helpblock && $this->helpbefore) echo '		<p class="help-block">' . $this->helpblock . '</p>' . CRLF;
 
@@ -1602,6 +1601,8 @@ class formslib_ticklist extends formslib_composite
 	private $ticklist = array();
 	private $checkedvalue = 'checked';
 	private $delimiter = "\n";
+	private $enableSelectAll = false;
+	private $selectAllText = null;
 
 	public function __construct($name)
 	{
@@ -1628,6 +1629,11 @@ class formslib_ticklist extends formslib_composite
 			$html = '<span class="formslib_ticklist_container" style="display: block; float: left;">';
 		}
 
+		if ($this->enableSelectAll && count($this->ticklist) > 1)
+		{
+		    $html .= '<span class="formslib_ticklist_select_all"><a href="#">'.htmlentities($this->selectAllText).'</a></span>';
+		}
+		
 		foreach ($this->ticklist as $index => $label)
 		{
 			$checked = ($this->composite_values[$index] == $this->checkedvalue) ? ' checked="checked"' : '';
@@ -1638,7 +1644,7 @@ class formslib_ticklist extends formslib_composite
 
 			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
 			{
-				$input .= '<div>';
+				$html .= '<div>';
 			}
 
 			$input .= '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr('formslib_ticklist') . ' name="' . htmlspecialchars($this->name . '__' . $index) . '" id="fld_' . htmlspecialchars($this->name . '__' . $index) . '" title="' . htmlspecialchars($label) . '" />' . CRLF;
@@ -1727,6 +1733,40 @@ class formslib_ticklist extends formslib_composite
 		}
 
 		return $checked;
+	}
+	
+	public function &setSelectAll($text = 'Select all')
+	{
+	    if ($text === false)
+	    {
+	       $this->enableSelectAll = false;
+	    }
+	    else
+	    {
+	        $this->enableSelectAll = true;
+	        $this->selectAllText = $text;
+	    }
+	    
+	    return $this;
+	}
+	
+	public function getJs()
+	{
+	    $js = parent::getJs();
+	    
+	    if ($this->enableSelectAll)
+	    {
+	        $js[] = <<<JS
+$(document).ready(function(){
+	$('.formslib_ticklist_select_all').click(function(){
+        $(this).parents('.formslib_ticklist_container').find('input.formslib_ticklist').prop('checked', true);
+		return false;
+	});
+});
+JS;
+	    }
+	    
+	    return $js;
 	}
 }
 
