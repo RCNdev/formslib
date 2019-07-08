@@ -5,7 +5,13 @@ use formslib\Rule\Rule;
 
 class MinCount extends Rule
 {
-    public function evaluate(array $value)
+    /**
+     * 
+     * {@inheritDoc}
+     * @see \formslib_rule::evaluate()
+     * @param array $value
+     */
+    public function evaluate($value)
     {
         return (count($value) >= $this->ruledfn) ? true : false;
     }

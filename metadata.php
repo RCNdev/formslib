@@ -155,6 +155,11 @@ abstract class formslib_field_paramset extends formslib_field
 	{
 		return $this;
 	}
+	
+	public function &setSelectAll($text = 'Select all')
+	{
+	    return $this;
+	}
 }
 
 class Services_JSON
