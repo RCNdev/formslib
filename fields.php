@@ -532,6 +532,9 @@ abstract class formslib_field
 					echo '</div><!--/.form-group-->' . CRLF;
 					echo $this->htmlafter . CRLF;
 					break;
+					
+					
+				//TODO: Other output styles?
 			}
 		}
 		else
@@ -979,13 +982,11 @@ class formslib_checkbox extends formslib_field
 
 	public function display(formslib_form &$form)
 	{
-		$outputstyle = $form->outputstyle;
-
 		$mand = ($this->mandatory) ? $form->mandatoryHTML : '';
 
 		if (! $this->rawoutput)
 		{
-			switch ($outputstyle)
+		    switch ($form->outputstyle)
 			{
 				case FORMSLIB_STYLE_P:
 					echo $this->htmlbefore;
@@ -1357,7 +1358,9 @@ abstract class formslib_composite extends formslib_field
 
 		// TODO: Review the need for this
 		foreach ($this->composites as $key)
+		{
 			$this->composite_values[$key] = '';
+		}
 	}
 
 	public function get_composites()
@@ -1598,7 +1601,7 @@ class formslib_uksortcode extends formslib_composite
 
 class formslib_ticklist extends formslib_composite
 {
-	private $ticklist = array();
+	private $ticklist = [];
 	private $checkedvalue = 'checked';
 	private $delimiter = "\n";
 	private $enableSelectAll = false;

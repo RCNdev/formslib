@@ -266,6 +266,8 @@ class formslib_form
 	public function validate_vars($vars)
 	{
 		$is_valid = true;
+		
+		$bootstrap3 = ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL);
 
 		// Loop through the fields and check mandatory fields are entered
 		$fields = array_keys($this->fields);
@@ -293,7 +295,7 @@ class formslib_form
 						$this->fields[$name]->addClass('formslibinvalid');
 
 						if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
-						if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE) $this->fields[$name]->addGroupClass('has-error');
+						if ($bootstrap3) $this->fields[$name]->addGroupClass('has-error');
 
 						// Add field to error list
 						$label = $this->fields[$name]->label;
@@ -323,7 +325,7 @@ class formslib_form
 			            $this->fields[$name]->addClass('formslibinvalid');
 			            
 			            if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
-			            if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE) $this->fields[$name]->addGroupClass('has-error');
+			            if ($bootstrap3) $this->fields[$name]->addGroupClass('has-error');
 			            
 			            // Add field to error list
 			            $label = $this->fields[$name]->label;
@@ -344,7 +346,7 @@ class formslib_form
 					$this->fields[$name]->addClass('formslibinvalid');
 
 					if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
-					if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE) $this->fields[$name]->addGroupClass('has-error');
+					if ($bootstrap3) $this->fields[$name]->addGroupClass('has-error');
 
 					// Add field to error list
 					$label = $this->fields[$name]->label;
@@ -382,7 +384,7 @@ class formslib_form
 					$this->fields[$name]->addClass('formslibinvalid');
 
 					if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
-					if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE) $this->fields[$name]->addGroupClass('has-error');
+					if ($bootstrap3) $this->fields[$name]->addGroupClass('has-error');
 
 					$is_valid = false;
 
@@ -412,7 +414,7 @@ class formslib_form
 			        $this->fields[$name]->addClass('formslibinvalid');
 			        
 			        if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
-			        if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE) $this->fields[$name]->addGroupClass('has-error');
+			        if ($bootstrap3) $this->fields[$name]->addGroupClass('has-error');
 			        
 			        $is_valid = false;
 			        
@@ -432,7 +434,7 @@ class formslib_form
 					$this->fields[$name]->addClass('formslibinvalid');
 
 					if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
-					if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE) $this->fields[$name]->addGroupClass('has-error');
+					if ($bootstrap3) $this->fields[$name]->addGroupClass('has-error');
 
 					$is_valid = false;
 
@@ -637,6 +639,8 @@ class formslib_form
 
 	private function _generate_jquery_validation()
 	{
+	    $bootstrap3 = ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL);
+		
 		// Generic stuff
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
 		{
@@ -656,7 +660,7 @@ $('.formslib_jq_mand').blur(function(){
 });
 EOF;
 		}
-		elseif ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE)
+		elseif ($bootstrap3)
 		{
 			$jq = <<<EOF
 $(document).ready(function(){
@@ -706,7 +710,7 @@ $('[name=$name]').focus(function(){
 	$(this).parent().parent().removeClass('error');
 });";
 				}
-				elseif ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE)
+				elseif ($bootstrap3)
 				{
 					$jq .= <<<EOF
 $('[name=$name]').focus(function(){
@@ -744,7 +748,7 @@ $('[name=$name]').blur(function(){
 });
 ";
 					}
-					elseif ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE)
+					elseif ($bootstrap3)
 					{
 						$jq .= <<<JS
 		$(this).addClass('formslibinvalid');
@@ -821,7 +825,7 @@ JS;
 			{
 				$classes = 'alert alert-block alert-error';
 			}
-			elseif ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle = FORMSLIB_STYLE_BOOTSTRAP3_INLINE)
+			elseif ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
 			{
 				$classes = 'alert alert-block alert-danger';
 			}
