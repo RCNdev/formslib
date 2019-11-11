@@ -1068,9 +1068,9 @@ class formslib_checkbox extends formslib_field
 		return $data;
 	}
 
-	public function &setRawBoxOnly()
+	public function &setRawBoxOnly($raw = true)
 	{
-		$this->rawboxonly = true;
+		$this->rawboxonly = $raw;
 
 		return $this;
 	}

@@ -465,6 +465,8 @@ class formslib_form
 	 *        	Field label
 	 * @param string $message
 	 *        	The message to display to the user
+	 *        
+	 * @todo Call this function within validate_vars
 	 */
 	public function addError($name, $label, $message)
 	{
