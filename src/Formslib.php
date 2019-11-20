@@ -19,7 +19,7 @@ final class Formslib
 	 *
 	 * @param string $date_string
 	 * @throws \Exception
-	 * @return DateTime
+	 * @return \DateTime
 	 */
 	public static function &getUkDate($date_string)
 	{

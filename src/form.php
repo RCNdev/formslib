@@ -2,17 +2,17 @@
 class formslib_form
 {
 	private $name, $id, $action, $method;
-	
+
 	/** @var formslib_field[] */
 	public $fields = [];
-	
+
 	/** @var formslib_fieldset[] */
 	public $fieldsets = [];
-	
+
 	public $outputstyle;
 	public $submitlabel;
 	public $mandatoryHTML, $semimandatoryHTML;
-	
+
 	private $errorlist = array();
 	private $htmltop, $htmlbottom, $htmlbeforesubmit;
 	private $classes = array();
@@ -266,7 +266,7 @@ class formslib_form
 	public function validate_vars($vars)
 	{
 		$is_valid = true;
-		
+
 		$bootstrap3 = ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL);
 
 		// Loop through the fields and check mandatory fields are entered
@@ -313,20 +313,20 @@ class formslib_form
 			    if ($mandatory)
 			    {
 			        $missing = false;
-			        
+
 			        if(!isset($vars[ $name . '__0']) || ($vars[ $name . '__0']) == '')
 			        {
 			            $missing = true;
 			        }
-			        
+
 			        if ($missing)
 			        {
 			            $this->fields[$name]->valid = false;
 			            $this->fields[$name]->addClass('formslibinvalid');
-			            
+
 			            if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
 			            if ($bootstrap3) $this->fields[$name]->addGroupClass('has-error');
-			            
+
 			            // Add field to error list
 			            $label = $this->fields[$name]->label;
 			            $this->errorlist[] = array(
@@ -396,28 +396,28 @@ class formslib_form
 				// TODO: Validate multiselect fields
 			}
 			elseif (is_a($this->fields[$name], 'formslib\Field\MultiValue'))
-			{              
-			    $count = 0;			    
-			    
+			{
+			    $count = 0;
+
 			    $mv = [];
 			    while (isset($vars[$name . '__'. $count]) && ($vars[$name . '__'. $count]) != '')
 			    {
 			        $count++;
 			        $mv[] = $vars[$name . '__'. $count];
 			    }
-			    
+
 			    $valid = $this->fields[$name]->validate($mv);
-			    
+
 			    if (!$valid)
 			    {
 			        $this->fields[$name]->valid = false;
 			        $this->fields[$name]->addClass('formslibinvalid');
-			        
+
 			        if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
 			        if ($bootstrap3) $this->fields[$name]->addGroupClass('has-error');
-			        
+
 			        $is_valid = false;
-			        
+
 			        $this->errorlist = array_merge($this->errorlist, $this->fields[$name]->getErrors());
 			    }
 
@@ -465,7 +465,7 @@ class formslib_form
 	 *        	Field label
 	 * @param string $message
 	 *        	The message to display to the user
-	 *        
+	 *
 	 * @todo Call this function within validate_vars
 	 */
 	public function addError($name, $label, $message)
@@ -642,7 +642,7 @@ class formslib_form
 	private function _generate_jquery_validation()
 	{
 	    $bootstrap3 = ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL);
-		
+
 		// Generic stuff
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
 		{

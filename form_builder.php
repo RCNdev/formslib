@@ -21,11 +21,11 @@ if (!defined('EMAIL_VALIDATE')) define('EMAIL_VALIDATE', '[a-z0-9!#$%&\'*+\/=?^_
 if (!defined('POSTCODE_VALIDATE')) define('POSTCODE_VALIDATE', '^[A-PR-UWYZ][A-HK-Y0-9][A-HJKSTUW0-9]?[ABEHMNPRVWXY0-9]? ?[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA|XM4 5HQ|BFPO [0-9]{1,4}$');
 if (!defined('MOBILE_VALIDATE')) define('MOBILE_VALIDATE', '^(\+44|0)7[4-57-9][0-9]{8}$');
 
-require_once 'Formslib.php';
-require_once 'form.php';
-require_once 'fields.php';
-require_once 'custom_fields.php';
-require_once 'rules.php';
+require_once 'src/Formslib.php';
+require_once 'src/form.php';
+require_once 'src/fields.php';
+require_once 'src/custom_fields.php';
+require_once 'src/rules.php';
 
 if (!defined('LIBPATH')) define('LIBPATH', '');
 require_once(LIBPATH.'class.JavaScriptPacker.php');

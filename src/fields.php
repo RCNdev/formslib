@@ -44,7 +44,7 @@ abstract class formslib_field
 
 		return $this;
 	}
-	
+
 	public function &setMandatory($mandatory = true)
 	{
 		$this->mandatory = $mandatory;
@@ -110,11 +110,11 @@ abstract class formslib_field
 
 		return $this;
 	}
-	
+
 	public function &addLabelClass($class)
 	{
 	    $this->labelclass[] = $class;
-	    
+
 	    return $this;
 	}
 
@@ -532,8 +532,8 @@ abstract class formslib_field
 					echo '</div><!--/.form-group-->' . CRLF;
 					echo $this->htmlafter . CRLF;
 					break;
-					
-					
+
+
 				//TODO: Other output styles?
 			}
 		}
@@ -878,7 +878,7 @@ class formslib_radio extends formslib_options
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '</div><!--/.radio-->';
 
 		return $html;
-	}	
+	}
 
 	public function &requireEquivalency($in = true)
 	{
@@ -960,7 +960,7 @@ class formslib_checkbox extends formslib_field
 		$html = '';
 
 		$checked = ($this->value == $this->checkedvalue) ? ' checked="checked"' : '';
-		
+
 		$labelclass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
 
 		$text = htmlspecialchars($this->label) . CRLF;
@@ -1636,7 +1636,7 @@ class formslib_ticklist extends formslib_composite
 		{
 		    $html .= '<span class="formslib_ticklist_select_all"><a href="#">'.htmlentities($this->selectAllText).'</a></span>';
 		}
-		
+
 		foreach ($this->ticklist as $index => $label)
 		{
 			$checked = ($this->composite_values[$index] == $this->checkedvalue) ? ' checked="checked"' : '';
@@ -1737,7 +1737,7 @@ class formslib_ticklist extends formslib_composite
 
 		return $checked;
 	}
-	
+
 	public function &setSelectAll($text = 'Select all')
 	{
 	    if ($text === false)
@@ -1749,14 +1749,14 @@ class formslib_ticklist extends formslib_composite
 	        $this->enableSelectAll = true;
 	        $this->selectAllText = $text;
 	    }
-	    
+
 	    return $this;
 	}
-	
+
 	public function getJs()
 	{
 	    $js = parent::getJs();
-	    
+
 	    if ($this->enableSelectAll)
 	    {
 	        $js[] = <<<JS
@@ -1769,7 +1769,7 @@ $(document).ready(function(){
 });
 JS;
 	    }
-	    
+
 	    return $js;
 	}
 }
