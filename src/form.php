@@ -137,7 +137,7 @@ class formslib_form
 
 	public function &addFieldSet($name)
 	{
-		//TODO: Duplicate fieldset name check
+		if (isset($this->fieldsets[$name])) throw new \Exception('FORMSLIB ERROR: Duplicate fieldset name');
 
 		$fieldset = new formslib_fieldset($name);
 		if (is_object($fieldset))
