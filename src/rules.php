@@ -129,7 +129,7 @@ class formslib_rule_sqldate extends formslib_rule
 			return true;
 
 		// Check for correct SQL format
-		$matches = array();
+		$matches = [];
 		if (!preg_match('|^([0-9]{4})-([0-9]{2})-([0-9]{2})$|i', $value, $matches))
 			return false;
 

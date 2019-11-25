@@ -1,6 +1,8 @@
 <?php
 namespace formslib\BootstrapUtil;
 
+use formslib\Utility\Security;
+
 /**
  * Utility class to create HTML code for a Bootstrap JS modal window
  */
@@ -98,7 +100,7 @@ class Modal
 	{
 		$lines = explode("\r\n", $js);
 
-		$newline = array();
+		$newline = [];
 		foreach ($lines as $line)
 		{
 			$newline[] = "\t\t".$line;
@@ -155,7 +157,7 @@ EOF;
 	 */
 	protected function _escape($input)
 	{
-		return htmlentities($input); //TODO: Check security
+		return Security::escapeHtml($input);
 	}
 
 	/**

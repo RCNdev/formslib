@@ -1,5 +1,7 @@
 <?php
 
+use formslib\Utility\Security;
+
 /**
  * Abstract field class for formslib
  * @author sheppardp
@@ -9,16 +11,16 @@ abstract class formslib_field
 	protected $name, $defaultval;
 	public $label, $value;
 	public $mandatory = false, $semimandatory = false;
-	protected $rules = array();
-	protected $classes = array();
-	protected $attrib = array();
-	protected $labelclass = array();
+	protected $rules = [];
+	protected $classes = [];
+	protected $attrib = [];
+	protected $labelclass = [];
 	public $valid;
-	protected $errorlist = array();
+	protected $errorlist = [];
 	protected $rawoutput = false;
 	protected $htmlbefore, $htmlafter, $innerhtmlbefore, $innerhtmlafter, $helpinline, $helpblock, $helpbefore = false;
 	protected $donotemail = false, $noObject = false;
-	protected $group_classes = array();
+	protected $group_classes = [];
 	protected $gridRatio = 3;
 	protected $starts_new_row = false;
 	protected $outputstyle = null;
@@ -28,7 +30,32 @@ abstract class formslib_field
 	public function __construct($name)
 	{
 		$this->name = $name;
-		$this->addClass(get_class($this));
+		$this->addClass('formslib_'.$this->getType());
+	}
+
+	/**
+	 * Get the name of the field
+	 *
+	 * @return string
+	 */
+	public function getName()
+	{
+	    return $this->name;
+	}
+
+	/**
+	 * Get the type name the form class recognises to add this field
+	 *
+	 * @return string
+	 */
+	public function getType()
+	{
+	    $type = get_class($this);
+
+	    if (substr($type, 0, 9) == 'formslib_') $type = substr($type, 9);
+	    elseif (substr($type, 0, 15) == 'formslib\Field\\') $type = substr($type, 15);
+
+	    return $type;
 	}
 
 	public function &setDefault($default)
@@ -164,7 +191,7 @@ abstract class formslib_field
 					echo $this->htmlbefore;
 					echo '<p>' . CRLF;
 					echo $this->innerhtmlbefore;
-					echo '<label for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . '</label> ' . CRLF;
+					echo '<label for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label> ' . CRLF;
 					echo $this->getHTML() . CRLF;
 					echo $mand;
 					echo $this->innerhtmlafter;
@@ -176,7 +203,7 @@ abstract class formslib_field
 				default:
 					echo $this->htmlbefore;
 					echo '<dl>' . CRLF;
-					echo '<dt><label for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . '</label></dt>' . CRLF;
+					echo '<dt><label for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label></dt>' . CRLF;
 					echo '<dd>' . $this->getHTML() . $mand . '</dd>' . CRLF;
 					echo '</dl>' . CRLF . CRLF;
 					echo $this->htmlafter;
@@ -189,7 +216,7 @@ abstract class formslib_field
 					echo $this->htmlbefore . CRLF;
 					echo '<div class="control-group' . $group_class_str . '">' . CRLF;
 					echo $this->innerhtmlbefore . CRLF;
-					echo '	<label class="control-label" for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . '</label> ' . CRLF;
+					echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label> ' . CRLF;
 					echo '	<div class="controls">' . CRLF;
 					echo '		' . $this->getHTML() . CRLF;
 					echo '		' . $mand . CRLF;
@@ -213,7 +240,7 @@ abstract class formslib_field
 					echo $this->htmlbefore . CRLF;
 					echo '<div class="form-group' . $group_class_str . '">' . CRLF;
 					echo $this->innerhtmlbefore . CRLF;
-					echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . $mand . '</label> ' . CRLF;
+					echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand . '</label> ' . CRLF;
 					echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
 					echo '		' . $this->getHTML() . CRLF;
 					if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with this
@@ -233,7 +260,7 @@ abstract class formslib_field
 					echo $this->htmlbefore . CRLF;
 					echo '<div class="form-group' . $group_class_str . '">' . CRLF;
 					echo $this->innerhtmlbefore . CRLF;
-					echo '	<label class="control-label" for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . $mand . '</label> ' . CRLF;
+					echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand . '</label> ' . CRLF;
 // 					echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
 					echo '		' . $this->getHTML() . CRLF;
 // 					if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with this
@@ -254,7 +281,7 @@ abstract class formslib_field
 					echo '<div class="form-group' . $group_class_str . '">' . CRLF;
 					echo $this->innerhtmlbefore . CRLF;
 
-					echo '	<label class="control-label" for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . $mand . '</label> ' . CRLF;
+					echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand . '</label> ' . CRLF;
 
 					if ($this->helpblock && $this->helpbefore) echo '		<p class="help-block">' . $this->helpblock . '</p>' . CRLF;
 
@@ -331,19 +358,23 @@ abstract class formslib_field
 			if (! $rulevalid)
 			{
 				$valid = false;
-				$this->errorlist[] = array(
+				$this->errorlist[] = [
 					'name' => $this->name,
 					'label' => $this->label,
 					'message' => $this->label . ' invalid: ' . $this->rules[$rule]->getError()
-				);
+				];
 			}
 		}
 		return $valid;
 	}
 
+	/**
+	 * Return validation errors
+	 *
+	 * @return array
+	 */
 	public function getErrors()
 	{
-		// Return validation errors
 		return $this->errorlist;
 	}
 
@@ -375,7 +406,7 @@ abstract class formslib_field
 
 	public function getDataDump()
 	{
-		$data = array();
+		$data = [];
 
 		$data['type'] = str_replace('formslib_', '', get_class($this));
 		$data['name'] = $this->name;
@@ -398,7 +429,7 @@ abstract class formslib_field
 	public function get_jquery_conditions()
 	{
 		$rules = array_keys($this->rules);
-		$rulejs = array();
+		$rulejs = [];
 
 		foreach ($rules as $rule)
 		{
@@ -471,7 +502,7 @@ abstract class formslib_field
 					echo $this->htmlbefore;
 					echo '<p>' . CRLF;
 					echo $this->innerhtmlbefore;
-					echo '<label for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . '</label> ' . CRLF;
+					echo '<label for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label> ' . CRLF;
 					echo $this->getHTMLReadOnly() . CRLF;
 					echo $mand;
 					echo $this->innerhtmlafter;
@@ -483,7 +514,7 @@ abstract class formslib_field
 				default:
 					echo $this->htmlbefore;
 					echo '<dl>' . CRLF;
-					echo '<dt><label for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . '</label></dt>' . CRLF;
+					echo '<dt><label for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label></dt>' . CRLF;
 					echo '<dd>' . $this->getHTMLReadOnly() . $mand . '</dd>' . CRLF;
 					echo '</dl>' . CRLF . CRLF;
 					echo $this->htmlafter;
@@ -496,7 +527,7 @@ abstract class formslib_field
 					echo $this->htmlbefore . CRLF;
 					echo '<div class="control-group' . $group_class_str . '">' . CRLF;
 					echo $this->innerhtmlbefore . CRLF;
-					echo '	<label class="control-label" for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . '</label> ' . CRLF;
+					echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label> ' . CRLF;
 					echo '	<div class="controls">' . CRLF;
 					echo '		' . $this->getHTMLReadOnly() . CRLF;
 					echo '		' . $mand . CRLF;
@@ -522,7 +553,7 @@ abstract class formslib_field
 					echo $this->htmlbefore . CRLF;
 					echo '<div class="form-group' . $group_class_str . '">' . CRLF;
 					echo $this->innerhtmlbefore . CRLF;
-					echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . $mand . '</label> ' . CRLF;
+					echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand . '</label> ' . CRLF;
 					echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
 					echo '		' . $this->getHTMLReadOnly() . CRLF;
 					if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with this
@@ -552,6 +583,13 @@ abstract class formslib_field
 		return $this;
 	}
 
+	public function &attachToForm(formslib_form &$f)
+	{
+	    $f->attachField($this);
+
+	    return $this;
+	}
+
 	public function &setGridRatio($label_cols)
 	{
 		$this->gridRatio = $label_cols;
@@ -571,17 +609,21 @@ abstract class formslib_field
 		return $this->starts_new_row;
 	}
 
-	public function setClasses(array $classes)
+	public function &setClasses(array $classes)
 	{
 		$this->classes = $classes;
+
+		return $this;
 	}
 
-	public function addClasses(array $classes)
+	public function &addClasses(array $classes)
 	{
 		foreach ($classes as $class)
 		{
 			if (!in_array($class, $this->classes)) $this->classes[] = $class;
 		}
+
+		return $this;
 	}
 
 	public function getClasses()
@@ -591,7 +633,7 @@ abstract class formslib_field
 
 	public function getJs()
 	{
-		return array();
+		return [];
 	}
 
 	public function &setAjaxFormIdentifier($ident)
@@ -666,7 +708,7 @@ class formslib_hidden extends formslib_field
 
 	public function getHTML()
 	{
-		return '<input type="hidden" name="' . $this->name . '" value="' . htmlspecialchars($this->value) . '"' . $this->_custom_attr() . ' />';
+		return '<input type="hidden" name="' . $this->name . '" value="' . Security::escapeHtml($this->value) . '"' . $this->_custom_attr() . ' />';
 	}
 }
 
@@ -693,7 +735,7 @@ class formslib_text extends formslib_field
 			$html .= '</span>'.CRLF;
 		}
 
-		$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . htmlspecialchars($this->name) . '" id="fld_' . htmlspecialchars($this->name) . '" value="' . htmlspecialchars($this->value) . '" />'.CRLF;
+		$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . Security::escapeHtml($this->name) . '" id="fld_' . Security::escapeHtml($this->name) . '" value="' . Security::escapeHtml($this->value) . '" />'.CRLF;
 
 		if ($right)
 		{
@@ -712,7 +754,7 @@ class formslib_text extends formslib_field
 
 	public function getHTMLReadOnly()
 	{
-		return '<span name="' . htmlspecialchars($this->name) . '" id="fld_' . htmlspecialchars($this->name) . '" ' . $this->_custom_attr() . $this->_class_attr() . '><strong>' . htmlspecialchars($this->value) . '</strong></span>'; // TODO: Move strong to a class
+		return '<span name="' . Security::escapeHtml($this->name) . '" id="fld_' . Security::escapeHtml($this->name) . '" ' . $this->_custom_attr() . $this->_class_attr() . '><strong>' . Security::escapeHtml($this->value) . '</strong></span>'; // TODO: Move strong to a class
 	}
 
 	public function &setInputGroupLeft($type, $html)
@@ -752,7 +794,7 @@ abstract class formslib_options extends formslib_field
 	{
 		if (! is_array($in_opt))
 		{
-			echo '<p>FORMSLIB ERROR: Options passed not an array, setting options for field: ' . htmlspecialchars($this->name) . '</p>';
+			echo '<p>FORMSLIB ERROR: Options passed not an array, setting options for field: ' . Security::escapeHtml($this->name) . '</p>';
 			$this->options = array(
 				'' => 'FORMSLIB ERROR: No options set'
 			);
@@ -783,7 +825,7 @@ abstract class formslib_options extends formslib_field
 
 	public function &setOptionsRange($start, $end, $default = false)
 	{
-		$this->options = array();
+		$this->options = [];
 
 		if ($default !== false)
 		{
@@ -815,11 +857,11 @@ abstract class formslib_options extends formslib_field
 		if ($value !== null && $value != '' && !in_array($value, array_keys($this->options)))
 		{
 			$valid = false;
-			$this->errorlist[] = array(
+			$this->errorlist[] = [
 					'name' => $this->name,
 					'label' => $this->label,
 					'message' => 'A valid option for ' . $this->label . ' was not selected '
-			);
+			];
 		}
 
 		return $valid;
@@ -849,7 +891,7 @@ class formslib_radio extends formslib_options
 
 		foreach ($this->options as $value => $label)
 		{
-			$id = $this->name . '__' . htmlspecialchars($value);
+			$id = $this->name . '__' . Security::escapeHtml($value);
 
 			if ($this->requireEquivalency)
 			{
@@ -870,9 +912,9 @@ class formslib_radio extends formslib_options
 
 			$dis_str = ($disabled) ? ' disabled="disabled"' : '';
 
-			$data_str = ($this->addDataLabels) ? ' data-label="'.htmlspecialchars($label).'"' : '';
+			$data_str = ($this->addDataLabels) ? ' data-label="'.Security::escapeHtml($label).'"' : '';
 
-			$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelclass . '"><input type="radio" name="' . htmlspecialchars($this->name) . '" id="' . $id . '"' . $selected .$dis_str.$data_str. ' value="' . htmlspecialchars($value) . '" />&nbsp;' . htmlspecialchars($label) . '</label> ';
+			$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelclass . '"><input type="radio" name="' . Security::escapeHtml($this->name) . '" id="' . $id . '"' . $selected .$dis_str.$data_str. ' value="' . Security::escapeHtml($value) . '" />&nbsp;' . Security::escapeHtml($label) . '</label> ';
 		}
 
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '</div><!--/.radio-->';
@@ -909,14 +951,14 @@ class formslib_select extends formslib_options
 	{
 		$html = '';
 
-		$html .= '<select' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" id="fld_' . htmlspecialchars($this->name) . '">' . CRLF;
+		$html .= '<select' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
 
 		foreach ($this->options as $value => $label)
 		{
-			$html .= '<option value="' . htmlentities($value) . '"';
+			$html .= '<option value="' . Security::escapeHtml($value) . '"';
 			if ($this->value == $value) $html .= ' selected="selected"';
 			$html .= '>';
-			$html .= htmlentities($label);
+			$html .= Security::escapeHtml($label);
 			$html .= '</option>' . CRLF;
 		}
 
@@ -929,7 +971,7 @@ class formslib_select extends formslib_options
 	{
 		$label = (isset($this->options[$this->value])) ? $this->options[$this->value] : '- Unknown value -';
 
-		return '<span name="' . htmlspecialchars($this->name) . '" id="fld_' . htmlspecialchars($this->name) . '" ' . $this->_custom_attr() . $this->_class_attr() . '><strong>' . htmlspecialchars($label) . '</strong></span>'; // TODO: Move strong to a class
+		return '<span name="' . Security::escapeHtml($this->name) . '" id="fld_' . Security::escapeHtml($this->name) . '" ' . $this->_custom_attr() . $this->_class_attr() . '><strong>' . Security::escapeHtml($label) . '</strong></span>'; // TODO: Move strong to a class
 	}
 }
 
@@ -963,8 +1005,8 @@ class formslib_checkbox extends formslib_field
 
 		$labelclass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
 
-		$text = htmlspecialchars($this->label) . CRLF;
-		$input = '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" id="fld_' . htmlspecialchars($this->name) . '" />' . CRLF;
+		$text = Security::escapeHtml($this->label) . CRLF;
+		$input = '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '" />' . CRLF;
 
 		if ($this->rawboxonly)
 		{
@@ -991,7 +1033,7 @@ class formslib_checkbox extends formslib_field
 				case FORMSLIB_STYLE_P:
 					echo $this->htmlbefore;
 					echo '<p>' . CRLF;
-					// echo '<label for="'.$this->name.'">'.htmlspecialchars($this->label).'</label> '.CRLF;
+					// echo '<label for="'.$this->name.'">'.Security::escapeHtml($this->label).'</label> '.CRLF;
 					echo $this->getHTML() . CRLF;
 					echo $mand;
 					echo '</p>' . CRLF . CRLF;
@@ -1002,7 +1044,7 @@ class formslib_checkbox extends formslib_field
 				default:
 					echo $this->htmlbefore;
 					echo '<dl>' . CRLF;
-					echo '<dt><label for="' . $this->name . '">' . htmlspecialchars($this->label) . '</label></dt>' . CRLF;
+					echo '<dt><label for="' . $this->name . '">' . Security::escapeHtml($this->label) . '</label></dt>' . CRLF;
 					echo '<dd>' . $this->getHTML() . $mand . '</dd>' . CRLF;
 					echo '</dl>' . CRLF . CRLF;
 					echo $this->htmlafter;
@@ -1014,7 +1056,7 @@ class formslib_checkbox extends formslib_field
 					echo $this->htmlafter;
 					break;
 
-				case FORMSLIB_STYLE_BOOTSTRAP3: //TODO: Review from upstream
+				case FORMSLIB_STYLE_BOOTSTRAP3:
 				    echo $this->htmlbefore;
 				    echo '<div class="checkbox">'.CRLF;
 				    echo $this->getHTML() . CRLF;
@@ -1087,10 +1129,10 @@ class formslib_checkbox extends formslib_field
 		// TODO: Complete
 		$html = '';
 
-		$ids = 'name="' . $this->name . '" id="fld_' . htmlspecialchars($this->name) . '"';
+		$ids = 'name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '"';
 		$checked = ($this->value == $this->checkedvalue) ? '<span ' . $ids . ' class="colour-positive">&#10004;</span>' : '<span ' . $ids . ' class="colour-negative">&#10008;</span>';
 
-		$text = htmlspecialchars($this->label) . CRLF;
+		$text = Security::escapeHtml($this->label) . CRLF;
 
 		if ($this->rawboxonly)
 		{
@@ -1119,7 +1161,7 @@ class formslib_password extends formslib_text
 
 	public function getHTML()
 	{
-		return '<input type="password"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" id="fld_' . htmlspecialchars($this->name) . '" value="" autocomplete="off" />';
+		return '<input type="password"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '" value="" autocomplete="off" />';
 	}
 }
 
@@ -1176,12 +1218,12 @@ class formslib_textarea extends formslib_field
 
 	public function getHTML()
 	{
-		return '<textarea id="fld_' . $this->name . '" name="' . $this->name . '"' . $this->_custom_attr() . $this->_class_attr() . '>' . htmlspecialchars($this->value) . '</textarea>';
+		return '<textarea id="fld_' . $this->name . '" name="' . $this->name . '"' . $this->_custom_attr() . $this->_class_attr() . '>' . Security::escapeHtml($this->value) . '</textarea>';
 	}
 
 	function getHTMLReadOnly()
 	{
-		return '<span name="' . htmlspecialchars($this->name) . '" id="fld_' . htmlspecialchars($this->name) . '" ' . $this->_custom_attr() . $this->_class_attr() . '><strong>' . Formslib::convertTextToHtml($this->value) . '</strong></span>'; // TODO: Move strong to a class
+		return '<span name="' . Security::escapeHtml($this->name) . '" id="fld_' . Security::escapeHtml($this->name) . '" ' . $this->_custom_attr() . $this->_class_attr() . '><strong>' . Formslib::convertTextToHtml($this->value) . '</strong></span>'; // TODO: Move strong to a class
 	}
 }
 
@@ -1256,7 +1298,7 @@ class formslib_file extends formslib_field
 
 	public function getHTML()
 	{
-		return '<input type="file"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" value="' . htmlspecialchars($this->value) . '" />';
+		return '<input type="file"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" value="' . Security::escapeHtml($this->value) . '" />';
 	}
 }
 
@@ -1272,7 +1314,7 @@ class formslib_multiselect extends formslib_select
 		foreach ($this->options as $value => $label)
 		{
 
-			$html .= '<option value="' . htmlspecialchars($value) . '"';
+			$html .= '<option value="' . Security::escapeHtml($value) . '"';
 			// if ($this->value == $value)
 			// $html .= ' selected="selected"';
 			if (is_array($this->value))
@@ -1283,7 +1325,7 @@ class formslib_multiselect extends formslib_select
 				}
 			}
 			$html .= '>';
-			$html .= htmlspecialchars($label);
+			$html .= Security::escapeHtml($label);
 			$html .= '</option>' . CRLF;
 		}
 
@@ -1349,8 +1391,8 @@ class formslib_personname extends formslib_text
 
 abstract class formslib_composite extends formslib_field
 {
-	protected $composites = array();
-	public $composite_values = array();
+	protected $composites = [];
+	public $composite_values = [];
 
 	protected function _set_composites($composites)
 	{
@@ -1461,7 +1503,7 @@ class formslib_date extends formslib_composite
 		{
 			$html .= '<option value="' . $i . '"';
 			if ($this->composite_values['month'] == $i) $html .= ' selected="selected"';
-			$html .= '>' . $GLOBALS['mn'][$i] . '</option>' . CRLF; // TODO: Review use of this lookup here
+			$html .= '>' . \formslib\Data\General::SHORT_MONTHS[$i] . '</option>' . CRLF;
 		}
 		$html .= '</select>' . CRLF;
 
@@ -1576,23 +1618,23 @@ class formslib_uksortcode extends formslib_composite
 		{
 			$html .= '<div class="row">' . CRLF;
 			$html .= '<div class="col-xs-4">' . CRLF;
-			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode1') . ' name="' . $this->name . '__1" value="' . htmlspecialchars($this->composite_values['1']) . '" />';
+			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode1') . ' name="' . $this->name . '__1" value="' . Security::escapeHtml($this->composite_values['1']) . '" />';
 			$html .= '</div>' . CRLF;
 			$html .= '<div class="col-xs-4">' . CRLF;
-			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode2') . ' name="' . $this->name . '__2" value="' . htmlspecialchars($this->composite_values['2']) . '" />';
-// 			$html .= '<div class="input-group"><span class="input-group-addon">-</span><input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode2') . ' name="' . $this->name . '__2" value="' . htmlspecialchars($this->composite_values['2']) . '" /></div>';
+			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode2') . ' name="' . $this->name . '__2" value="' . Security::escapeHtml($this->composite_values['2']) . '" />';
+// 			$html .= '<div class="input-group"><span class="input-group-addon">-</span><input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode2') . ' name="' . $this->name . '__2" value="' . Security::escapeHtml($this->composite_values['2']) . '" /></div>';
 			$html .= '</div>' . CRLF;
 			$html .= '<div class="col-xs-4">' . CRLF;
-			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode3') . ' name="' . $this->name . '__3" value="' . htmlspecialchars($this->composite_values['3']) . '" />';
-// 			$html .= '<div class="input-group"><span class="input-group-addon">-</span><input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode3') . ' name="' . $this->name . '__3" value="' . htmlspecialchars($this->composite_values['3']) . '" /></div>';
+			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode3') . ' name="' . $this->name . '__3" value="' . Security::escapeHtml($this->composite_values['3']) . '" />';
+// 			$html .= '<div class="input-group"><span class="input-group-addon">-</span><input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode3') . ' name="' . $this->name . '__3" value="' . Security::escapeHtml($this->composite_values['3']) . '" /></div>';
 			$html .= '</div><!-- /.col-xs-4 -->' . CRLF;
 			$html .= '</div><!-- /.row -->' . CRLF;
 		}
 		else
 		{
-			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode1') . ' name="' . $this->name . '__1" value="' . htmlspecialchars($this->composite_values['1']) . '" /> - ';
-			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode2') . ' name="' . $this->name . '__2" value="' . htmlspecialchars($this->composite_values['2']) . '" /> - ';
-			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode3') . ' name="' . $this->name . '__3" value="' . htmlspecialchars($this->composite_values['3']) . '" />';
+			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode1') . ' name="' . $this->name . '__1" value="' . Security::escapeHtml($this->composite_values['1']) . '" /> - ';
+			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode2') . ' name="' . $this->name . '__2" value="' . Security::escapeHtml($this->composite_values['2']) . '" /> - ';
+			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode3') . ' name="' . $this->name . '__3" value="' . Security::escapeHtml($this->composite_values['3']) . '" />';
 		}
 
 		return $html;
@@ -1634,14 +1676,14 @@ class formslib_ticklist extends formslib_composite
 
 		if ($this->enableSelectAll && count($this->ticklist) > 1)
 		{
-		    $html .= '<span class="formslib_ticklist_select_all"><a href="#">'.htmlentities($this->selectAllText).'</a></span>';
+		    $html .= '<span class="formslib_ticklist_select_all"><a href="#">'.Security::escapeHtml($this->selectAllText).'</a></span>';
 		}
 
 		foreach ($this->ticklist as $index => $label)
 		{
 			$checked = ($this->composite_values[$index] == $this->checkedvalue) ? ' checked="checked"' : '';
 
-			$text = htmlspecialchars($label) . CRLF;
+			$text = Security::escapeHtml($label) . CRLF;
 
 			$input = '';
 
@@ -1650,7 +1692,7 @@ class formslib_ticklist extends formslib_composite
 				$html .= '<div>';
 			}
 
-			$input .= '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr('formslib_ticklist') . ' name="' . htmlspecialchars($this->name . '__' . $index) . '" id="fld_' . htmlspecialchars($this->name . '__' . $index) . '" title="' . htmlspecialchars($label) . '" />' . CRLF;
+			$input .= '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr('formslib_ticklist') . ' name="' . Security::escapeHtml($this->name . '__' . $index) . '" id="fld_' . Security::escapeHtml($this->name . '__' . $index) . '" title="' . Security::escapeHtml($label) . '" />' . CRLF;
 
 			// TODO: More inline CSS
 			$html .= '<label for="fld_'.$this->name.'__'.$index.'" class="formslib_label_checkbox" style="display: inline; font-weight: normal;">';
@@ -1686,10 +1728,10 @@ class formslib_ticklist extends formslib_composite
 
 		foreach ($this->ticklist as $index => $label)
 		{
-			$ids = 'name="' . $this->name . '" id="fld_' . htmlspecialchars($this->name) . '"';
+			$ids = 'name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '"';
 			$checked = ($this->composite_values[$index] == $this->checkedvalue) ? '<span ' . $ids . ' class="colour-positive">&#10004;</span>' : '<span ' . $ids . ' class="colour-negative">&#10008;</span>';
 
-			$text = htmlspecialchars($label) . CRLF;
+			$text = Security::escapeHtml($label) . CRLF;
 
 			$html .= $checked . $text . '<br />' . CRLF;
 		}
@@ -1703,7 +1745,7 @@ class formslib_ticklist extends formslib_composite
 
 	public function getEmailValue()
 	{
-		$checked_vals = array();
+		$checked_vals = [];
 		foreach ($this->composites as $value)
 		{
 			if (isset($this->composite_values[$value]) && $this->composite_values[$value] == $this->checkedvalue) $checked_vals[] = $this->ticklist[$value];
@@ -1728,7 +1770,7 @@ class formslib_ticklist extends formslib_composite
 
 	public function &getObjectValue()
 	{
-		$checked = array();
+		$checked = [];
 
 		foreach ($this->composites as $value)
 		{
@@ -1931,8 +1973,8 @@ class formslib_toggle_button extends formslib_checkbox
 
 		$html .= '<div class="btn-group" data-toggle="buttons">' . CRLF;
 		$html .= '<label for="fld_' . $this->name . '" class="btn' . $this->btnclass . $active . '">' . CRLF;
-		$html .= '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" id="fld_' . htmlspecialchars($this->name) . '" title="' . htmlentities($this->label) . '" />' . CRLF;
-		$html .= htmlspecialchars($this->button_text);
+		$html .= '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '" title="' . Security::escapeHtml($this->label) . '" />' . CRLF;
+		$html .= Security::escapeHtml($this->button_text);
 		$html .= '</label>' . CRLF;
 		$html .= '</div>' . CRLF;
 
@@ -2093,7 +2135,7 @@ class formslib_datepicker extends formslib_text
     public function getHTML()
     {
         $html = '<div class="input-group date">';
-        $html .= '<input type="text" '.$this->_custom_attr().$this->_class_attr('form-control').' name="'.htmlspecialchars($this->name).'" id="fld_'.htmlspecialchars($this->name).'" value="'.htmlspecialchars($this->value).'">';
+        $html .= '<input type="text" '.$this->_custom_attr().$this->_class_attr('form-control').' name="'.Security::escapeHtml($this->name).'" id="fld_'.Security::escapeHtml($this->name).'" value="'.Security::escapeHtml($this->value).'">';
         $html .= '<span class="input-group-addon"><i class="fa fa-calendar"></i></span>';
         $html .= '</div>';
 
@@ -2104,7 +2146,7 @@ class formslib_datepicker extends formslib_text
 
     protected function _generateDatepickerJS()
     {
-        $id = $this->name; //TODO: Properly escape
+        $id = $this->name; //TODO: Properly escape for JS
 
         if (isset($this->startdate))
         {
@@ -2207,21 +2249,14 @@ class formslib_dateselecttime extends formslib_composite
 		$start = new DateTime($startDate);
 		$end = new DateTime($endDate);
 
-		if (version_compare(PHP_VERSION, '5.4.0', '>='))
-		{
-			$interval = $start->diff($end);
-			$daycount = $interval->days;
-		}
-		else
-		{
-			$daycount = abs(strtotime($endDate) - strtotime($startDate)) / (60*60*24);
-		}
+        $interval = $start->diff($end);
+        $daycount = $interval->days;
 
 		if ($daycount < 5) $this->dateformat = 'l';
 		elseif ($daycount < 21) $this->dateformat = 'l jS';
 		elseif ($daycount >= 21) $this->dateformat = 'l j M';
 
-		$days = array();
+		$days = [];
 		for ($i = 0; $i <= $daycount; $i++)
 		{
 			$start = new DateTime($startDate);
@@ -2254,14 +2289,14 @@ class formslib_dateselecttime extends formslib_composite
 			$html .= $this->field_date->getHTML();
 			$html .= '</div>' . CRLF;
 			$html .= '<div class="col-sm-3">' . CRLF;
-			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__time" value="' . htmlspecialchars($this->composite_values['time']) . '" />';
+			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__time" value="' . Security::escapeHtml($this->composite_values['time']) . '" />';
 			$html .= '</div><!-- /.col-sm-3 -->' . CRLF;
 			$html .= '</div><!-- /.row -->' . CRLF;
 		}
 		else
 		{
 			$html .= $this->field_date->getHTML().' - ';
-			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__time" value="' . htmlspecialchars($this->composite_values['time']) . '" />';
+			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__time" value="' . Security::escapeHtml($this->composite_values['time']) . '" />';
 		}
 
 		return $html;
@@ -2322,18 +2357,18 @@ class formslib_dateselecttimerange extends formslib_dateselecttime
 			$html .= $this->field_date->getHTML();
 			$html .= '</div>' . CRLF;
 			$html .= '<div class="col-sm-3">' . CRLF;
-			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__start" value="' . htmlspecialchars($this->composite_values['start']) . '" />';
+			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__start" value="' . Security::escapeHtml($this->composite_values['start']) . '" />';
 			$html .= '</div>' . CRLF;
 			$html .= '<div class="col-sm-3">' . CRLF;
-			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__end" value="' . htmlspecialchars($this->composite_values['end']) . '" />';
+			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__end" value="' . Security::escapeHtml($this->composite_values['end']) . '" />';
 			$html .= '</div><!-- /.col-sm-3 -->' . CRLF;
 			$html .= '</div><!-- /.row -->' . CRLF;
 		}
 		else
 		{
 			$html .= $this->field_date->getHTML().' - ';
-			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__start" value="' . htmlspecialchars($this->composite_values['start']) . '" /> - ';
-			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__end" value="' . htmlspecialchars($this->composite_values['end']) . '" />';
+			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__start" value="' . Security::escapeHtml($this->composite_values['start']) . '" /> - ';
+			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__end" value="' . Security::escapeHtml($this->composite_values['end']) . '" />';
 		}
 
 		return $html;
@@ -2413,14 +2448,14 @@ class formslib_datepickertime extends formslib_composite
 			$html .= $this->field_date->getHTML();
 			$html .= '</div>' . CRLF;
 			$html .= '<div class="col-sm-3">' . CRLF;
-			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__time" value="' . htmlspecialchars($this->composite_values['time']) . '" />';
+			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__time" value="' . Security::escapeHtml($this->composite_values['time']) . '" />';
 			$html .= '</div><!-- /.col-sm-3 -->' . CRLF;
 			$html .= '</div><!-- /.row -->' . CRLF;
 		}
 		else
 		{
 			$html .= $this->field_date->getHTML().' - ';
-			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__time" value="' . htmlspecialchars($this->composite_values['time']) . '" />';
+			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__time" value="' . Security::escapeHtml($this->composite_values['time']) . '" />';
 		}
 
 		return $html;

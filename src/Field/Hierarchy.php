@@ -79,7 +79,7 @@ class Hierarchy extends MultiValue
 		$output = '';
 
 		// TODO: Labelling
-		// echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . htmlspecialchars($this->name) . '">' . htmlspecialchars($this->label) . $mand . '</label> ' . CRLF;
+		// echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand . '</label> ' . CRLF;
 
 		$output .=  '	<div class="col-xs-12">' . CRLF;
 		$output .= $field->getHTML() . CRLF;
@@ -150,7 +150,7 @@ EOF;
 
 	public function getNextLevelAjax($subfield, $values)
 	{
-		$matches = array();
+		$matches = [];
 		preg_match('/^(.*)__([0-9]+)$/', $subfield, $matches);
 
 		//TODO: Check for lack of matches
@@ -170,7 +170,7 @@ EOF;
 			$v = json_decode($values);
 		}
 
-		$vals = array();
+		$vals = [];
 		foreach ($v as $valobj)
 		{
 			$vals[$valobj->name] = $valobj->val;
@@ -193,7 +193,7 @@ EOF;
 
 			if (!$found)
 			{
-				$children = array(); // TODO: Return a message instead?
+				$children = []; // TODO: Return a message instead?
 			}
 		}
 

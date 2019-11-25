@@ -1,4 +1,6 @@
 <?php
+use formslib\Utility\Security;
+
 class formslib_form
 {
 	private $name, $id, $action, $method;
@@ -13,21 +15,21 @@ class formslib_form
 	public $submitlabel;
 	public $mandatoryHTML, $semimandatoryHTML;
 
-	private $errorlist = array();
+	private $errorlist = [];
 	private $htmltop, $htmlbottom, $htmlbeforesubmit;
-	private $classes = array();
-	private $attrib = array();
+	private $classes = [];
+	private $attrib = [];
 	private $submitfieldset = false;
 	private $nosubmitbutton = false;
 	private $jqueryvalidate = false;
 	private $obfuscate_js = false;
 	private $customjs;
-	private $types_used = array();
+	private $types_used = [];
 	private $submitclass = array('btn', 'btn-primary');
 	private $submit_grid_ratio = null;
 	private $resultClass = '\formslib\Result\ResultObject';
 	private $doubleClickTimeout = null;
-	private $fsorder = array();
+	private $fsorder = [];
 
 	public function __construct($name)
 	{
@@ -74,13 +76,9 @@ class formslib_form
 	 *        	Pointer for error code
 	 * @return formslib_field_paramset
 	 */
-	public function &addField($type, $name, &$error = NULL)
+	public function &addField($type, $name)
 	{
-		if ($type == 'field')
-		{
-			$error = 1;
-			return false;
-		}
+	    if ($type == 'field') throw new \Exception('FORMSLIB ERROR: Cannot add a field of abstract type "field": ' . $name);
 
 		if (isset($this->fields[$name])) throw new \Exception('FORMSLIB ERROR: Duplicate field name: ' . $name);
 
@@ -112,27 +110,30 @@ class formslib_form
 			}
 			else
 			{
-				if (! defined('FORMSLIB_SILENT_ERRORS') || FORMBLIB_SILENT_ERRORS === false)
-				{
-					echo '<p>FORMSLIB ERROR: Failed to create field object for &quot;' . htmlspecialchars($name) . '&quot;</p>' . CRLF . CRLF;
-				}
-				$error = 2;
-				return false;
+                throw new \Exception('FORMSLIB ERROR: Failed to create field object for: ' . $name);
 			}
 		}
 		else
 		{
-			if (! defined('FORMSLIB_SILENT_ERRORS') || FORMBLIB_SILENT_ERRORS === false)
-			{
-				echo '<p>FORMSLIB ERROR: No such field type: ' . htmlspecialchars($type) . ' for field name &quot;' . htmlspecialchars($name) . '&quot;</p>' . CRLF . CRLF;
-			}
-			$error = 3;
-			return false;
+			throw new \Exception('FORMSLIB ERROR: No such field type "' . $type . '" for field name "' . $name . '"');
 		}
 
 		if (! in_array($type, $this->types_used)) $this->types_used[] = $type;
 
 		return $field;
+	}
+
+	public function &attachField(\formslib_field &$field)
+	{
+        $name = $field->getName();
+
+        if (isset($this->fields[$name])) throw new \Exception('FORMSLIB ERROR: Duplicate field name: ' . $name);
+
+        $this->fields[$name] = &$field;
+
+        $type = $field->getType();
+
+	    if (! in_array($type, $this->types_used)) $this->types_used[] = $type;
 	}
 
 	public function &addFieldSet($name)
@@ -229,7 +230,7 @@ class formslib_form
 		}
 
 		// Go through the fieldsets
-		$field_js = array();
+		$field_js = [];
 		foreach ($this->fsorder as $fieldset)
 		{
 			/** @var formslib_fieldset $fs */
@@ -273,7 +274,13 @@ class formslib_form
 		$fields = array_keys($this->fields);
 		foreach ($fields as $name)
 		{
-			$mandatory = $this->fields[$name]->mandatory;
+		    $mandatory = $this->fields[$name]->mandatory;
+
+		    /**
+		     * @todo: Should mandatory checking be delegated...?
+		     * 1. To individual fields
+		     * 2. To a rule paradigm
+		     */
 
 			if (is_a($this->fields[$name], 'formslib_composite'))
 			{
@@ -299,11 +306,11 @@ class formslib_form
 
 						// Add field to error list
 						$label = $this->fields[$name]->label;
-						$this->errorlist[] = array(
+						$this->errorlist[] = [
 							'name' => $name,
 							'label' => $label,
 							'message' => (! is_a($this->fields[$name], 'formslib_checkbox')) ? 'You must enter a value for ' . $label : 'You must tick "' . $label . '" to be able to complete this form'
-						);
+						];
 						$is_valid = false;
 					}
 				}
@@ -329,11 +336,11 @@ class formslib_form
 
 			            // Add field to error list
 			            $label = $this->fields[$name]->label;
-			            $this->errorlist[] = array(
+			            $this->errorlist[] = [
 			                'name' => $name,
 			                'label' => $label,
 			                'message' => (! is_a($this->fields[$name], 'formslib_checkbox')) ? 'You must enter a value for ' . $label : 'You must tick "' . $label . '" to be able to complete this form'
-			            );
+			            ];
 			            $is_valid = false;
 			        }
 			    }
@@ -350,11 +357,11 @@ class formslib_form
 
 					// Add field to error list
 					$label = $this->fields[$name]->label;
-					$this->errorlist[] = array(
+					$this->errorlist[] = [
 						'name' => $name,
 						'label' => $label,
 						'message' => (! is_a($this->fields[$name], 'formslib_checkbox')) ? 'You must enter a value for ' . $label : 'You must tick "' . $label . '" to be able to complete this form'
-					);
+					];
 					$is_valid = false;
 				}
 			}
@@ -370,7 +377,7 @@ class formslib_form
 			// Validate field
 			if (is_a($this->fields[$name], 'formslib_composite'))
 			{
-				$cv = array();
+				$cv = [];
 				foreach ($this->fields[$name]->get_composites() as $key)
 				{
 					$cv[$key] = (isset($vars[$name . '__' . $key])) ? $vars[$name . '__' . $key] : null;
@@ -470,11 +477,11 @@ class formslib_form
 	 */
 	public function addError($name, $label, $message)
 	{
-		$this->errorlist[] = array(
+		$this->errorlist[] = [
 			'name' => $name,
 			'label' => $label,
 			'message' => $message
-		);
+		];
 
 		if (isset($this->fields[$name])) $this->fields[$name]->addClass('formslibinvalid');
 	}
@@ -484,7 +491,7 @@ class formslib_form
 		// Output any hidden fields
 		$fields = array_keys($this->fields);
 
-		$data = array();
+		$data = [];
 		foreach ($fields as $field)
 		{
 			if (is_a($this->fields[$field], 'formslib_hidden'))
@@ -894,7 +901,7 @@ EOF;
 
 	public function displayBottomOnly()
 	{
-		$js = array();
+		$js = [];
 
 		$this->_displayBottom($js);
 	}
@@ -903,17 +910,17 @@ EOF;
 	{
 		if (! isset($this->fields[$fieldname]))
 		{
-			echo '<p>FORMSLIB ERROR: undefined field: ' . htmlspecialchars($fieldname) . '</p>';
+			echo '<p>FORMSLIB ERROR: undefined field: ' . Security::escapeHtml($fieldname) . '</p>';
 			return '';
 		}
-		return '<label for="' . $fieldname . '">' . htmlspecialchars($this->fields[$fieldname]->label) . '</label>';
+		return '<label for="' . $fieldname . '">' . Security::escapeHtml($this->fields[$fieldname]->label) . '</label>';
 	}
 
 	public function displayRawField($fieldname)
 	{
 		if (! isset($this->fields[$fieldname]))
 		{
-			echo '<p>FORMSLIB ERROR: undefined field: ' . htmlspecialchars($fieldname) . '</p>';
+			echo '<p>FORMSLIB ERROR: undefined field: ' . Security::escapeHtml($fieldname) . '</p>';
 			return '';
 		}
 
@@ -925,7 +932,7 @@ EOF;
 	{
 		if (! isset($this->fields[$fieldname]))
 		{
-			echo '<p>FORMSLIB ERROR: undefined field: ' . htmlspecialchars($fieldname) . '</p>';
+			echo '<p>FORMSLIB ERROR: undefined field: ' . Security::escapeHtml($fieldname) . '</p>';
 			return '';
 		}
 
@@ -966,32 +973,22 @@ EOF;
 
 	private function _header()
 	{
-		$set_headers = $headers = array();
+		$set_headers = $headers = [];
 
 		foreach ($this->types_used as $type)
 		{
 			$class_set = '';
 
-			if (version_compare(PHP_VERSION, '5.3.0', '>='))
+			if (substr($type, 0, 1) == '\\')
 			{
-				if (substr($type, 0, 1) == '\\')
-				{
-					$class = $type;
-				}
-				else
-				{
-					$class = class_exists('formslib\Field\\'.$type) ? 'formslib\Field\\'.$type : 'formslib_'.$type;
-				}
-
-				$hdr = $class::getHeader($class_set);
+				$class = $type;
 			}
 			else
 			{
-				/* @var $class formslib_wysiwyg_light */
-				$class = 'formslib_' . $type;
-
-				$hdr = call_user_func_array(array($class, 'getHeader'), array(&$class_set));
+				$class = class_exists('formslib\Field\\'.$type) ? 'formslib\Field\\'.$type : 'formslib_'.$type;
 			}
+
+			$hdr = $class::getHeader($class_set);
 
 			if (! in_array($class_set, $set_headers))
 			{
@@ -1008,7 +1005,7 @@ EOF;
 	{
 		if (! isset($this->fields[$fieldname]))
 		{
-			echo '<p>FORMSLIB ERROR: undefined field: ' . htmlspecialchars($fieldname) . '</p>';
+			echo '<p>FORMSLIB ERROR: undefined field: ' . Security::escapeHtml($fieldname) . '</p>';
 			return '';
 		}
 
@@ -1019,7 +1016,7 @@ EOF;
 	{
 		if (! isset($this->fields[$fieldname]))
 		{
-			echo '<p>FORMSLIB ERROR: undefined field: ' . htmlspecialchars($fieldname) . '</p>';
+			echo '<p>FORMSLIB ERROR: undefined field: ' . Security::escapeHtml($fieldname) . '</p>';
 			return '';
 		}
 
@@ -1085,7 +1082,7 @@ EOF;
 			$post = '</p>';
 		}
 
-		return $pre.'<input type="submit" name="submit" value="' . htmlspecialchars($this->submitlabel) . '" class="'.implode(' ', $this->submitclass).'" />'.$post . CRLF;
+		return $pre.'<input type="submit" name="submit" value="' . Security::escapeHtml($this->submitlabel) . '" class="'.implode(' ', $this->submitclass).'" />'.$post . CRLF;
 	}
 
 	public function &setSubmitGridRatio($label_cols)
@@ -1213,15 +1210,15 @@ EOF;
 class formslib_fieldset
 {
 	private $name, $legend;
-	private $fields = array();
+	private $fields = [];
 	private $introtext, $footertext;
-	private $classes = array();
+	private $classes = [];
 	private $nohtml;
 	private $layout_table = false;
-	private $table_columns = array();
+	private $table_columns = [];
 	private $htmlbefore, $htmlafter;
-	private $legendclass = array();
-	private $fieldorder = array();
+	private $legendclass = [];
+	private $fieldorder = [];
 	private $isRawLegend = false;
 
 	public function __construct($name)
@@ -1256,7 +1253,7 @@ class formslib_fieldset
 
 			echo '<fieldset name="' . $this->name . '"' . $this->_class_attr() . '>' . CRLF;
 
-			$legend = ($this->isRawLegend) ? $this->legend : htmlspecialchars($this->legend);
+			$legend = ($this->isRawLegend) ? $this->legend : Security::escapeHtml($this->legend);
 
 			echo '<legend'.$lc.'>' . $legend . '</legend>' . CRLF . CRLF;
 		}
@@ -1273,7 +1270,7 @@ class formslib_fieldset
 				}
 				else
 				{
-					echo '<p class="error">Field ' . htmlspecialchars($fieldname) . ' is not an object.</p>'; // TODO: Throw exception?
+					echo '<p class="error">Field ' . Security::escapeHtml($fieldname) . ' is not an object.</p>'; // TODO: Throw exception?
 				}
 			}
 		}
@@ -1290,7 +1287,7 @@ class formslib_fieldset
 			{
 		        $thclass = (isset($column['class'])) ? ' class="'.$column['class'].'"' : '';
 		        echo '<th'.$thclass.'>'.CRLF;
-				echo htmlentities($column['label']);
+				echo Security::escapeHtml($column['label']);
 				echo '</th>' . CRLF;
 			}
 			echo '</tr>' . CRLF;
@@ -1316,7 +1313,7 @@ class formslib_fieldset
 					$outputted = true;
 
 					echo '<td>';
-					echo '<label class="sr-only control-label" for="fld_' . htmlspecialchars($fieldname) . '">' . htmlspecialchars($form->fields[$fieldname]->getLabel()) . '</label> ' . CRLF;
+					echo '<label class="sr-only control-label" for="fld_' . Security::escapeHtml($fieldname) . '">' . Security::escapeHtml($form->fields[$fieldname]->getLabel()) . '</label> ' . CRLF;
 					echo $fld->getHTML($form);
 					// TODO: Mandatory mark?
 					echo '</td>';
@@ -1325,7 +1322,7 @@ class formslib_fieldset
 				}
 				else
 				{
-					echo '<td class="error">Field ' . htmlspecialchars($fieldname) . ' is not an object.</td>'; //TODO: Throw exception?
+					echo '<td class="error">Field ' . Security::escapeHtml($fieldname) . ' is not an object.</td>'; //TODO: Throw exception?
 				}
 			}
 			if ($outputted) echo '</tr>' . CRLF;
@@ -1352,7 +1349,7 @@ class formslib_fieldset
 
 	public function getDataDump(&$form)
 	{
-		$data = array();
+		$data = [];
 		foreach ($this->fieldorder as $fieldname)
 		{
 			$data[$fieldname] = $form->fields[$fieldname]->getDataDump();
@@ -1388,7 +1385,7 @@ class formslib_fieldset
 
 		if ($style == FORMSLIB_EMAILSTYLE_HTML || $style == FORMSLIB_EMAILSTYLE_HTML_TH)
 		{
-			$body .= '<h2>' . htmlspecialchars($this->legend) . '</h2>' . CRLF;
+			$body .= '<h2>' . Security::escapeHtml($this->legend) . '</h2>' . CRLF;
 			$body .= '<table class="table">' . CRLF;
 		}
 		else
@@ -1406,8 +1403,8 @@ class formslib_fieldset
 					case FORMSLIB_EMAILSTYLE_HTML_TH:
 						$cell = ($style == FORMSLIB_EMAILSTYLE_HTML_TH) ? 'th' : 'td';
 						$body .= '<tr>' . CRLF;
-						$body .= '<' . $cell . '>' . htmlspecialchars($form->fields[$fieldname]->getLabel()) . '</' . $cell . '>' . CRLF;
-						$body .= '<td>' . str_replace("\n", "<br />\n", htmlspecialchars($form->fields[$fieldname]->getEmailValue())) . '</td>' . CRLF;
+						$body .= '<' . $cell . '>' . Security::escapeHtml($form->fields[$fieldname]->getLabel()) . '</' . $cell . '>' . CRLF;
+						$body .= '<td>' . str_replace("\n", "<br />\n", Security::escapeHtml($form->fields[$fieldname]->getEmailValue())) . '</td>' . CRLF;
 						$body .= '</tr>' . CRLF;
 						break;
 
@@ -1483,7 +1480,7 @@ class formslib_fieldset
 	public function &setTableColumns(array $columns, $merge = false)
 	{
 		if (!$merge)
-		    $this->table_columns = array();
+		    $this->table_columns = [];
 
 	    $this->table_columns += $columns;
 
@@ -1513,7 +1510,7 @@ class formslib_fieldset
 
 	public function getJs(formslib_form &$form)
 	{
-		$js = array();
+		$js = [];
 
 		foreach ($this->fields as $fieldname)
 		{

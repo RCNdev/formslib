@@ -3,7 +3,7 @@ namespace formslib\Field;
 
 abstract class MultiValue extends Field
 {
-	public $multi_values = array();
+	public $multi_values = [];
 	public $composite_values = null;
 	protected $maxvalue;
 

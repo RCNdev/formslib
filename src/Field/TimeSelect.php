@@ -64,50 +64,21 @@ class TimeSelect extends Composite
 	    {
 	        $html .= '<div class="row">' . CRLF;
 	        $html .= '<div class="col-xs-4">' . CRLF;
-	        $classes = '';
-	    }
-	    else
-	    {
-	        $classes = ' input-mini';
 	    }
 
 	    $this->field_hour->addClasses($this->getClasses());
+	    $this->field_hour->value = $this->composite_values['hour'];
 	    $html .= $this->field_hour->getHTML();
-
-// 	    // Day
-// 	    $html .= '<select' . $this->_custom_attr() . $this->_class_attr('formslib_date__day'.$classes) . ' name="' . $this->name . '__day">' . CRLF;
-// 	    $html .= '<option value="0">Day</option>';
-// 	    for ($i = 1; $i <= 31; $i++)
-// 	    {
-// 	        $html .= '<option value="' . $i . '"';
-// 	        if ($this->composite_values['day'] == $i) $html .= ' selected="selected"';
-// 	        $html .= '>' . $i . '</option>' . CRLF;
-// 	    }
-// 	    $html .= '</select>' . CRLF;
 
 	    if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
 	    {
 	        $html .= '</div>' . CRLF;
 	        $html .= '<div class="col-xs-4">' . CRLF;
-	        $classes = '';
-	    }
-	    else
-	    {
-	        $classes = ' input-small col-sm-6';
 	    }
 
 	    $this->field_minute->addClasses($this->getClasses());
+	    $this->field_minute->value = $this->composite_values['minute'];
 	    $html .= $this->field_minute->getHTML();
-
-// 	    // Month
-// 	    $html .= '<select' . $this->_custom_attr() . $this->_class_attr('formslib_date__month'.$classes) . ' name="' . $this->name . '__month">' . CRLF;
-// 	    for ($i = 0; $i <= 12; $i++)
-// 	    {
-// 	        $html .= '<option value="' . $i . '"';
-// 	        if ($this->composite_values['month'] == $i) $html .= ' selected="selected"';
-// 	        $html .= '>' . $GLOBALS['mn'][$i] . '</option>' . CRLF;
-// 	    }
-// 	    $html .= '</select>' . CRLF;
 
 	    if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
 	    {
@@ -120,6 +91,8 @@ class TimeSelect extends Composite
 
 	public function getEmailValue()
 	{
+	    if ($this->composite_values['hour'] === '' && $this->composite_values['minute'] === '') return null;
+
 	    return sprintf('%02s', $this->composite_values['hour']).':'.sprintf('%02s', $this->composite_values['minute']);
 	}
 

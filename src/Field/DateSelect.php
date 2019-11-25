@@ -20,7 +20,7 @@ class DateSelect extends \formslib_select
 		elseif ($daycount < 21) $this->dateformat = 'l jS';
 		elseif ($daycount >= 21) $this->dateformat = 'l j M';
 
-		$days = array();
+		$days = [];
 		for ($i = 0; $i <= $daycount; $i++)
 		{
 			$start = new \DateTime($startDate);
@@ -29,7 +29,7 @@ class DateSelect extends \formslib_select
 			$days[$key] = $date->format($this->dateformat);
 		}
 
-		$this->setOptions(array('' => '- Select day -')+$days);
+		$this->setOptions(['' => '- Select day -'] + $days);
 
 		return $this;
 	}
