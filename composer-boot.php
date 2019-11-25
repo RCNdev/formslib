@@ -22,7 +22,7 @@ if (!defined('POSTCODE_VALIDATE')) define('POSTCODE_VALIDATE', '^[A-PR-UWYZ][A-H
 if (!defined('MOBILE_VALIDATE')) define('MOBILE_VALIDATE', '^(\+44|0)7[4-57-9][0-9]{8}$');
 
 require_once 'src/Formslib.php';
-require_once 'src/form.php';
+require_once 'src/compat.php';
 require_once 'src/fields.php';
 require_once 'src/custom_fields.php';
 require_once 'src/rules.php';

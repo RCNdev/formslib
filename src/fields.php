@@ -1,6 +1,8 @@
 <?php
 
 use formslib\Utility\Security;
+use formslib\Form;
+use formslib\Fieldset;
 
 /**
  * Abstract field class for formslib
@@ -172,7 +174,7 @@ abstract class formslib_field
 		return $this;
 	}
 
-	public function display(formslib_form &$form)
+	public function display(Form &$form)
 	{
 		$this->outputstyle = $outputstyle = $form->outputstyle;
 
@@ -485,7 +487,7 @@ abstract class formslib_field
 		return '';
 	}
 
-	public function displayReadOnly(formslib_form &$form)
+	public function displayReadOnly(Form &$form)
 	{
 		if ($this->mandatory)
 			$mand = $form->mandatoryHTML;
@@ -576,14 +578,14 @@ abstract class formslib_field
 		}
 	}
 
-	public function &attachToFieldset(formslib_fieldset &$fs)
+	public function &attachToFieldset(Fieldset &$fs)
 	{
 		$fs->attachField($this->name);
 
 		return $this;
 	}
 
-	public function &attachToForm(formslib_form &$f)
+	public function &attachToForm(Form &$f)
 	{
 	    $f->attachField($this);
 
@@ -692,6 +694,11 @@ abstract class formslib_field
 		$this->helpbefore = $before;
 
 		return $this;
+	}
+
+	public static function getJsCommon()
+	{
+
 	}
 }
 
@@ -1022,7 +1029,7 @@ class formslib_checkbox extends formslib_field
 		return $html;
 	}
 
-	public function display(formslib_form &$form)
+	public function display(Form &$form)
 	{
 		$mand = ($this->mandatory) ? $form->mandatoryHTML : '';
 
