@@ -19,6 +19,8 @@ class TimeSelect extends Composite
 
         $this->field_hour = new \formslib_select($name.'__hour');
         $this->field_minute = new \formslib_select($name.'__minute');
+
+        $this->setTimeRange('00:00', '23:59');
     }
 
     /**

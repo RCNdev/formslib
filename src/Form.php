@@ -16,6 +16,7 @@ class Form
 	public $outputstyle;
 	public $submitlabel;
 	public $mandatoryHTML, $semimandatoryHTML;
+	public $optionalHTML = '<small class="formslib_optional">(optional)</small>';
 
 	private $errorlist = [];
 	private $htmltop, $htmlbottom, $htmlbeforesubmit;
@@ -32,6 +33,7 @@ class Form
 	private $resultClass = '\formslib\Result\ResultObject';
 	private $doubleClickTimeout = null;
 	private $fsorder = [];
+	private $optionalLabels = false;
 
 	public function __construct($name)
 	{
@@ -204,6 +206,11 @@ class Form
 	{
 		$this->mandatoryHTML = $html;
 		$this->semimandatoryHTML = $semimandatoryhtml;
+	}
+
+	public function setOptionalHTML($html)
+	{
+	    $this->optionalHTML = $html;
 	}
 
 	/**
@@ -1199,5 +1206,15 @@ EOF;
 		$location = ($pos > $orig) ? $pos : $pos + 1;
 
 		$this->positionFieldsetTo($fsname, $location);
+	}
+
+	public function setOptionalLabels($optional = true)
+	{
+	    $this->optionalLabels = true;
+	}
+
+	public function getOptionalLabels()
+	{
+	    return $this->optionalLabels;
 	}
 }
