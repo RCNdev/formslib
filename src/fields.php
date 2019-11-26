@@ -268,7 +268,7 @@ class formslib_select extends formslib_options
 		foreach ($this->options as $value => $label)
 		{
 			$html .= '<option value="' . Security::escapeHtml($value) . '"';
-			if ($this->value == $value) $html .= ' selected="selected"';
+			if ($this->value === (string)$value) $html .= ' selected="selected"';
 			$html .= '>';
 			$html .= Security::escapeHtml($label);
 			$html .= '</option>' . CRLF;
