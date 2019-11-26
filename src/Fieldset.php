@@ -383,9 +383,11 @@ class Fieldset extends \formslib_fieldset
         return $this;
     }
 
-    public function setDisplayCondition(\formslib\Rule\DisplayCondition &$condition)
+    public function &setDisplayCondition(\formslib\Rule\DisplayCondition &$condition)
     {
         $this->display_condition = $condition;
+
+        return $this;
     }
 
     public function getDisplayCondition()
