@@ -30,6 +30,9 @@ abstract class Field
     protected $ajaxFormIdentifier;
     protected $disabled = false;
 
+    /** @var \formslib\Rule\DisplayCondition */
+    protected $display_condition;
+
     public function __construct($name)
     {
         $this->name = $name;
@@ -708,5 +711,15 @@ abstract class Field
     public static function getJsCommon()
     {
 
+    }
+
+    public function setDisplayCondition(\formslib\Rule\DisplayCondition &$condition)
+    {
+        $this->display_condition = $condition;
+    }
+
+    public function getDisplayCondition()
+    {
+        return $this->display_condition;
     }
 }
