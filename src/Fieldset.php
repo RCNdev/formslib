@@ -17,6 +17,9 @@ class Fieldset extends \formslib_fieldset
     private $fieldorder = [];
     private $isRawLegend = false;
 
+    /** @var \formslib\Rule\DisplayCondition */
+    private $display_condition;
+
     public function __construct($name)
     {
         $this->name = $name;
@@ -378,5 +381,15 @@ class Fieldset extends \formslib_fieldset
         $this->isRawLegend = $raw;
 
         return $this;
+    }
+
+    public function setDisplayCondition(\formslib\Rule\DisplayCondition &$condition)
+    {
+        $this->display_condition = $condition;
+    }
+
+    public function getDisplayCondition()
+    {
+        return $this->display_condition;
     }
 }
