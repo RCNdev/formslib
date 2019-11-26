@@ -16,7 +16,7 @@ class Form
 	public $outputstyle;
 	public $submitlabel;
 	public $mandatoryHTML, $semimandatoryHTML;
-	public $optionalHTML = '<small class="formslib_optional">(optional)</small>';
+	public $optionalHTML = ' <small class="formslib_optional">(optional)</small>';
 
 	private $errorlist = [];
 	private $htmltop, $htmlbottom, $htmlbeforesubmit;

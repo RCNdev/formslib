@@ -577,6 +577,8 @@ class formslib_yesno extends formslib_radio
 		parent::__construct($name);
 		$this->addOption('1', 'Yes');
 		$this->addOption('0', 'No');
+
+		$this->setMandatory();
 	}
 }
 
