@@ -55,7 +55,7 @@ class Fieldset extends \formslib_fieldset
         {
             $lc = (count($this->legendclass)) ? ' class="'.implode(' ', $this->legendclass).'"' : '';
 
-            echo '<fieldset name="' . $this->name . '"' . $this->_class_attr() . ' id="fs_' . $this->name . '">' . CRLF;
+            echo '<fieldset name="' . $this->name . '"' . $this->_class_attr() . ' data-formslib-owner="fs_' . $this->name . '">' . CRLF;
 
             $legend = ($this->isRawLegend) ? $this->legend : Security::escapeHtml($this->legend);
 

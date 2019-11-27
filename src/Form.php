@@ -1253,34 +1253,37 @@ EOF;
 $('[name=$name]').change(function(e){
 JS;
 
-			$type = $c[0];
-			$id = $c[1];
-			$val = $c[2]->getValue();
-
-			switch ($c[2]->getOperator())
+			foreach ($c as $cd)
 			{
-				case \formslib\Operator::EQ:
-					$jq .= <<<JS
+				$type = $cd[0];
+				$id = $cd[1];
+				$val = $cd[2]->getValue();
+
+				switch ($cd[2]->getOperator())
+				{
+					case \formslib\Operator::EQ:
+						$jq .= <<<JS
 if ($(e.target).val() == '$val')
 {
-	$('#{$type}_$id').show();
+	$('[data-formslib-owner="{$type}_$id"]').show();
 }
 else
 {
-	$('#{$type}_$id').hide();
+	$('[data-formslib-owner="{$type}_$id"]').hide();
 }
 JS;
-					break;
+						break;
 
-				case \formslib\Operator::IN:
-					$jq .= <<<JS
+					case \formslib\Operator::IN:
+						$jq .= <<<JS
 // TODO: Conditional display on IN
 JS;
-					break;
+						break;
 
-				default:
-					throw new \Exception('Unable to process display condition operator "'.$c[3]->getOperator().'"');
-					break;
+					default:
+						throw new \Exception('Unable to process display condition operator "'.$cd[2]->getOperator().'"');
+						break;
+				}
 			}
 
 			$jq .= '});';
