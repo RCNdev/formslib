@@ -762,6 +762,11 @@ abstract class formslib_composite extends formslib_field
 	{
 		throw new \Exception('Composite field function getObjectValue() not overwritten for field type '.get_class($this));
 	}
+
+	public function getJquerySelector()
+	{
+		return '[data-formslib-owner="fld_'.$this->name.'"] input';
+	}
 }
 
 class formslib_date extends formslib_composite

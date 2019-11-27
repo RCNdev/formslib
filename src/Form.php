@@ -1232,7 +1232,7 @@ EOF;
 				$conditions[$condition->getFieldName()][] = ['fs', $fs->getName(), $condition];
 
 				$jq .= 'var fld = $(\''.$this->getField($condition->getFieldName())->getJquerySelector().'\');'.CRLF;
-				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fs', $fs->getName(), $condition->getValue());
+				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fs', $fs->getName(), $condition->getValue(), $condition->getFieldName());
 			}
 		}
 
@@ -1245,7 +1245,7 @@ EOF;
 				$conditions[$condition->getFieldName()][] = ['fld', $fld->getName(), $condition];
 
 				$jq .= 'var fld = $(\''.$this->getField($condition->getFieldName())->getJquerySelector().'\');'.CRLF;
-				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fld', $fs->getName(), $condition->getValue());
+				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fld', $fs->getName(), $condition->getValue(), $condition->getFieldName());
 			}
 		}
 
@@ -1293,7 +1293,7 @@ JS;
 		}
 	}
 
-	private function _generateDisplayCondition($operator, $type, $id, $value)
+	private function _generateDisplayCondition($operator, $type, $id, $value, $field)
 	{
 		$jq = '';
 
@@ -1332,6 +1332,24 @@ JS;
 			case \formslib\Operator::IN:
 				$jq .= <<<JS
 // TODO: Conditional display on IN
+JS;
+				break;
+
+			case \formslib\Operator::PRESENT:
+				$jq .= <<<JS
+	fld.each(function(index){
+		if ($(this).name == '{$field}__$value')
+		{
+			if $(this).prop('checked')
+			{
+				$('[data-formslib-owner="{$type}_$id"]').show();
+			}
+			else
+			{
+				$('[data-formslib-owner="{$type}_$id"]').hide();
+			}
+		}
+	});
 JS;
 				break;
 
