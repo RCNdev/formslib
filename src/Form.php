@@ -7,7 +7,7 @@ class Form
 {
 	private $name, $id, $action, $method;
 
-	/** @var \formslib_field[] */
+	/** @var Field\Field[] */
 	public $fields = [];
 
 	/** @var Fieldset[] */
@@ -1231,7 +1231,7 @@ EOF;
 			{
 				$conditions[$condition->getFieldName()][] = ['fs', $fs->getName(), $condition];
 
-				$jq .= 'var fld = $(\'[name='.$condition->getFieldName().']:selected\');'.CRLF; //TODO: Get selector from field
+				$jq .= 'var fld = $(\''.$this->getField($condition->getFieldName())->getJquerySelector().'\');'.CRLF;
 				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fs', $fs->getName(), $condition->getValue());
 			}
 		}
@@ -1244,7 +1244,7 @@ EOF;
 			{
 				$conditions[$condition->getFieldName()][] = ['fld', $fld->getName(), $condition];
 
-				$jq .= 'var fld = $(\'[name='.$condition->getFieldName().']:selected\');'.CRLF; //TODO: Get selector from field
+				$jq .= 'var fld = $(\''.$this->getField($condition->getFieldName())->getJquerySelector().'\');'.CRLF;
 				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fld', $fs->getName(), $condition->getValue());
 			}
 		}

@@ -254,6 +254,11 @@ class formslib_radio extends formslib_options
 
 		return $this;
 	}
+
+	public function getJquerySelector()
+	{
+		return '[name='.$this->name.']:selected';
+	}
 }
 
 class formslib_select extends formslib_options

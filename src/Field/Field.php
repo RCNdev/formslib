@@ -721,4 +721,12 @@ abstract class Field
     {
         return $this->display_condition;
     }
+
+    /**
+     * Get a jQuery selector that can be used to target this field
+     */
+    public function getJquerySelector()
+    {
+    	return '[name='.$this->name.']';
+    }
 }
