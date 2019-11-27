@@ -257,7 +257,7 @@ class formslib_radio extends formslib_options
 
 	public function getJquerySelector()
 	{
-		return '[name='.$this->name.']:selected';
+		return 'input[name='.$this->name.']:selected';
 	}
 }
 
@@ -289,6 +289,11 @@ class formslib_select extends formslib_options
 		$label = (isset($this->options[$this->value])) ? $this->options[$this->value] : '- Unknown value -';
 
 		return '<span name="' . Security::escapeHtml($this->name) . '" id="fld_' . Security::escapeHtml($this->name) . '" ' . $this->_custom_attr() . $this->_class_attr() . '><strong>' . Security::escapeHtml($label) . '</strong></span>'; // TODO: Move strong to a class
+	}
+
+	public function getJquerySelector()
+	{
+		return 'select[name='.$this->name.']';
 	}
 }
 

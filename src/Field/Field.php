@@ -727,6 +727,6 @@ abstract class Field
      */
     public function getJquerySelector()
     {
-    	return '[name='.$this->name.']';
+    	return 'input[name='.$this->name.']';
     }
 }
