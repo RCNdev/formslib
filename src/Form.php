@@ -1231,6 +1231,7 @@ EOF;
 			{
 				$conditions[$condition->getFieldName()][] = ['fs', $fs->getName(), $condition];
 
+				$jq .= 'var fld = $(\'[name='.$condition->getFieldName().'\']\');'.CRLF;
 				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fs', $fs->getName(), $condition->getValue());
 			}
 		}
@@ -1243,6 +1244,7 @@ EOF;
 			{
 				$conditions[$condition->getFieldName()][] = ['fld', $fld->getName(), $condition];
 
+				$jq .= 'var fld = $(\'[name='.$condition->getFieldName().'\']\');'.CRLF;
 				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fld', $fs->getName(), $condition->getValue());
 			}
 		}
@@ -1256,6 +1258,7 @@ EOF;
 			$jq .= <<<JS
 
 $('[name=$name]').change(function(e){
+	var fld = $(e.target);
 JS;
 
 			foreach ($c as $cd)
@@ -1297,14 +1300,15 @@ JS;
 		{
 			case \formslib\Operator::EQ:
 				$jq .= <<<JS
-if ($(e.target).val() == '$value')
-{
-	$('[data-formslib-owner="{$type}_$id"]').show();
-}
-else
-{
-	$('[data-formslib-owner="{$type}_$id"]').hide();
-}
+
+	if (fld.val() == '$value')
+	{
+		$('[data-formslib-owner="{$type}_$id"]').show();
+	}
+	else
+	{
+		$('[data-formslib-owner="{$type}_$id"]').hide();
+	}
 JS;
 				break;
 
