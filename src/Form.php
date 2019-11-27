@@ -1221,6 +1221,7 @@ EOF;
 	private function _generate_jquery_showhide()
 	{
 		$conditions = [];
+		$jq = '';
 
 		foreach ($this->fieldsets as $fs)
 		{
@@ -1229,6 +1230,8 @@ EOF;
 			if (is_object($condition))
 			{
 				$conditions[$condition->getFieldName()][] = ['fs', $fs->getName(), $condition];
+
+				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fs', $fs->getName(), $condition->getValue());
 			}
 		}
 
@@ -1239,12 +1242,14 @@ EOF;
 			if (is_object($condition))
 			{
 				$conditions[$condition->getFieldName()][] = ['fld', $fld->getName(), $condition];
+
+				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fld', $fs->getName(), $condition->getValue());
 			}
 		}
 
 		if (!count($conditions)) return null;
 
-		$jq = '';
+
 
 		foreach ($conditions as $name => $c)
 		{
@@ -1255,35 +1260,7 @@ JS;
 
 			foreach ($c as $cd)
 			{
-				$type = $cd[0];
-				$id = $cd[1];
-				$val = $cd[2]->getValue();
-
-				switch ($cd[2]->getOperator())
-				{
-					case \formslib\Operator::EQ:
-						$jq .= <<<JS
-if ($(e.target).val() == '$val')
-{
-	$('[data-formslib-owner="{$type}_$id"]').show();
-}
-else
-{
-	$('[data-formslib-owner="{$type}_$id"]').hide();
-}
-JS;
-						break;
-
-					case \formslib\Operator::IN:
-						$jq .= <<<JS
-// TODO: Conditional display on IN
-JS;
-						break;
-
-					default:
-						throw new \Exception('Unable to process display condition operator "'.$cd[2]->getOperator().'"');
-						break;
-				}
+				$jq .= $this->_generateDisplayCondition($cd[2]->getOperator(), $cd[0], $cd[1], $cd[2]->getValue());
 			}
 
 			$jq .= '});';
@@ -1310,5 +1287,38 @@ JS;
 		{
 			return $jq;
 		}
+	}
+
+	private function _generateDisplayCondition($operator, $type, $id, $value)
+	{
+		$jq = '';
+
+		switch ($operator)
+		{
+			case \formslib\Operator::EQ:
+				$jq .= <<<JS
+if ($(e.target).val() == '$value')
+{
+	$('[data-formslib-owner="{$type}_$id"]').show();
+}
+else
+{
+	$('[data-formslib-owner="{$type}_$id"]').hide();
+}
+JS;
+				break;
+
+			case \formslib\Operator::IN:
+				$jq .= <<<JS
+// TODO: Conditional display on IN
+JS;
+				break;
+
+			default:
+				throw new \Exception('Unable to process display condition operator "'.$operator.'"');
+				break;
+		}
+
+		return $jq;
 	}
 }
