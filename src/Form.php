@@ -1231,7 +1231,7 @@ EOF;
 			{
 				$conditions[$condition->getFieldName()][] = ['fs', $fs->getName(), $condition];
 
-				$jq .= 'var fld = $(\''.$this->getField($condition->getFieldName())->getJquerySelector().'\');'.CRLF;
+				$jq .= 'var fld = $(\''.$this->fields[$condition->getFieldName()]->getJquerySelector().'\');'.CRLF;
 				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fs', $fs->getName(), $condition->getValue(), $condition->getFieldName());
 			}
 		}
@@ -1244,7 +1244,7 @@ EOF;
 			{
 				$conditions[$condition->getFieldName()][] = ['fld', $fld->getName(), $condition];
 
-				$jq .= 'var fld = $(\''.$this->getField($condition->getFieldName())->getJquerySelector().'\');'.CRLF;
+				$jq .= 'var fld = $(\''.$this->fields[$condition->getFieldName()]->getJquerySelector().'\');'.CRLF;
 				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fld', $fs->getName(), $condition->getValue(), $condition->getFieldName());
 			}
 		}
@@ -1255,16 +1255,18 @@ EOF;
 
 		foreach ($conditions as $name => $c)
 		{
+			$selector = $this->fields[$name]->getJquerySelector();
+
 			$jq .= <<<JS
 
-$('[name=$name]').change(function(e){
+$('$selector').change(function(e){
 	var fld = $(e.target);
 
 JS;
 
 			foreach ($c as $cd)
 			{
-				$jq .= $this->_generateDisplayCondition($cd[2]->getOperator(), $cd[0], $cd[1], $cd[2]->getValue());
+				$jq .= $this->_generateDisplayCondition($cd[2]->getOperator(), $cd[0], $cd[1], $cd[2]->getValue(), $name);
 			}
 
 			$jq .= '});';
@@ -1340,7 +1342,7 @@ JS;
 	fld.each(function(index){
 		if ($(this).name == '{$field}__$value')
 		{
-			if $(this).prop('checked')
+			if ($(this).prop('checked'))
 			{
 				$('[data-formslib-owner="{$type}_$id"]').show();
 			}
