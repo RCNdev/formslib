@@ -1255,9 +1255,9 @@ JS;
 
 			$type = $c[0];
 			$id = $c[1];
-			$val = $c[3]->getValue();
+			$val = $c[2]->getValue();
 
-			switch ($c[3]->getOperator())
+			switch ($c[2]->getOperator())
 			{
 				case \formslib\Operator::EQ:
 					$jq .= <<<JS
