@@ -26,6 +26,11 @@ class Fieldset extends \formslib_fieldset
         $this->legend = '';
     }
 
+    public function getName()
+    {
+    	return $this->name;
+    }
+
     public function &setLegend($legend)
     {
         $this->legend = $legend;
@@ -50,7 +55,7 @@ class Fieldset extends \formslib_fieldset
         {
             $lc = (count($this->legendclass)) ? ' class="'.implode(' ', $this->legendclass).'"' : '';
 
-            echo '<fieldset name="' . $this->name . '"' . $this->_class_attr() . '>' . CRLF;
+            echo '<fieldset name="' . $this->name . '"' . $this->_class_attr() . ' id="fs_' . $this->name . '">' . CRLF;
 
             $legend = ($this->isRawLegend) ? $this->legend : Security::escapeHtml($this->legend);
 
@@ -69,7 +74,7 @@ class Fieldset extends \formslib_fieldset
                 }
                 else
                 {
-                    echo '<p class="error">Field ' . Security::escapeHtml($fieldname) . ' is not an object.</p>'; // TODO: Throw exception?
+                    throw new \Exception('Field ' . $fieldname . ' is not an object.');
                 }
             }
         }
@@ -390,6 +395,11 @@ class Fieldset extends \formslib_fieldset
         return $this;
     }
 
+    /**
+     * Gets any display condition object associated with this fieldset
+     *
+     * @return \formslib\Rule\DisplayCondition
+     */
     public function getDisplayCondition()
     {
         return $this->display_condition;

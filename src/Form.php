@@ -252,9 +252,6 @@ class Form
 			$field_js = array_merge($field_js, $fs->getJs($this));
 		}
 
-		// TODO: Display any fields not in fieldsets
-		// TODO: Review if the above is acutually necessary, or whether it should fail instead
-
 		echo $this->htmlbeforesubmit . CRLF . CRLF;
 
 		if ($this->submitfieldset === false && $this->nosubmitbutton === false)
@@ -262,6 +259,8 @@ class Form
 			// Display a submit button
 			echo $this->getSubmitHtml();
 		}
+
+
 
 		$this->_displayBottom($field_js);
 	}
@@ -873,6 +872,7 @@ JS;
 		if ($this->jqueryvalidate)
 		{
 			echo '<script type="text/javascript">' . CRLF . '<!--' . CRLF;
+			echo $this->_generate_jquery_showhide() . CRLF;
 			echo $this->_generate_jquery_validation() . CRLF;
 			echo $this->customjs . CRLF;
 			foreach ($field_js as $fjs)
@@ -1216,5 +1216,96 @@ EOF;
 	public function getOptionalLabels()
 	{
 	    return $this->optionalLabels;
+	}
+
+	private function _generate_jquery_showhide()
+	{
+		$conditions = [];
+
+		foreach ($this->fieldsets as $fs)
+		{
+			$condition = $fs->getDisplayCondition();
+
+			if (is_object($condition))
+			{
+				$conditions[$condition->getFieldName()][] = ['fs', $fs->getName(), $condition];
+			}
+		}
+
+		foreach ($this->fields as $fld)
+		{
+			$condition = $fld->getDisplayCondition();
+
+			if (is_object($condition))
+			{
+				$conditions[$condition->getFieldName()][] = ['fld', $fld->getName(), $condition];
+			}
+		}
+
+		if (!count($conditions)) return null;
+
+		$jq = '';
+
+		foreach ($conditions as $name => $c)
+		{
+			$jq .= <<<JS
+
+$('[name=$name]').change(function(e){
+JS;
+
+			$type = $c[0];
+			$id = $c[1];
+			$val = $c[3]->getValue();
+
+			switch ($c[3]->getOperator())
+			{
+				case \formslib\Operator::EQ:
+					$jq .= <<<JS
+if ($(e.target).val() == '$val')
+{
+	$('#{$type}_$id').show();
+}
+else
+{
+	$('#{$type}_$id').hide();
+}
+JS;
+					break;
+
+				case \formslib\Operator::IN:
+					$jq .= <<<JS
+// TODO: Conditional display on IN
+JS;
+					break;
+
+				default:
+					throw new \Exception('Unable to process display condition operator "'.$c[3]->getOperator().'"');
+					break;
+			}
+
+			$jq .= '});';
+		}
+
+		if ($this->obfuscate_js)
+		{
+			// Obfuscate returned JS
+			$jqp = $jq;
+			$jqp = str_replace("\\\r\n", "\\n", $jqp);
+			$jqp = str_replace("\\\n", "\\n", $jqp);
+			$jqp = str_replace("\\\r", "\\n", $jqp);
+			$jqp = str_replace("}\r\n", "};\r\n", $jqp);
+			$jqp = str_replace("}\n", "};\n", $jqp);
+			$jqp = str_replace("}\r", "};\r", $jqp);
+
+			$myPacker = new \JavaScriptPacker($jqp);
+			$packed = $myPacker->pack();
+			unset($myPacker);
+
+			return $packed;
+		}
+		else
+		{
+			return $jq;
+		}
 	}
 }
