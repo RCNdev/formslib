@@ -1245,7 +1245,7 @@ EOF;
 				$conditions[$condition->getFieldName()][] = ['fld', $fld->getName(), $condition];
 
 				$jq .= '	var fld = $(\''.$this->fields[$condition->getFieldName()]->getJquerySelectorOnLoad().'\');'.CRLF;
-				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fld', $fs->getName(), $condition->getValue(), $condition->getFieldName());
+				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fld', $fld->getName(), $condition->getValue(), $condition->getFieldName());
 			}
 		}
 
