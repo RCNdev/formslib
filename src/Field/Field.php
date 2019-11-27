@@ -729,4 +729,12 @@ abstract class Field
     {
     	return 'input[name='.$this->name.']';
     }
+
+    /**
+     * Get a jQuery selector that can be used to target this field when the document is ready
+     */
+    public function getJquerySelectorOnLoad()
+    {
+    	return $this->getJquerySelector();
+    }
 }

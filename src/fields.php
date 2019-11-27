@@ -255,7 +255,7 @@ class formslib_radio extends formslib_options
 		return $this;
 	}
 
-	public function getJquerySelector()
+	public function getJquerySelectorOnLoad()
 	{
 		return 'input[name='.$this->name.']:selected';
 	}

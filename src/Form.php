@@ -1231,7 +1231,7 @@ EOF;
 			{
 				$conditions[$condition->getFieldName()][] = ['fs', $fs->getName(), $condition];
 
-				$jq .= 'var fld = $(\''.$this->fields[$condition->getFieldName()]->getJquerySelector().'\');'.CRLF;
+				$jq .= '	var fld = $(\''.$this->fields[$condition->getFieldName()]->getJquerySelectorOnLoad().'\');'.CRLF;
 				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fs', $fs->getName(), $condition->getValue(), $condition->getFieldName());
 			}
 		}
@@ -1244,7 +1244,7 @@ EOF;
 			{
 				$conditions[$condition->getFieldName()][] = ['fld', $fld->getName(), $condition];
 
-				$jq .= 'var fld = $(\''.$this->fields[$condition->getFieldName()]->getJquerySelector().'\');'.CRLF;
+				$jq .= '	var fld = $(\''.$this->fields[$condition->getFieldName()]->getJquerySelectorOnLoad().'\');'.CRLF;
 				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fld', $fs->getName(), $condition->getValue(), $condition->getFieldName());
 			}
 		}
@@ -1339,8 +1339,9 @@ JS;
 
 			case \formslib\Operator::PRESENT:
 				$jq .= <<<JS
+
 	fld.each(function(index){
-		if ($(this).name == '{$field}__$value')
+		if (this.name == '{$field}__$value')
 		{
 			if ($(this).prop('checked'))
 			{
@@ -1352,6 +1353,7 @@ JS;
 			}
 		}
 	});
+
 JS;
 				break;
 
