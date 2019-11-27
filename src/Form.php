@@ -1231,7 +1231,7 @@ EOF;
 			{
 				$conditions[$condition->getFieldName()][] = ['fs', $fs->getName(), $condition];
 
-				$jq .= 'var fld = $(\'[name='.$condition->getFieldName().']\');'.CRLF;
+				$jq .= 'var fld = $(\'[name='.$condition->getFieldName().']:selected\');'.CRLF; //TODO: Get selector from field
 				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fs', $fs->getName(), $condition->getValue());
 			}
 		}
@@ -1244,7 +1244,7 @@ EOF;
 			{
 				$conditions[$condition->getFieldName()][] = ['fld', $fld->getName(), $condition];
 
-				$jq .= 'var fld = $(\'[name='.$condition->getFieldName().']\');'.CRLF;
+				$jq .= 'var fld = $(\'[name='.$condition->getFieldName().']:selected\');'.CRLF; //TODO: Get selector from field
 				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fld', $fs->getName(), $condition->getValue());
 			}
 		}
@@ -1311,6 +1311,21 @@ JS;
 		$('[data-formslib-owner="{$type}_$id"]').hide();
 	}
 
+JS;
+				break;
+
+			case \formslib\Operator::CHECKED:
+				$jq .= <<<JS
+				
+	if (fld.prop('checked') == $value)
+	{
+		$('[data-formslib-owner="{$type}_$id"]').show();
+	}
+	else
+	{
+		$('[data-formslib-owner="{$type}_$id"]').hide();
+	}
+	
 JS;
 				break;
 
