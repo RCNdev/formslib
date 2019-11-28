@@ -254,6 +254,11 @@ class formslib_radio extends formslib_options
 
 		return $this;
 	}
+
+	public function getJquerySelectorOnLoad()
+	{
+		return 'input[name='.$this->name.']:selected';
+	}
 }
 
 class formslib_select extends formslib_options
@@ -284,6 +289,11 @@ class formslib_select extends formslib_options
 		$label = (isset($this->options[$this->value])) ? $this->options[$this->value] : '- Unknown value -';
 
 		return '<span name="' . Security::escapeHtml($this->name) . '" id="fld_' . Security::escapeHtml($this->name) . '" ' . $this->_custom_attr() . $this->_class_attr() . '><strong>' . Security::escapeHtml($label) . '</strong></span>'; // TODO: Move strong to a class
+	}
+
+	public function getJquerySelector()
+	{
+		return 'select[name='.$this->name.']';
 	}
 }
 
@@ -751,6 +761,11 @@ abstract class formslib_composite extends formslib_field
 	public function &getObjectValue()
 	{
 		throw new \Exception('Composite field function getObjectValue() not overwritten for field type '.get_class($this));
+	}
+
+	public function getJquerySelector()
+	{
+		return '[data-formslib-owner="fld_'.$this->name.'"] input';
 	}
 }
 

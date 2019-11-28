@@ -263,7 +263,7 @@ abstract class Field
                     if (! isset($this->classes['form-control']) && get_class($this) != 'formslib_ticklist') $this->addClass('form-control');
 
                     echo $this->htmlbefore . CRLF;
-                    echo '<div class="form-group' . $group_class_str . '">' . CRLF;
+                    echo '<div class="form-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
                     echo $this->innerhtmlbefore . CRLF;
                     echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand. $optionalLabel . '</label> ' . CRLF;
                     echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
@@ -283,7 +283,7 @@ abstract class Field
                     if (! isset($this->classes['form-control']) && get_class($this) != 'formslib_ticklist') $this->addClass('form-control');
 
                     echo $this->htmlbefore . CRLF;
-                    echo '<div class="form-group' . $group_class_str . '">' . CRLF;
+                    echo '<div class="form-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
                     echo $this->innerhtmlbefore . CRLF;
                     echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand . $optionalLabel . '</label> ' . CRLF;
                     // 					echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
@@ -303,7 +303,7 @@ abstract class Field
                     if (! isset($this->classes['form-control']) && get_class($this) != 'formslib_ticklist') $this->addClass('form-control');
 
                     echo $this->htmlbefore . CRLF;
-                    echo '<div class="form-group' . $group_class_str . '">' . CRLF;
+                    echo '<div class="form-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
                     echo $this->innerhtmlbefore . CRLF;
 
                     echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand . $optionalLabel . '</label> ' . CRLF;
@@ -524,7 +524,7 @@ abstract class Field
                     {
                         case FORMSLIB_STYLE_P:
                             echo $this->htmlbefore;
-                            echo '<p>' . CRLF;
+                            echo '<p data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
                             echo $this->innerhtmlbefore;
                             echo '<label for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label> ' . CRLF;
                             echo $this->getHTMLReadOnly() . CRLF;
@@ -537,7 +537,7 @@ abstract class Field
                         case FORMSLIB_STYLE_DL:
                         default:
                             echo $this->htmlbefore;
-                            echo '<dl>' . CRLF;
+                            echo '<dl data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
                             echo '<dt><label for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label></dt>' . CRLF;
                             echo '<dd>' . $this->getHTMLReadOnly() . $mand . '</dd>' . CRLF;
                             echo '</dl>' . CRLF . CRLF;
@@ -549,7 +549,7 @@ abstract class Field
                             if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
 
                             echo $this->htmlbefore . CRLF;
-                            echo '<div class="control-group' . $group_class_str . '">' . CRLF;
+                            echo '<div class="control-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
                             echo $this->innerhtmlbefore . CRLF;
                             echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label> ' . CRLF;
                             echo '	<div class="controls">' . CRLF;
@@ -575,7 +575,7 @@ abstract class Field
                             if (! isset($this->classes['form-control']) && get_class($this) != 'formslib_ticklist') $this->addClass('form-control');
 
                             echo $this->htmlbefore . CRLF;
-                            echo '<div class="form-group' . $group_class_str . '">' . CRLF;
+                            echo '<div class="form-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
                             echo $this->innerhtmlbefore . CRLF;
                             echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand . '</label> ' . CRLF;
                             echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
@@ -587,9 +587,6 @@ abstract class Field
                             echo '</div><!--/.form-group-->' . CRLF;
                             echo $this->htmlafter . CRLF;
                             break;
-
-
-                            //TODO: Other output styles?
                     }
                 }
                 else
@@ -732,5 +729,21 @@ abstract class Field
     public function getDisplayCondition()
     {
         return $this->display_condition;
+    }
+
+    /**
+     * Get a jQuery selector that can be used to target this field
+     */
+    public function getJquerySelector()
+    {
+    	return 'input[name='.$this->name.']';
+    }
+
+    /**
+     * Get a jQuery selector that can be used to target this field when the document is ready
+     */
+    public function getJquerySelectorOnLoad()
+    {
+    	return $this->getJquerySelector();
     }
 }

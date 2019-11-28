@@ -7,7 +7,7 @@ class Form
 {
 	private $name, $id, $action, $method;
 
-	/** @var \formslib_field[] */
+	/** @var Field\Field[] */
 	public $fields = [];
 
 	/** @var Fieldset[] */
@@ -1221,6 +1221,7 @@ EOF;
 	private function _generate_jquery_showhide()
 	{
 		$conditions = [];
+		$jq = '';
 
 		foreach ($this->fieldsets as $fs)
 		{
@@ -1229,6 +1230,9 @@ EOF;
 			if (is_object($condition))
 			{
 				$conditions[$condition->getFieldName()][] = ['fs', $fs->getName(), $condition];
+
+				$jq .= '	var fld = $(\''.$this->fields[$condition->getFieldName()]->getJquerySelectorOnLoad().'\');'.CRLF;
+				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fs', $fs->getName(), $condition->getValue(), $condition->getFieldName());
 			}
 		}
 
@@ -1239,48 +1243,30 @@ EOF;
 			if (is_object($condition))
 			{
 				$conditions[$condition->getFieldName()][] = ['fld', $fld->getName(), $condition];
+
+				$jq .= '	var fld = $(\''.$this->fields[$condition->getFieldName()]->getJquerySelectorOnLoad().'\');'.CRLF;
+				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fld', $fld->getName(), $condition->getValue(), $condition->getFieldName());
 			}
 		}
 
 		if (!count($conditions)) return null;
 
-		$jq = '';
+
 
 		foreach ($conditions as $name => $c)
 		{
+			$selector = $this->fields[$name]->getJquerySelector();
+
 			$jq .= <<<JS
 
-$('[name=$name]').change(function(e){
+$('$selector').change(function(e){
+	var fld = $(e.target);
+
 JS;
 
-			$type = $c[0];
-			$id = $c[1];
-			$val = $c[3]->getValue();
-
-			switch ($c[3]->getOperator())
+			foreach ($c as $cd)
 			{
-				case \formslib\Operator::EQ:
-					$jq .= <<<JS
-if ($(e.target).val() == '$val')
-{
-	$('#{$type}_$id').show();
-}
-else
-{
-	$('#{$type}_$id').hide();
-}
-JS;
-					break;
-
-				case \formslib\Operator::IN:
-					$jq .= <<<JS
-// TODO: Conditional display on IN
-JS;
-					break;
-
-				default:
-					throw new \Exception('Unable to process display condition operator "'.$c[3]->getOperator().'"');
-					break;
+				$jq .= $this->_generateDisplayCondition($cd[2]->getOperator(), $cd[0], $cd[1], $cd[2]->getValue(), $name);
 			}
 
 			$jq .= '});';
@@ -1307,5 +1293,75 @@ JS;
 		{
 			return $jq;
 		}
+	}
+
+	private function _generateDisplayCondition($operator, $type, $id, $value, $field)
+	{
+		$jq = '';
+
+		switch ($operator)
+		{
+			case \formslib\Operator::EQ:
+				$jq .= <<<JS
+
+	if (fld.val() == '$value')
+	{
+		$('[data-formslib-owner="{$type}_$id"]').show();
+	}
+	else
+	{
+		$('[data-formslib-owner="{$type}_$id"]').hide();
+	}
+
+JS;
+				break;
+
+			case \formslib\Operator::CHECKED:
+				$jq .= <<<JS
+				
+	if (fld.prop('checked') == $value)
+	{
+		$('[data-formslib-owner="{$type}_$id"]').show();
+	}
+	else
+	{
+		$('[data-formslib-owner="{$type}_$id"]').hide();
+	}
+	
+JS;
+				break;
+
+			case \formslib\Operator::IN:
+				$jq .= <<<JS
+// TODO: Conditional display on IN
+JS;
+				break;
+
+			case \formslib\Operator::PRESENT:
+				$jq .= <<<JS
+
+	fld.each(function(index){
+		if (this.name == '{$field}__$value')
+		{
+			if ($(this).prop('checked'))
+			{
+				$('[data-formslib-owner="{$type}_$id"]').show();
+			}
+			else
+			{
+				$('[data-formslib-owner="{$type}_$id"]').hide();
+			}
+		}
+	});
+
+JS;
+				break;
+
+			default:
+				throw new \Exception('Unable to process display condition operator "'.$operator.'"');
+				break;
+		}
+
+		return $jq;
 	}
 }
