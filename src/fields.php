@@ -257,7 +257,7 @@ class formslib_radio extends formslib_options
 
 	public function getJquerySelectorOnLoad()
 	{
-		return 'input[name='.$this->name.']:selected';
+		return 'input[name='.$this->name.']:checked';
 	}
 }
 
@@ -1553,7 +1553,6 @@ class formslib_dateselecttime extends formslib_composite
 {
 	protected $startDate, $endDate, $time;
 	protected $field_date;
-	protected $dateformat;
 
 	public function __construct($name)
 	{
@@ -1563,40 +1562,14 @@ class formslib_dateselecttime extends formslib_composite
 			'time'
 		));
 
-		$this->field_date = new formslib_select($name.'__date');
+		$this->field_date = new \formslib\Field\DateSelect($name.'__date');
 
 		$this->addRule('composite_timerangeformat', null, 'Times must be in the 24-hour format hh:mm');
 	}
 
 	public function &setDateRange($startDate, $endDate)
 	{
-		$patternDate = '/[0-9]{4}-[0-9]{2}-[0-9]{2}/';
-		if (!preg_match($patternDate, $startDate) || !preg_match($patternDate, $endDate)) throw new Exception('Invalid date format');
-
-		if ($startDate > $endDate) throw new Exception('End date constraint before start date');
-
-		$start = new DateTime($startDate);
-		$end = new DateTime($endDate);
-
-        $interval = $start->diff($end);
-        $daycount = $interval->days;
-
-		if ($daycount < 5) $this->dateformat = 'l';
-		elseif ($daycount < 21) $this->dateformat = 'l jS';
-		elseif ($daycount >= 21) $this->dateformat = 'l j M';
-
-		$days = [];
-		for ($i = 0; $i <= $daycount; $i++)
-		{
-			$start = new DateTime($startDate);
-			$date = $start->add(new DateInterval('P'.$i.'D'));
-			$key = $date->format('Y-m-d');
-			$days[$key] = $date->format($this->dateformat);
-		}
-
-		$this->field_date->setOptions(array('' => '- Select day -')+$days);
-
-		return $this;
+	    $this->field_date->setDateRange($startDate, $endDate);
 	}
 
 	protected function _prepareOutput()
@@ -1633,7 +1606,9 @@ class formslib_dateselecttime extends formslib_composite
 
 	public function getEmailValue()
 	{
-		return date($this->dateformat, strtotime($this->composite_values['date'])).' '.$this->composite_values['time'];
+	    $this->_prepareOutput();
+
+	    return $this->field_date->getEmailValue().' '.$this->composite_values['time'];
 	}
 
 	public function &getObjectValue()
