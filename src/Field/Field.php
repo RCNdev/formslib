@@ -39,6 +39,15 @@ abstract class Field
         $this->addClass('formslib_'.$this->getType());
     }
 
+    public static function &create($name, Form &$f, Fieldset &$fs = false)
+    {
+        $field = new self($name);
+        $f->attachField($field);
+        if (is_object($fs)) $fs->attachField($name);
+
+        return $field;
+    }
+
     /**
      * Get the name of the field
      *
