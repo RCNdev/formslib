@@ -41,7 +41,7 @@ abstract class Field
 
     public static function &create($name, Form &$f, Fieldset &$fs = null)
     {
-        $field = new self($name);
+        $field = new static($name);
         $f->attachField($field);
         if (is_object($fs)) $fs->attachField($name);
 
