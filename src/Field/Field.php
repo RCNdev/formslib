@@ -755,7 +755,7 @@ abstract class Field
 
     public function checkMandatoryVars(array &$vars)
     {
-        if (isset($vars[$this->name])) return false;
+        if (!isset($vars[$this->name])) return false;
         if (trim((string)$vars[$this->name]) === '') return false;
 
         return true;
