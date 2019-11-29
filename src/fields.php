@@ -3,10 +3,7 @@
 use formslib\Utility\Security;
 use formslib\Form;
 
-abstract class formslib_field extends \formslib\Field\Field
-{
 
-}
 
 class formslib_hidden extends formslib_field
 {
@@ -171,7 +168,6 @@ abstract class formslib_options extends formslib_field
 			$valid = false;
 			$this->errorlist[] = [
 					'name' => $this->name,
-					'label' => $this->label,
 					'message' => 'A valid option for ' . $this->label . ' was not selected '
 			];
 		}
@@ -624,8 +620,27 @@ class formslib_file extends formslib_field
 	{
 		return '<input type="file"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" value="' . Security::escapeHtml($this->value) . '" />';
 	}
+
+	/**
+	 *
+	 * {@inheritDoc}
+	 * @see \formslib\Field\Field::checkMandatoryVars()
+	 *
+	 * @todo Validate mandatory file fields
+	 */
+	public function checkMandatoryVars(array &$vars)
+	{
+	    return true;
+	}
 }
 
+/**
+ * Horrible "select multiple" control
+ *
+ * Seriously, don't use this!
+ *
+ * @deprecated
+ */
 class formslib_multiselect extends formslib_select
 {
 
@@ -710,62 +725,6 @@ class formslib_personname extends formslib_text
 	{
 		parent::__construct($name);
 		$this->addRule('regex', '/^[a-z\s\-\']*$/i', 'Please make sure you only enter letters, hyphen or apostrophes');
-	}
-}
-
-abstract class formslib_composite extends formslib_field
-{
-	protected $composites = [];
-	public $composite_values = [];
-
-	protected function _set_composites($composites)
-	{
-		$this->composites = $composites;
-
-		// TODO: Review the need for this
-		foreach ($this->composites as $key)
-		{
-			$this->composite_values[$key] = '';
-		}
-	}
-
-	public function get_composites()
-	{
-		return $this->composites;
-	}
-
-	protected function _class_attr($extraclass = '')
-	{
-		$class_str = '';
-		$classes = $this->classes;
-		$classes[] = $extraclass;
-
-		$class_str .= ' class="';
-		$first = true;
-		foreach ($classes as $classname)
-		{
-			if (! $first) $class_str .= ' ';
-			$class_str .= $classname;
-			$first = false;
-		}
-		$class_str .= '"';
-
-		return $class_str;
-	}
-
-	public function getEmailValue()
-	{
-		return '[Composite field function getEmailValue() not overwritten]';
-	}
-
-	public function &getObjectValue()
-	{
-		throw new \Exception('Composite field function getObjectValue() not overwritten for field type '.get_class($this));
-	}
-
-	public function getJquerySelector()
-	{
-		return '[data-formslib-owner="fld_'.$this->name.'"] input';
 	}
 }
 
@@ -910,6 +869,18 @@ class formslib_date extends formslib_composite
 
 		return $date;
 	}
+
+	public function checkMandatoryVars(array &$vars)
+	{
+	    $missing = false;
+
+	    foreach ($this->composites as $key)
+	    {
+	        if (! isset($vars[$this->name . '__' . $key]) || trim($vars[$this->name . '__' . $key]) === '' || (string)$vars[$this->name . '__' . $key] === '0') $missing = true;
+	    }
+
+	    return $missing;
+	}
 }
 
 class formslib_ukbankacct extends formslib_text
@@ -967,181 +938,6 @@ class formslib_uksortcode extends formslib_composite
 		}
 
 		return $html;
-	}
-}
-
-class formslib_ticklist extends formslib_composite
-{
-	private $ticklist = [];
-	private $checkedvalue = 'checked';
-	private $delimiter = "\n";
-	private $enableSelectAll = false;
-	private $selectAllText = null;
-
-	public function __construct($name)
-	{
-		parent::__construct($name);
-	}
-
-	public function &setTickList($lookup)
-	{
-		$this->ticklist = $lookup;
-		$this->_set_composites(array_keys($lookup));
-
-		return $this;
-	}
-
-	public function getHTML()
-	{
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
-		{
-			$html = '<div class="formslib_ticklist_container">';
-		}
-		else
-		{
-			// TODO: Inline CSS, get this into a proper style sheet!
-			$html = '<span class="formslib_ticklist_container" style="display: block; float: left;">';
-		}
-
-		if ($this->enableSelectAll && count($this->ticklist) > 1)
-		{
-		    $html .= '<span class="formslib_ticklist_select_all"><a href="#">'.Security::escapeHtml($this->selectAllText).'</a></span>';
-		}
-
-		foreach ($this->ticklist as $index => $label)
-		{
-			$checked = ($this->composite_values[$index] == $this->checkedvalue) ? ' checked="checked"' : '';
-
-			$text = Security::escapeHtml($label) . CRLF;
-
-			$input = '';
-
-			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
-			{
-				$html .= '<div>';
-			}
-
-			$input .= '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr('formslib_ticklist') . ' name="' . Security::escapeHtml($this->name . '__' . $index) . '" id="fld_' . Security::escapeHtml($this->name . '__' . $index) . '" title="' . Security::escapeHtml($label) . '" />' . CRLF;
-
-			// TODO: More inline CSS
-			$html .= '<label for="fld_'.$this->name.'__'.$index.'" class="formslib_label_checkbox" style="display: inline; font-weight: normal;">';
-			$html .= $input . $text;
-			$html .= '</label>';
-
-			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
-			{
-				$html .= '</div><!--/div-->'.CRLF;
-			}
-			else
-			{
-				$html .= '<br />'.CRLF;
-			}
-		}
-
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
-		{
-			$html .= '</div><!--/.formslib_ticklist_container-->';
-		}
-		else
-		{
-			$html .= '</span><!--/.formslib_ticklist_container-->';
-			$html .= '<span style="display: block; clear: both;"></span>'.CRLF;
-		}
-
-		return $html;
-	}
-
-	public function getHTMLReadOnly()
-	{
-		$html = '<span class="formslib_ticklist_container" style="display: block; float: left;">';
-
-		foreach ($this->ticklist as $index => $label)
-		{
-			$ids = 'name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '"';
-			$checked = ($this->composite_values[$index] == $this->checkedvalue) ? '<span ' . $ids . ' class="colour-positive">&#10004;</span>' : '<span ' . $ids . ' class="colour-negative">&#10008;</span>';
-
-			$text = Security::escapeHtml($label) . CRLF;
-
-			$html .= $checked . $text . '<br />' . CRLF;
-		}
-
-		$html .= '</span>';
-
-		$html .= '<span style="display: block; clear: both;"></span>';
-
-		return $html;
-	}
-
-	public function getEmailValue()
-	{
-		$checked_vals = [];
-		foreach ($this->composites as $value)
-		{
-			if (isset($this->composite_values[$value]) && $this->composite_values[$value] == $this->checkedvalue) $checked_vals[] = $this->ticklist[$value];
-		}
-
-		if (! count($checked_vals))
-		{
-			return 'No options selected';
-		}
-		else
-		{
-			return implode($this->delimiter, $checked_vals);
-		}
-	}
-
-	public function &setDelimiter($delimiter)
-	{
-		$this->delimiter = $delimiter;
-
-		return $this;
-	}
-
-	public function &getObjectValue()
-	{
-		$checked = [];
-
-		foreach ($this->composites as $value)
-		{
-			if (isset($this->composite_values[$value]) && $this->composite_values[$value] == $this->checkedvalue) $checked[$value] = $this->ticklist[$value];
-		}
-
-		return $checked;
-	}
-
-	public function &setSelectAll($text = 'Select all')
-	{
-	    if ($text === false)
-	    {
-	       $this->enableSelectAll = false;
-	    }
-	    else
-	    {
-	        $this->enableSelectAll = true;
-	        $this->selectAllText = $text;
-	    }
-
-	    return $this;
-	}
-
-	public function getJs()
-	{
-	    $js = parent::getJs();
-
-	    if ($this->enableSelectAll)
-	    {
-	        $js[] = <<<JS
-$(document).ready(function(){
-	$('.formslib_ticklist_select_all a').click(function(){
-        $(this).parents('.formslib_ticklist_container').find('input.formslib_ticklist').prop('checked', true);
-        $(this).parents('.formslib_ticklist_select_all').hide();
-		return false;
-	});
-});
-JS;
-	    }
-
-	    return $js;
 	}
 }
 

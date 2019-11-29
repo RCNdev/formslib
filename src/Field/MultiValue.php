@@ -57,4 +57,16 @@ abstract class MultiValue extends Field
 
 		return $value;
 	}
+
+	public function checkMandatoryVars(array &$vars)
+	{
+	    $missing = false;
+
+	    if (!isset($vars[ $this->name . '__0']) || ($vars[ $this->name . '__0']) == '')
+	    {
+	        $missing = true;
+	    }
+
+	    return !$missing;
+	}
 }

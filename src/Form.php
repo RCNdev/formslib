@@ -260,8 +260,6 @@ class Form
 			echo $this->getSubmitHtml();
 		}
 
-
-
 		$this->_displayBottom($field_js);
 	}
 
@@ -271,189 +269,91 @@ class Form
 		return false;
 	}
 
-	public function validate_vars($vars)
+	public function validate_vars(array $vars)
 	{
 		$is_valid = true;
 
-		$bootstrap3 = ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL);
-
-		// Loop through the fields and check mandatory fields are entered
 		$fields = array_keys($this->fields);
-		foreach ($fields as $name)
-		{
-		    $mandatory = $this->fields[$name]->mandatory;
 
-		    /**
-		     * @todo: Should mandatory checking be delegated...?
-		     * 1. To individual fields
-		     * 2. To a rule paradigm
-		     */
-
-			if (is_a($this->fields[$name], 'formslib_composite'))
-			{
-				if ($mandatory)
-				{
-					// TODO: Should validate on ticklist mean ALL ticked or at least one? Inherited behaviour is ALL ticked.
-
-					$missing = false;
-					foreach ($this->fields[$name]->get_composites() as $key)
-					{
-						if (! isset($vars[$name . '__' . $key]) || $vars[$name . '__' . $key] == '') $missing = true;
-
-						if (is_a($this->fields[$name], 'formslib_date') && $vars[$name . '__' . $key] == 0) $missing = true;
-					}
-
-					if ($missing)
-					{
-						$this->fields[$name]->valid = false;
-						$this->fields[$name]->addClass('formslibinvalid');
-
-						if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
-						if ($bootstrap3) $this->fields[$name]->addGroupClass('has-error');
-
-						// Add field to error list
-						$label = $this->fields[$name]->label;
-						$this->errorlist[] = [
-							'name' => $name,
-							'label' => $label,
-							'message' => (! is_a($this->fields[$name], 'formslib_checkbox')) ? 'You must enter a value for ' . $label : 'You must tick "' . $label . '" to be able to complete this form'
-						];
-						$is_valid = false;
-					}
-				}
-			}
-			elseif (is_a($this->fields[$name], 'formslib\Field\MultiValue'))
-			{
-			    if ($mandatory)
-			    {
-			        $missing = false;
-
-			        if(!isset($vars[ $name . '__0']) || ($vars[ $name . '__0']) == '')
-			        {
-			            $missing = true;
-			        }
-
-			        if ($missing)
-			        {
-			            $this->fields[$name]->valid = false;
-			            $this->fields[$name]->addClass('formslibinvalid');
-
-			            if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
-			            if ($bootstrap3) $this->fields[$name]->addGroupClass('has-error');
-
-			            // Add field to error list
-			            $label = $this->fields[$name]->label;
-			            $this->errorlist[] = [
-			                'name' => $name,
-			                'label' => $label,
-			                'message' => (! is_a($this->fields[$name], 'formslib_checkbox')) ? 'You must enter a value for ' . $label : 'You must tick "' . $label . '" to be able to complete this form'
-			            ];
-			            $is_valid = false;
-			        }
-			    }
-			}
-			elseif (! is_a($this->fields[$name], 'formslib_file'))
-			{
-				if ($mandatory && (! isset($vars[$name]) || $vars[$name] === ''))
-				{
-					$this->fields[$name]->valid = false;
-					$this->fields[$name]->addClass('formslibinvalid');
-
-					if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
-					if ($bootstrap3) $this->fields[$name]->addGroupClass('has-error');
-
-					// Add field to error list
-					$label = $this->fields[$name]->label;
-					$this->errorlist[] = [
-						'name' => $name,
-						'label' => $label,
-						'message' => (! is_a($this->fields[$name], 'formslib_checkbox')) ? 'You must enter a value for ' . $label : 'You must tick "' . $label . '" to be able to complete this form'
-					];
-					$is_valid = false;
-				}
-			}
-			else
-			{
-				// TODO: Validate mandatory file fields
-			}
-		}
+		//TODO: Evaluate fieldset display rules
 
 		// Loop through the fields and check the validation rules
 		foreach ($fields as $name)
 		{
-			// Validate field
-			if (is_a($this->fields[$name], 'formslib_composite'))
+			$field =& $this->fields[$name];
+
+            $displayed = true;
+
+			$cond = $field->getDisplayCondition();
+			if (is_object($cond))
 			{
-				$cv = [];
-				foreach ($this->fields[$name]->get_composites() as $key)
-				{
-					$cv[$key] = (isset($vars[$name . '__' . $key])) ? $vars[$name . '__' . $key] : null;
-				}
-
-				$valid = $this->fields[$name]->validate($cv);
-
-				if (!$valid)
-				{
-					$this->fields[$name]->valid = false;
-					$this->fields[$name]->addClass('formslibinvalid');
-
-					if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
-					if ($bootstrap3) $this->fields[$name]->addGroupClass('has-error');
-
-					$is_valid = false;
-
-					$this->errorlist = array_merge($this->errorlist, $this->fields[$name]->getErrors());
-				}
+                $displayed = $cond->evaluateVars($vars);
 			}
-			elseif (is_a($this->fields[$name], 'formslib_multiselect'))
+
+			if ($displayed)
 			{
-				// TODO: Validate multiselect fields
-			}
-			elseif (is_a($this->fields[$name], 'formslib\Field\MultiValue'))
-			{
-			    $count = 0;
+    			if ($field->mandatory)
+    			{
+    			    if (!$field->checkMandatoryVars($vars))
+    			    {
+    			        $message = (! is_a($field, 'formslib_checkbox')) ? 'You must enter something for ' . $field->label : 'You must tick "' . $field->label . '" to be able to complete this form';
 
-			    $mv = [];
-			    while (isset($vars[$name . '__'. $count]) && ($vars[$name . '__'. $count]) != '')
-			    {
-			        $count++;
-			        $mv[] = $vars[$name . '__'. $count];
-			    }
+    			        $this->addError($name, null, $message);
 
-			    $valid = $this->fields[$name]->validate($mv);
+    			        $is_valid = false;
+    			    }
+    			}
 
-			    if (!$valid)
-			    {
-			        $this->fields[$name]->valid = false;
-			        $this->fields[$name]->addClass('formslibinvalid');
+    			if (is_a($field, 'formslib_composite'))
+    			{
+    				$cv = [];
+    				foreach ($field->get_composites() as $key)
+    				{
+    					$cv[$key] = (isset($vars[$name . '__' . $key])) ? $vars[$name . '__' . $key] : null;
+    				}
 
-			        if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
-			        if ($bootstrap3) $this->fields[$name]->addGroupClass('has-error');
+    				$valid = $field->validate($cv);
 
-			        $is_valid = false;
+    				if (!$valid)
+    				{
+    					$is_valid = false;
+    				    $this->_markFieldInvalid($name);
+    					$this->errorlist = array_merge($this->errorlist, $field->getErrors());
+    				}
+    			}
+    			elseif (is_a($field, 'formslib\Field\MultiValue'))
+    			{
+    			    $count = 0;
 
-			        $this->errorlist = array_merge($this->errorlist, $this->fields[$name]->getErrors());
-			    }
+    			    $mv = [];
+    			    while (isset($vars[$name . '__'. $count]) && ($vars[$name . '__'. $count]) != '')
+    			    {
+    			        $count++;
+    			        $mv[] = $vars[$name . '__'. $count];
+    			    }
 
- 			}
-			elseif (! is_a($this->fields[$name], 'formslib_file') && ! is_a($this->fields[$name], 'formslib_checkbox') && ! is_a($this->fields[$name], 'formslib_radio'))
-			{
-				$data = (isset($vars[$name])) ? $vars[$name] : null;
+    			    $valid = $field->validate($mv);
 
-				$valid = $this->fields[$name]->validate($data);
+    			    if (!$valid)
+    			    {
+    			        $is_valid = false;
+    			        $this->_markFieldInvalid($name);
+    			        $this->errorlist = array_merge($this->errorlist, $field->getErrors());
+    			    }
+     			}
+    			elseif (! is_a($field, 'formslib_file') && ! is_a($field, 'formslib_checkbox') && ! is_a($field, 'formslib_radio'))
+    			{
+    				$data = (isset($vars[$name])) ? $vars[$name] : null;
 
-				if (! $valid)
-				{
-					$this->fields[$name]->valid = false;
-					$this->fields[$name]->addClass('formslibinvalid');
+    				$valid = $field->validate($data);
 
-					if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP) $this->fields[$name]->addGroupClass('error');
-					if ($bootstrap3) $this->fields[$name]->addGroupClass('has-error');
-
-					$is_valid = false;
-
-					$this->errorlist = array_merge($this->errorlist, $this->fields[$name]->getErrors());
-				}
+    				if (! $valid)
+    				{
+    					$is_valid = false;
+    					$this->_markFieldInvalid($name);
+    					$this->errorlist = array_merge($this->errorlist, $field->getErrors());
+    				}
+    			}
 			}
 		}
 
@@ -480,17 +380,39 @@ class Form
 	 * @param string $message
 	 *        	The message to display to the user
 	 *
-	 * @todo Call this function within validate_vars
 	 */
 	public function addError($name, $label, $message)
 	{
-		$this->errorlist[] = [
+	    $this->_markFieldInvalid($name);
+
+	    $this->errorlist[] = [
 			'name' => $name,
-			'label' => $label,
 			'message' => $message
 		];
+	}
 
-		if (isset($this->fields[$name])) $this->fields[$name]->addClass('formslibinvalid');
+	private function _markFieldInvalid($name)
+	{
+	    if (isset($this->fields[$name]))
+	    {
+	        $field =& $this->fields[$name];
+
+	        $field->valid = false;
+	        $field->addClass('formslibinvalid');
+
+	        if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
+	        {
+	            $field->addGroupClass('error');
+	        }
+	        elseif ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3
+	            || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE
+	            || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+	        {
+	            $field->addGroupClass('has-error');
+	        }
+
+	        $field->addClass('formslibinvalid');
+	    }
 	}
 
 	public function getDataDump()
@@ -1250,8 +1172,6 @@ EOF;
 		}
 
 		if (!count($conditions)) return null;
-
-
 
 		foreach ($conditions as $name => $c)
 		{

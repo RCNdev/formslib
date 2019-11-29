@@ -268,7 +268,7 @@ abstract class Field
                     echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand. $optionalLabel . '</label> ' . CRLF;
                     echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
                     echo '		' . $this->getHTML() . CRLF;
-                    if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with this
+                    if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with help inline
                     if ($this->helpblock) echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
                     echo $this->innerhtmlafter . CRLF;
                     echo '	</div><!--/.col-sm-' . $col_field . '-->' . CRLF;
@@ -288,7 +288,7 @@ abstract class Field
                     echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand . $optionalLabel . '</label> ' . CRLF;
                     // 					echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
                     echo '		' . $this->getHTML() . CRLF;
-                    // 					if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with this
+                    // 					if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with help inline/help block for BOOTSTRAP3_INLINE
                     // 					if ($this->helpblock) echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
                     echo $this->innerhtmlafter . CRLF;
                     // 					echo '	</div><!--/.col-sm-' . $col_field . '-->' . CRLF;
@@ -312,7 +312,7 @@ abstract class Field
 
                     echo '		' . $this->getHTML() . CRLF;
 
-                    if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with this
+                    if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with help inline
                     if ($this->helpblock && !$this->helpbefore) echo '		<p class="help-block">' . $this->helpblock . '</p>' . CRLF;
 
                     echo $this->innerhtmlafter . CRLF;
@@ -385,11 +385,11 @@ abstract class Field
                 $valid = false;
                 $this->errorlist[] = [
                     'name' => $this->name,
-                    'label' => $this->label,
                     'message' => $this->label . ' invalid: ' . $this->rules[$rule]->getError()
                 ];
             }
         }
+
         return $valid;
     }
 
@@ -512,89 +512,95 @@ abstract class Field
     public function displayReadOnly(Form &$form)
     {
         if ($this->mandatory)
+        {
             $mand = $form->mandatoryHTML;
-            elseif ($this->semimandatory)
+        }
+        elseif ($this->semimandatory)
+        {
             $mand = $form->semimandatoryHTML;
-            else
-                $mand = '';
+        }
+        else
+        {
+            $mand = '';
+        }
 
-                if (! $this->rawoutput)
-                {
-                    switch ($form->outputstyle)
-                    {
-                        case FORMSLIB_STYLE_P:
-                            echo $this->htmlbefore;
-                            echo '<p data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
-                            echo $this->innerhtmlbefore;
-                            echo '<label for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label> ' . CRLF;
-                            echo $this->getHTMLReadOnly() . CRLF;
-                            echo $mand;
-                            echo $this->innerhtmlafter;
-                            echo '</p>' . CRLF . CRLF;
-                            echo $this->htmlafter;
-                            break;
-
-                        case FORMSLIB_STYLE_DL:
-                        default:
-                            echo $this->htmlbefore;
-                            echo '<dl data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
-                            echo '<dt><label for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label></dt>' . CRLF;
-                            echo '<dd>' . $this->getHTMLReadOnly() . $mand . '</dd>' . CRLF;
-                            echo '</dl>' . CRLF . CRLF;
-                            echo $this->htmlafter;
-                            break;
-
-                        case FORMSLIB_STYLE_BOOTSTRAP:
-                            $group_class_str = implode(' ', $this->group_classes);
-                            if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
-
-                            echo $this->htmlbefore . CRLF;
-                            echo '<div class="control-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
-                            echo $this->innerhtmlbefore . CRLF;
-                            echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label> ' . CRLF;
-                            echo '	<div class="controls">' . CRLF;
-                            echo '		' . $this->getHTMLReadOnly() . CRLF;
-                            echo '		' . $mand . CRLF;
-                            if ($this->helpinline) echo '		<span class="help-inline">' . $this->helpinline . '</span>' . CRLF;
-                            if ($this->helpblock) echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
-                            echo $this->innerhtmlafter . CRLF;
-                            echo '	</div><!--/.controls-->' . CRLF;
-                            echo '</div><!--/.control-group-->' . CRLF;
-                            echo $this->htmlafter . CRLF;
-                            break;
-
-                        case FORMSLIB_STYLE_BOOTSTRAP3:
-                            // TODO: @see p.form-control-static
-
-                            $col_label = ($this->gridRatio > 0) ? $this->gridRatio : 12;
-                            $col_field = 12 - $this->gridRatio;
-
-                            $group_class_str = implode(' ', $this->group_classes);
-                            if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
-
-                            if (! isset($this->classes['form-control']) && get_class($this) != 'formslib_ticklist') $this->addClass('form-control');
-
-                            echo $this->htmlbefore . CRLF;
-                            echo '<div class="form-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
-                            echo $this->innerhtmlbefore . CRLF;
-                            echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand . '</label> ' . CRLF;
-                            echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
-                            echo '		' . $this->getHTMLReadOnly() . CRLF;
-                            if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with this
-                            if ($this->helpblock) echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
-                            echo $this->innerhtmlafter . CRLF;
-                            echo '	</div><!--/.col-sm-' . $col_field . '-->' . CRLF;
-                            echo '</div><!--/.form-group-->' . CRLF;
-                            echo $this->htmlafter . CRLF;
-                            break;
-                    }
-                }
-                else
-                {
+        if (! $this->rawoutput)
+        {
+            switch ($form->outputstyle)
+            {
+                case FORMSLIB_STYLE_P:
                     echo $this->htmlbefore;
-                    echo $this->getHTMLReadOnly() . $mand . CRLF;
+                    echo '<p data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
+                    echo $this->innerhtmlbefore;
+                    echo '<label for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label> ' . CRLF;
+                    echo $this->getHTMLReadOnly() . CRLF;
+                    echo $mand;
+                    echo $this->innerhtmlafter;
+                    echo '</p>' . CRLF . CRLF;
                     echo $this->htmlafter;
-                }
+                    break;
+
+                case FORMSLIB_STYLE_DL:
+                default:
+                    echo $this->htmlbefore;
+                    echo '<dl data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
+                    echo '<dt><label for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label></dt>' . CRLF;
+                    echo '<dd>' . $this->getHTMLReadOnly() . $mand . '</dd>' . CRLF;
+                    echo '</dl>' . CRLF . CRLF;
+                    echo $this->htmlafter;
+                    break;
+
+                case FORMSLIB_STYLE_BOOTSTRAP:
+                    $group_class_str = implode(' ', $this->group_classes);
+                    if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
+
+                    echo $this->htmlbefore . CRLF;
+                    echo '<div class="control-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
+                    echo $this->innerhtmlbefore . CRLF;
+                    echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label> ' . CRLF;
+                    echo '	<div class="controls">' . CRLF;
+                    echo '		' . $this->getHTMLReadOnly() . CRLF;
+                    echo '		' . $mand . CRLF;
+                    if ($this->helpinline) echo '		<span class="help-inline">' . $this->helpinline . '</span>' . CRLF;
+                    if ($this->helpblock) echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
+                    echo $this->innerhtmlafter . CRLF;
+                    echo '	</div><!--/.controls-->' . CRLF;
+                    echo '</div><!--/.control-group-->' . CRLF;
+                    echo $this->htmlafter . CRLF;
+                    break;
+
+                case FORMSLIB_STYLE_BOOTSTRAP3:
+                    // TODO: @see p.form-control-static
+
+                    $col_label = ($this->gridRatio > 0) ? $this->gridRatio : 12;
+                    $col_field = 12 - $this->gridRatio;
+
+                    $group_class_str = implode(' ', $this->group_classes);
+                    if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
+
+                    if (! isset($this->classes['form-control']) && get_class($this) != 'formslib_ticklist') $this->addClass('form-control');
+
+                    echo $this->htmlbefore . CRLF;
+                    echo '<div class="form-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
+                    echo $this->innerhtmlbefore . CRLF;
+                    echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand . '</label> ' . CRLF;
+                    echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
+                    echo '		' . $this->getHTMLReadOnly() . CRLF;
+                    if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with help inline
+                    if ($this->helpblock) echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
+                    echo $this->innerhtmlafter . CRLF;
+                    echo '	</div><!--/.col-sm-' . $col_field . '-->' . CRLF;
+                    echo '</div><!--/.form-group-->' . CRLF;
+                    echo $this->htmlafter . CRLF;
+                    break;
+            }
+        }
+        else
+        {
+            echo $this->htmlbefore;
+            echo $this->getHTMLReadOnly() . $mand . CRLF;
+            echo $this->htmlafter;
+        }
     }
 
     public function &attachToFieldset(Fieldset &$fs)
@@ -745,5 +751,13 @@ abstract class Field
     public function getJquerySelectorOnLoad()
     {
     	return $this->getJquerySelector();
+    }
+
+    public function checkMandatoryVars(array &$vars)
+    {
+        if (isset($vars[$this->name])) return false;
+        if (trim((string)$vars[$this->name]) === '') return false;
+
+        return true;
     }
 }
