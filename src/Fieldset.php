@@ -125,7 +125,7 @@ class Fieldset extends \formslib_fieldset
                 }
                 else
                 {
-                    echo '<td class="error">Field ' . Security::escapeHtml($fieldname) . ' is not an object.</td>'; //TODO: Throw exception?
+                    throw new \Exception('Field "' . $fieldname . '" is not an object.');
                 }
             }
             if ($outputted) echo '</tr>' . CRLF;
@@ -182,6 +182,15 @@ class Fieldset extends \formslib_fieldset
         return $this;
     }
 
+    /**
+     * Get the body of an email with the results of the form
+     *
+     * @param \formslib\Form $form
+     * @param integer $style
+     * @return string
+     *
+     * @todo [CONDITIONAL] Follow conditional display rules
+     */
     public function getEmailBody(&$form, &$style)
     {
         $body = '';
@@ -329,6 +338,14 @@ class Fieldset extends \formslib_fieldset
         return count($this->fields);
     }
 
+    /**
+     * Build a result object for the form from local fields
+     *
+     * @param \formslib\Form $form
+     * @param object $result
+     *
+     * @todo [CONDITIONAL] Follow conditional display rules
+     */
     public function buildResultObject(&$form, &$result)
     {
         foreach ($this->fields as $fieldname)
@@ -350,7 +367,7 @@ class Fieldset extends \formslib_fieldset
 
         unset($this->fieldorder[$oldpos]);
 
-        array_splice($this->fieldorder, $location-1, 0, array($fieldname));
+        array_splice($this->fieldorder, $location-1, 0, [$fieldname]);
     }
 
     public function positionFieldBelow($fieldname, $below)

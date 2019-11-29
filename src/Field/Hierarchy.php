@@ -65,7 +65,7 @@ class Hierarchy extends MultiValue
 
 	private function _buildDropdown($tree, $level, $selected)
 	{
-		$options = array('' => '- Please select -');
+		$options = ['' => '- Please select -'];
 
 		foreach ($tree as $dat)
 		{

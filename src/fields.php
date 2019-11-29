@@ -104,9 +104,7 @@ abstract class formslib_options extends formslib_field
 		if (! is_array($in_opt))
 		{
 			echo '<p>FORMSLIB ERROR: Options passed not an array, setting options for field: ' . Security::escapeHtml($this->name) . '</p>';
-			$this->options = array(
-				'' => 'FORMSLIB ERROR: No options set'
-			);
+			$this->options = ['' => 'FORMSLIB ERROR: No options set'];
 			return false;
 		}
 		$this->options = $in_opt;
@@ -736,11 +734,11 @@ class formslib_date extends formslib_composite
 	public function __construct($name)
 	{
 		parent::__construct($name);
-		$this->_set_composites(array(
+		$this->_set_composites([
 			'day',
 			'month',
 			'year'
-		));
+		]);
 
 		$this->startyear = date('Y');
 		$this->endyear = date('Y');
@@ -900,11 +898,11 @@ class formslib_uksortcode extends formslib_composite
 	public function __construct($name)
 	{
 		parent::__construct($name);
-		$this->_set_composites(array(
+		$this->_set_composites([
 			'1',
 			'2',
 			'3'
-		));
+		]);
 		$this->addRule('compsite_sortcode', '', 'Each part of your sort code must contain 2 digits');
 		$this->addAttr('maxlength', '2');
 		$this->addAttr('size', '2'); // Text box width, in characters
@@ -947,10 +945,10 @@ class formslib_carddate extends formslib_composite
 	public function __construct($name)
 	{
 		parent::__construct($name);
-		$this->_set_composites(array(
+		$this->_set_composites([
 			'month',
 			'year'
-		));
+		]);
 	}
 
 	public function getHTML()
@@ -1031,7 +1029,7 @@ class formslib_wysiwyg_light extends formslib_textarea
 	{
 		parent::__construct($name);
 
-		$this->button_list = array('bold','italic','ol','ul','fontFormat','removeformat','xhtml');
+		$this->button_list = ['bold','italic','ol','ul','fontFormat','removeformat','xhtml'];
 	}
 
 	public static function getHeader(&$class)
@@ -1041,7 +1039,7 @@ class formslib_wysiwyg_light extends formslib_textarea
 		if (!defined('CONFIG_PATH_NICEDIT'))
 			define('CONFIG_PATH_NICEDIT', '/phplib/nicEdit-latest.js');
 
-			return '<script type="text/javascript" src="'.CONFIG_PATH_NICEDIT.'"></script>'; // TODO: Alter URL
+			return '<script type="text/javascript" src="'.CONFIG_PATH_NICEDIT.'"></script>'; // TODO: Alter nicEdit URL
 	}
 
 	public function getHTML()
@@ -1127,10 +1125,10 @@ class formslib_time extends formslib_composite
 	public function __construct($name)
 	{
 		parent::__construct($name);
-		$this->_set_composites(array(
+		$this->_set_composites([
 				'hour',
 				'minute',
-		));
+		]);
 
 	}
 
@@ -1353,10 +1351,10 @@ class formslib_dateselecttime extends formslib_composite
 	public function __construct($name)
 	{
 		parent::__construct($name);
-		$this->_set_composites(array(
+		$this->_set_composites([
 			'date',
 			'time'
-		));
+		]);
 
 		$this->field_date = new \formslib\Field\DateSelect($name.'__date');
 
@@ -1422,11 +1420,11 @@ class formslib_dateselecttimerange extends formslib_dateselecttime
 	public function __construct($name)
 	{
 		parent::__construct($name);
-		$this->_set_composites(array(
+		$this->_set_composites([
 				'date',
 				'start',
 				'end'
-		));
+		]);
 
 		$this->addRule('composite_timerangeorder', null, 'End time must be after start time');
 	}
@@ -1490,10 +1488,10 @@ class formslib_datepickertime extends formslib_composite
 	public function __construct($name)
 	{
 		parent::__construct($name);
-		$this->_set_composites(array(
+		$this->_set_composites([
 				'date',
 				'time'
-		));
+		]);
 
 		$this->field_date = new formslib_datepicker($name.'__date');
 

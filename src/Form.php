@@ -461,30 +461,27 @@ class Form
 
 		foreach ($fields as $field)
 		{
-			if (is_a($this->fields[$field], 'formslib_hidden'))
+			if (is_a($this->fields[$field], 'formslib_hidden') && ! $this->fields[$field]->getDoNotEmail())
 			{
-				if (! $this->fields[$field]->getDoNotEmail())
+				switch ($style)
 				{
-					switch ($style)
-					{
-						case FORMSLIB_EMAILSTYLE_HTML:
-						case FORMSLIB_EMAILSTYLE_HTML_TH:
-							if ($first)
-							{
-								$body .= '<table class="table">' . CRLF;
-								$first = false;
-							}
-							$body .= '<tr>' . CRLF;
-							$body .= ($style == FORMSLIB_EMAILSTYLE_HTML_TH) ? '<th>' . $field . '</th>' . CRLF : '<td>' . $field . '</td>' . CRLF;
-							$body .= '<td>' . $this->fields[$field]->getEmailValue() . '</td>' . CRLF;
-							$body .= '</tr>' . CRLF;
-							break;
+					case FORMSLIB_EMAILSTYLE_HTML:
+					case FORMSLIB_EMAILSTYLE_HTML_TH:
+						if ($first)
+						{
+							$body .= '<table class="table">' . CRLF;
+							$first = false;
+						}
+						$body .= '<tr>' . CRLF;
+						$body .= ($style == FORMSLIB_EMAILSTYLE_HTML_TH) ? '<th>' . $field . '</th>' . CRLF : '<td>' . $field . '</td>' . CRLF;
+						$body .= '<td>' . $this->fields[$field]->getEmailValue() . '</td>' . CRLF;
+						$body .= '</tr>' . CRLF;
+						break;
 
-						default:
-							$body .= $field . ':' . CRLF;
-							$body .= $this->fields[$field]->getEmailValue() . CRLF . CRLF;
-							break;
-					}
+					default:
+						$body .= $field . ':' . CRLF;
+						$body .= $this->fields[$field]->getEmailValue() . CRLF . CRLF;
+						break;
 				}
 			}
 		}
@@ -499,9 +496,6 @@ class Form
 		{
 			$body .= $this->fieldsets[$fieldset]->getEmailBody($this, $style);
 		}
-
-		// TODO: Display any fields not in fieldsets
-		// TODO: Review if the above is acutually necessary, or whether it should fail instead
 
 		return $body;
 	}
@@ -569,7 +563,7 @@ class Form
 		}
 		else
 		{
-			return false; //TODO: Throw exception?
+			throw new \Exception('Attempted to set submit fieldset to non-existent "'.$fieldset.'"');
 		}
 	}
 
@@ -1055,12 +1049,9 @@ EOF;
 		$fields = array_keys($this->fields);
 		foreach ($fields as $field)
 		{
-			if (is_a($this->fields[$field], 'formslib_hidden'))
+		    if (is_a($this->fields[$field], 'formslib_hidden') && ! $this->fields[$field]->getNoObject())
 			{
-				if (! $this->fields[$field]->getNoObject())
-				{
-					$result->{$field} = $this->fields[$field]->getObjectValue();
-				}
+				$result->{$field} = $this->fields[$field]->getObjectValue();
 			}
 		}
 
@@ -1114,7 +1105,7 @@ EOF;
 
 		unset($this->fsorder[$oldpos]);
 
-		array_splice($this->fsorder, $location-1, 0, array($fsname));
+		array_splice($this->fsorder, $location-1, 0, [$fsname]);
 	}
 
 	public function positionFieldsetBelow($fsname, $below)
