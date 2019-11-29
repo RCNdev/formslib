@@ -181,7 +181,7 @@ class Form
 				{
 					$fld = $this->getField($field);
 
-					if (is_a($fld, 'formslib_composite'))
+					if (is_a($fld, 'formslib\Field\Composite'))
 					{
 						$this->fields[$field]->composite_values[$composite] = $value;
 					}
@@ -314,7 +314,7 @@ class Form
     			    }
     			}
 
-    			if (is_a($field, 'formslib_composite'))
+    			if (is_a($field, 'formslib\Field\Composite'))
     			{
     				$cv = [];
     				foreach ($field->get_composites() as $key)
