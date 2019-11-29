@@ -36,8 +36,6 @@ class DisplayCondition
      *
      * @param array $vars
      * @return boolean
-     *
-     * @todo Implement display conditions
      */
     public function evaluateVars(array &$vars)
     {
@@ -49,22 +47,23 @@ class DisplayCondition
 
 
             case Operator::IN:
+                //TODO: Implement IN operator
                 return true;
                 break;
 
 
             case Operator::CHECKED:
+                //TODO: Implement CHECKED operator
                 return true;
                 break;
 
 
             case Operator::PRESENT:
-                return true;
+                return (isset($vars[$this->field_name.'__'.$this->value]));
                 break;
 
             default:
                 throw new \Exception('Invalid operator');
-
         }
     }
 }

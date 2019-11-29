@@ -226,9 +226,7 @@ class Fieldset extends \formslib_fieldset
 
     public function unattachField($fieldname)
     {
-        if (! is_array($fieldname)) $fieldname = array(
-            $fieldname
-        );
+        if (! is_array($fieldname)) $fieldname = [$fieldname];
 
         foreach ($fieldname as $fn)
         {
@@ -403,5 +401,10 @@ class Fieldset extends \formslib_fieldset
     public function getDisplayCondition()
     {
         return $this->display_condition;
+    }
+
+    public function hasField($name)
+    {
+        return (in_array($name, $this->fields));
     }
 }

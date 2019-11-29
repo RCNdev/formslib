@@ -275,8 +275,6 @@ class Form
 
 		$fields = array_keys($this->fields);
 
-		//TODO: Evaluate fieldset display rules
-
 		// Loop through the fields and check the validation rules
 		foreach ($fields as $name)
 		{
@@ -284,11 +282,23 @@ class Form
 
             $displayed = true;
 
-			$cond = $field->getDisplayCondition();
-			if (is_object($cond))
-			{
-                $displayed = $cond->evaluateVars($vars);
-			}
+            foreach ($this->fieldsets as &$fs)
+            {
+                if ($fs->hasField($name))
+                {
+                    $cond = $field->getDisplayCondition();
+                    $displayed = false;
+                }
+            }
+
+            if ($displayed)
+            {
+    			$cond = $field->getDisplayCondition();
+    			if (is_object($cond))
+    			{
+                    $displayed = $cond->evaluateVars($vars);
+    			}
+            }
 
 			if ($displayed)
 			{
