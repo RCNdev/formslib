@@ -287,7 +287,10 @@ class Form
                 if ($fs->hasField($name))
                 {
                     $cond = $field->getDisplayCondition();
-                    $displayed = false;
+                    if (is_object($cond))
+                    {
+                        $displayed = $cond->evaluateVars($vars);
+                    }
                 }
             }
 
