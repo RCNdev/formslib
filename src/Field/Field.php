@@ -194,7 +194,7 @@ abstract class Field
         $mand = $optionalLabel = null;
         if ($form->getOptionalLabels())
         {
-            if (!$this->mandatory) $optionalLabel = $form->optionalHTML;
+            if (!$this->mandatory && !$this->disabled) $optionalLabel = $form->optionalHTML;
         }
         else
         {
