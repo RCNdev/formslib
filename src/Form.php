@@ -98,7 +98,7 @@ class Form
 
 		if (class_exists($classnamespace))
 		{
-			/** @var formslib_field $field */
+			/** @var \formslib\Field\Field $field */
 			$field = new $classnamespace($name);
 			if (!is_object($field)) throw new \Exception('FORMSLIB ERROR: Failed to create field object for: ' . $name);
 
@@ -106,7 +106,7 @@ class Form
 		}
 		elseif (class_exists($classname))
 		{
-			/** @var formslib_field $field */
+			/** @var \formslib\Field\Field $field */
 			$field = new $classname($name);
 			if (is_object($field))
 			{
@@ -127,7 +127,7 @@ class Form
 		return $field;
 	}
 
-	public function attachField(\formslib_field &$field)
+	public function attachField(\formslib\Field\Field &$field)
 	{
         $name = $field->getName();
 
