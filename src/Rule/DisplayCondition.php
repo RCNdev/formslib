@@ -90,9 +90,9 @@ class DisplayCondition
 
             case Operator::PRESENT:
                 /** @var \formslib\Field\Composite $field */
-                foreach ($field->composite_values as $value)
+                foreach ($field->composite_values as $key => $value)
                 {
-                    if ($value == $this->value) return true;
+                    if ($key == $this->value && $value != '') return true;
                 }
 
                 return false;

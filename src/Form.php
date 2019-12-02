@@ -455,6 +455,11 @@ class Form
 	{
 		$body = '';
 
+		if ($style == FORMSLIB_EMAILSTYLE_HTML_COLSPAN)
+		{
+		    $body .= '<table class="table">' . CRLF;
+		}
+
 		// Output any hidden fields
 		$fields = array_keys($this->fields);
 		$table_opened = false;
@@ -498,6 +503,11 @@ class Form
 		foreach ($this->fsorder as $fieldset)
 		{
 			$body .= $this->fieldsets[$fieldset]->getEmailBody($this, $style, $includeConditionalDisplay);
+		}
+
+		if ($style == FORMSLIB_EMAILSTYLE_HTML_COLSPAN)
+		{
+		    $body .= '</table>' . CRLF;
 		}
 
 		return $body;

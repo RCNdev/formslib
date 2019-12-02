@@ -193,67 +193,70 @@ class Fieldset extends \formslib_fieldset
     {
         $body = '';
 
-        if ($style == FORMSLIB_EMAILSTYLE_HTML || $style == FORMSLIB_EMAILSTYLE_HTML_TH)
+        if (!is_object($this->display_condition) || $this->display_condition->evaluateField($form->getField($this->display_condition->getFieldName())))
         {
-            $body .= '<h2>' . Security::escapeHtml($this->legend) . '</h2>' . CRLF;
-            $body .= '<table class="table">' . CRLF;
-        }
-        elseif ($style == FORMSLIB_EMAILSTYLE_HTML_COLSPAN)
-        {
-            $body .= '<tr><th colspan="2">' . Security::escapeHtml($this->legend) . '</th></tr>';
-        }
-        else
-        {
-            $body .= CRLF . CRLF . CRLF . '***** ' . $this->legend . ' *****' . CRLF . CRLF;
-        }
-
-        foreach ($this->fieldorder as $fieldname)
-        {
-            $field =& $form->fields[$fieldname];
-
-            if (! $field->getDoNotEmail())
+            if ($style == FORMSLIB_EMAILSTYLE_HTML || $style == FORMSLIB_EMAILSTYLE_HTML_TH)
             {
-                $cond = $field->getDisplayCondition();
+                $body .= '<h2>' . Security::escapeHtml($this->legend) . '</h2>' . CRLF;
+                $body .= '<table class="table">' . CRLF;
+            }
+            elseif ($style == FORMSLIB_EMAILSTYLE_HTML_COLSPAN)
+            {
+                $body .= '<tr><th colspan="2">' . Security::escapeHtml($this->legend) . '</th></tr>';
+            }
+            else
+            {
+                $body .= CRLF . CRLF . CRLF . '***** ' . $this->legend . ' *****' . CRLF . CRLF;
+            }
 
-                if ($includeConditionalDisplay)
-                {
-                    $displayed = true;
-                }
-                elseif (is_object($cond))
-                {
-                    $displayed = $cond->evaluateField($form->getField($cond->getFieldName()));
-                }
-                else
-                {
-                    $displayed = true;
-                }
+            foreach ($this->fieldorder as $fieldname)
+            {
+                $field =& $form->fields[$fieldname];
 
-                if ($displayed)
+                if (! $field->getDoNotEmail())
                 {
-                    switch ($style)
+                    $cond = $field->getDisplayCondition();
+
+                    if ($includeConditionalDisplay)
                     {
-                        case FORMSLIB_EMAILSTYLE_HTML:
-                        case FORMSLIB_EMAILSTYLE_HTML_TH:
-                        case FORMSLIB_EMAILSTYLE_HTML_COLSPAN:
-                            $cell = ($style == FORMSLIB_EMAILSTYLE_HTML_TH || FORMSLIB_EMAILSTYLE_HTML_COLSPAN) ? 'th' : 'td';
-                            $body .= '<tr>' . CRLF;
-                            $body .= '<' . $cell . '>' . Security::escapeHtml($field->getLabel()) . '</' . $cell . '>' . CRLF;
-                            $body .= '<td>' . str_replace("\n", "<br />\n", Security::escapeHtml($field->getEmailValue())) . '</td>' . CRLF;
-                            $body .= '</tr>' . CRLF;
-                            break;
+                        $displayed = true;
+                    }
+                    elseif (is_object($cond))
+                    {
+                        $displayed = $cond->evaluateField($form->getField($cond->getFieldName()));
+                    }
+                    else
+                    {
+                        $displayed = true;
+                    }
 
-                        default:
-                            $body .= $fieldname . ':' . CRLF;
-                            $body .= $field->getEmailValue() . CRLF . CRLF;
-                            break;
+                    if ($displayed)
+                    {
+                        switch ($style)
+                        {
+                            case FORMSLIB_EMAILSTYLE_HTML:
+                            case FORMSLIB_EMAILSTYLE_HTML_TH:
+                            case FORMSLIB_EMAILSTYLE_HTML_COLSPAN:
+                                $cell = ($style == FORMSLIB_EMAILSTYLE_HTML_TH || FORMSLIB_EMAILSTYLE_HTML_COLSPAN) ? 'th' : 'td';
+                                $body .= '<tr>' . CRLF;
+                                $body .= '<' . $cell . '>' . Security::escapeHtml($field->getLabel()) . '</' . $cell . '>' . CRLF;
+                                $body .= '<td>' . str_replace("\n", "<br />\n", Security::escapeHtml($field->getEmailValue())) . '</td>' . CRLF;
+                                $body .= '</tr>' . CRLF;
+                                break;
+
+                            default:
+                                $body .= $fieldname . ':' . CRLF;
+                                $body .= $field->getEmailValue() . CRLF . CRLF;
+                                break;
+                        }
                     }
                 }
             }
-        }
 
-        if ($style == FORMSLIB_EMAILSTYLE_HTML || $style == FORMSLIB_EMAILSTYLE_HTML_TH)
-        {
-            $body .= '</table>' . CRLF;
+            if ($style == FORMSLIB_EMAILSTYLE_HTML || $style == FORMSLIB_EMAILSTYLE_HTML_TH)
+            {
+                $body .= '</table>' . CRLF;
+            }
         }
 
         return $body;
