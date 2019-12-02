@@ -66,4 +66,40 @@ class DisplayCondition
                 throw new \Exception('Invalid operator');
         }
     }
+
+    public function evaluateField(\formslib\Field\Field &$field)
+    {
+        switch ($this->operator)
+        {
+            case Operator::EQ:
+                return ($field->value == $this->value);
+                break;
+
+
+            case Operator::IN:
+                //TODO: Implement IN operator
+                return true;
+                break;
+
+
+            case Operator::CHECKED:
+                //TODO: Implement CHECKED operator
+                return true;
+                break;
+
+
+            case Operator::PRESENT:
+                /** @var \formslib\Field\Composite $field */
+                foreach ($field->composite_values as $value)
+                {
+                    if ($value == $this->value) return true;
+                }
+
+                return false;
+                break;
+
+            default:
+                throw new \Exception('Invalid operator');
+        }
+    }
 }

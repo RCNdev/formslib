@@ -48,7 +48,7 @@ class MultiPair extends GenericMulti
 	{
 		$this->_preProcessValues();
 
-		// TODO: Implement email values
+		// TODO: Implement email values for MultiPair
 	}
 	*/
 

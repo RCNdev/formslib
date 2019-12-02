@@ -451,13 +451,13 @@ class Form
 		return $data;
 	}
 
-	public function getEmailBody($style)
+	public function getEmailBody($style, $includeConditionalDisplay = false)
 	{
 		$body = '';
 
 		// Output any hidden fields
 		$fields = array_keys($this->fields);
-		$first = true;
+		$table_opened = false;
 
 		foreach ($fields as $field)
 		{
@@ -467,11 +467,14 @@ class Form
 				{
 					case FORMSLIB_EMAILSTYLE_HTML:
 					case FORMSLIB_EMAILSTYLE_HTML_TH:
-						if ($first)
+					    if (!$table_opened)
 						{
 							$body .= '<table class="table">' . CRLF;
-							$first = false;
+							$table_opened = true;
 						}
+						// No break
+
+					case FORMSLIB_EMAILSTYLE_HTML_COLSPAN:
 						$body .= '<tr>' . CRLF;
 						$body .= ($style == FORMSLIB_EMAILSTYLE_HTML_TH) ? '<th>' . $field . '</th>' . CRLF : '<td>' . $field . '</td>' . CRLF;
 						$body .= '<td>' . $this->fields[$field]->getEmailValue() . '</td>' . CRLF;
@@ -486,7 +489,7 @@ class Form
 			}
 		}
 
-		if ($first === false && ($style == FORMSLIB_EMAILSTYLE_HTML || $style == FORMSLIB_EMAILSTYLE_HTML_TH))
+		if ($table_opened === true && ($style == FORMSLIB_EMAILSTYLE_HTML || $style == FORMSLIB_EMAILSTYLE_HTML_TH))
 		{
 			$body .= '</table>' . CRLF;
 		}
@@ -494,7 +497,7 @@ class Form
 		// Go through the fieldsets
 		foreach ($this->fsorder as $fieldset)
 		{
-			$body .= $this->fieldsets[$fieldset]->getEmailBody($this, $style);
+			$body .= $this->fieldsets[$fieldset]->getEmailBody($this, $style, $includeConditionalDisplay);
 		}
 
 		return $body;
@@ -1042,7 +1045,7 @@ EOF;
 	/**
 	 * @return \formslib\Result\ResultObject
 	 */
-	public function getResultObject()
+	public function getResultObject($includeConditionalDisplay = true)
 	{
 		$result = new $this->resultClass();
 
@@ -1058,7 +1061,7 @@ EOF;
 		// Go through the fieldsets
 		foreach ($this->fsorder as $fieldset)
 		{
-			$this->fieldsets[$fieldset]->buildResultObject($this, $result);
+			$this->fieldsets[$fieldset]->buildResultObject($this, $result, $includeConditionalDisplay);
 		}
 
 		return $result;

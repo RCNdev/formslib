@@ -442,7 +442,7 @@ class formslib_checkbox extends formslib_field
 
 	public function getHTMLReadOnly()
 	{
-		// TODO: Complete
+	    // TODO: Complete getHTMLReadOnly()
 		$html = '';
 
 		$ids = 'name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '"';

@@ -188,10 +188,8 @@ class Fieldset extends \formslib_fieldset
      * @param \formslib\Form $form
      * @param integer $style
      * @return string
-     *
-     * @todo [CONDITIONAL] Follow conditional display rules
      */
-    public function getEmailBody(&$form, &$style)
+    public function getEmailBody(&$form, &$style, $includeConditionalDisplay = false)
     {
         $body = '';
 
@@ -200,6 +198,10 @@ class Fieldset extends \formslib_fieldset
             $body .= '<h2>' . Security::escapeHtml($this->legend) . '</h2>' . CRLF;
             $body .= '<table class="table">' . CRLF;
         }
+        elseif ($style == FORMSLIB_EMAILSTYLE_HTML_COLSPAN)
+        {
+            $body .= '<tr><th colspan="2">' . Security::escapeHtml($this->legend) . '</th></tr>';
+        }
         else
         {
             $body .= CRLF . CRLF . CRLF . '***** ' . $this->legend . ' *****' . CRLF . CRLF;
@@ -207,28 +209,52 @@ class Fieldset extends \formslib_fieldset
 
         foreach ($this->fieldorder as $fieldname)
         {
-            if (! $form->fields[$fieldname]->getDoNotEmail())
-            {
-                switch ($style)
-                {
-                    case FORMSLIB_EMAILSTYLE_HTML:
-                    case FORMSLIB_EMAILSTYLE_HTML_TH:
-                        $cell = ($style == FORMSLIB_EMAILSTYLE_HTML_TH) ? 'th' : 'td';
-                        $body .= '<tr>' . CRLF;
-                        $body .= '<' . $cell . '>' . Security::escapeHtml($form->fields[$fieldname]->getLabel()) . '</' . $cell . '>' . CRLF;
-                        $body .= '<td>' . str_replace("\n", "<br />\n", Security::escapeHtml($form->fields[$fieldname]->getEmailValue())) . '</td>' . CRLF;
-                        $body .= '</tr>' . CRLF;
-                        break;
+            $field =& $form->fields[$fieldname];
 
-                    default:
-                        $body .= $fieldname . ':' . CRLF;
-                        $body .= $form->fields[$fieldname]->getEmailValue() . CRLF . CRLF;
-                        break;
+            if (! $field->getDoNotEmail())
+            {
+                $cond = $field->getDisplayCondition();
+
+                if ($includeConditionalDisplay)
+                {
+                    $displayed = true;
+                }
+                elseif (is_object($cond))
+                {
+                    $displayed = $cond->evaluateField($form->getField($cond->getFieldName()));
+                }
+                else
+                {
+                    $displayed = true;
+                }
+
+                if ($displayed)
+                {
+                    switch ($style)
+                    {
+                        case FORMSLIB_EMAILSTYLE_HTML:
+                        case FORMSLIB_EMAILSTYLE_HTML_TH:
+                        case FORMSLIB_EMAILSTYLE_HTML_COLSPAN:
+                            $cell = ($style == FORMSLIB_EMAILSTYLE_HTML_TH || FORMSLIB_EMAILSTYLE_HTML_COLSPAN) ? 'th' : 'td';
+                            $body .= '<tr>' . CRLF;
+                            $body .= '<' . $cell . '>' . Security::escapeHtml($field->getLabel()) . '</' . $cell . '>' . CRLF;
+                            $body .= '<td>' . str_replace("\n", "<br />\n", Security::escapeHtml($field->getEmailValue())) . '</td>' . CRLF;
+                            $body .= '</tr>' . CRLF;
+                            break;
+
+                        default:
+                            $body .= $fieldname . ':' . CRLF;
+                            $body .= $field->getEmailValue() . CRLF . CRLF;
+                            break;
+                    }
                 }
             }
         }
 
-        if ($style == FORMSLIB_EMAILSTYLE_HTML || $style == FORMSLIB_EMAILSTYLE_HTML_TH) $body .= '</table>' . CRLF;
+        if ($style == FORMSLIB_EMAILSTYLE_HTML || $style == FORMSLIB_EMAILSTYLE_HTML_TH)
+        {
+            $body .= '</table>' . CRLF;
+        }
 
         return $body;
     }
@@ -343,16 +369,31 @@ class Fieldset extends \formslib_fieldset
      *
      * @param \formslib\Form $form
      * @param object $result
-     *
-     * @todo [CONDITIONAL] Follow conditional display rules
      */
-    public function buildResultObject(&$form, &$result)
+    public function buildResultObject(&$form, &$result, $includeConditionalDisplay)
     {
         foreach ($this->fields as $fieldname)
         {
-            if (! $form->fields[$fieldname]->getNoObject())
+            $field =& $form->fields[$fieldname];
+
+            if (! $field->getNoObject())
             {
-                $result->{$fieldname} = $form->fields[$fieldname]->getObjectValue();
+                $cond = $field->getDisplayCondition();
+
+                if ($includeConditionalDisplay)
+                {
+                    $displayed = true;
+                }
+                elseif (is_object($cond))
+                {
+                    $displayed = $cond->evaluateField($form->getField($cond->getFieldName()));
+                }
+                else
+                {
+                    $displayed = true;
+                }
+
+                if ($displayed) $result->{$fieldname} = $field->getObjectValue();
             }
         }
     }

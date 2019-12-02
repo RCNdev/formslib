@@ -14,6 +14,7 @@ if (!defined('FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL')) define('FORMSLIB_STYLE_BOOTS
 if (!defined('FORMSLIB_EMAILSTYLE_TEXT')) define('FORMSLIB_EMAILSTYLE_TEXT', 1);
 if (!defined('FORMSLIB_EMAILSTYLE_HTML')) define('FORMSLIB_EMAILSTYLE_HTML', 2);
 if (!defined('FORMSLIB_EMAILSTYLE_HTML_TH')) define('FORMSLIB_EMAILSTYLE_HTML_TH', 3);
+if (!defined('FORMSLIB_EMAILSTYLE_HTML_COLSPAN')) define('FORMSLIB_EMAILSTYLE_HTML_COLSPAN', 4);
 
 if (!defined('VALIDATE_BACS')) define('VALIDATE_BACS', '/^[a-zA-Z0-9\s&\-\.\/]*$/');
 if (!defined('EMAIL_VALIDATE')) define('EMAIL_VALIDATE', '[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?');
