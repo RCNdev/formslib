@@ -193,7 +193,9 @@ class Fieldset extends \formslib_fieldset
     {
         $body = '';
 
-        if (!is_object($this->display_condition) || $this->display_condition->evaluateField($form->getField($this->display_condition->getFieldName())))
+        if ($includeConditionalDisplay
+            || !is_object($this->display_condition)
+            || $this->display_condition->evaluateField($form->getField($this->display_condition->getFieldName())))
         {
             if ($style == FORMSLIB_EMAILSTYLE_HTML || $style == FORMSLIB_EMAILSTYLE_HTML_TH)
             {
@@ -202,7 +204,7 @@ class Fieldset extends \formslib_fieldset
             }
             elseif ($style == FORMSLIB_EMAILSTYLE_HTML_COLSPAN)
             {
-                $body .= '<tr><th colspan="2">' . Security::escapeHtml($this->legend) . '</th></tr>';
+                $body .= '<tr><th colspan="2" style="text-align: center;"><h2>' . Security::escapeHtml($this->legend) . '</h2></th></tr>';
             }
             else
             {
@@ -375,28 +377,34 @@ class Fieldset extends \formslib_fieldset
      */
     public function buildResultObject(&$form, &$result, $includeConditionalDisplay)
     {
-        foreach ($this->fields as $fieldname)
+        if ($includeConditionalDisplay
+            || !is_object($this->display_condition)
+            || $this->display_condition->evaluateField($form->getField($this->display_condition->getFieldName())))
         {
-            $field =& $form->fields[$fieldname];
 
-            if (! $field->getNoObject())
+            foreach ($this->fields as $fieldname)
             {
-                $cond = $field->getDisplayCondition();
+                $field =& $form->fields[$fieldname];
 
-                if ($includeConditionalDisplay)
+                if (! $field->getNoObject())
                 {
-                    $displayed = true;
-                }
-                elseif (is_object($cond))
-                {
-                    $displayed = $cond->evaluateField($form->getField($cond->getFieldName()));
-                }
-                else
-                {
-                    $displayed = true;
-                }
+                    $cond = $field->getDisplayCondition();
 
-                if ($displayed) $result->{$fieldname} = $field->getObjectValue();
+                    if ($includeConditionalDisplay)
+                    {
+                        $displayed = true;
+                    }
+                    elseif (is_object($cond))
+                    {
+                        $displayed = $cond->evaluateField($form->getField($cond->getFieldName()));
+                    }
+                    else
+                    {
+                        $displayed = true;
+                    }
+
+                    if ($displayed) $result->{$fieldname} = $field->getObjectValue();
+                }
             }
         }
     }
