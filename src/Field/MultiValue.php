@@ -3,7 +3,7 @@ namespace formslib\Field;
 
 abstract class MultiValue extends Field
 {
-	public $multi_values = array();
+	public $multi_values = [];
 	public $composite_values = null;
 	protected $maxvalue;
 
@@ -56,5 +56,17 @@ abstract class MultiValue extends Field
 		$value = $this->multi_values;
 
 		return $value;
+	}
+
+	public function checkMandatoryVars(array &$vars)
+	{
+	    $missing = false;
+
+	    if (!isset($vars[ $this->name . '__0']) || ($vars[ $this->name . '__0']) == '')
+	    {
+	        $missing = true;
+	    }
+
+	    return !$missing;
 	}
 }

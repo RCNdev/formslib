@@ -3,7 +3,7 @@ namespace formslib\Field;
 
 class MultiId extends GenericMulti
 {
-	protected $indices = array();
+	protected $indices = [];
 	private $preprocessed = false;
 	protected $separator = ';';
 
@@ -11,7 +11,7 @@ class MultiId extends GenericMulti
 	{
 		parent::__construct($name);
 
-		$this->indices = array();
+		$this->indices = [];
 	}
 
 	protected function getSingleInstance($i, $setValue = false)

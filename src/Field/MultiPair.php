@@ -28,7 +28,7 @@ class MultiPair extends GenericMulti
 	{
 		parent::__construct($name);
 
-		$this->indices = array();
+		$this->indices = [];
 	}
 
 	protected function getSingleInstance($i, $setValue = false)
@@ -48,7 +48,7 @@ class MultiPair extends GenericMulti
 	{
 		$this->_preProcessValues();
 
-		// TODO: Implement email values
+		// TODO: Implement email values for MultiPair
 	}
 	*/
 

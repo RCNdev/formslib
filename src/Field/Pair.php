@@ -1,15 +1,17 @@
 <?php
 namespace formslib\Field;
 
+use formslib\Utility\Security;
+
 class Pair extends Composite
 {
 	public function __construct($name)
 	{
 		parent::__construct($name);
-		$this->_set_composites(array(
+		$this->_set_composites([
 			'1',
 			'2'
-		));
+		]);
 
 		//TODO: Rule to make both sides mandatory?
 
@@ -34,7 +36,7 @@ class Pair extends Composite
 		}
 
 		// Key
-		$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr($classes) . ' name="' . $this->name . '__1" value="' . htmlspecialchars($this->composite_values[1]) . '" />';
+		$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr($classes) . ' name="' . $this->name . '__1" value="' . Security::escapeHtml($this->composite_values[1]) . '" />';
 
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
 		{
@@ -48,7 +50,7 @@ class Pair extends Composite
 		}
 
 		// Value
-		$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr($classes) . ' name="' . $this->name . '__2" value="' . htmlspecialchars($this->composite_values[2]) . '" />';
+		$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr($classes) . ' name="' . $this->name . '__2" value="' . Security::escapeHtml($this->composite_values[2]) . '" />';
 
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
 		{

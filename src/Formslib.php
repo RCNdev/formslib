@@ -8,7 +8,7 @@ final class Formslib
 	 */
 	public static function convertTextToHtml($text)
 	{
-		$htmltext = htmlspecialchars($text);
+	    $htmltext = \formslib\Utility\Security::escapeHtml($text);
 		$htmltext = str_replace("\r", '', $htmltext);
 		$htmltext = str_replace("\n", "<br />\n", $htmltext);
 		return $htmltext;
@@ -19,7 +19,7 @@ final class Formslib
 	 *
 	 * @param string $date_string
 	 * @throws \Exception
-	 * @return DateTime
+	 * @return \DateTime
 	 */
 	public static function &getUkDate($date_string)
 	{

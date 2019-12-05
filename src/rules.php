@@ -129,7 +129,7 @@ class formslib_rule_sqldate extends formslib_rule
 			return true;
 
 		// Check for correct SQL format
-		$matches = array();
+		$matches = [];
 		if (!preg_match('|^([0-9]{4})-([0-9]{2})-([0-9]{2})$|i', $value, $matches))
 			return false;
 
@@ -225,7 +225,7 @@ class formslib_rule_compsite_sortcode extends formslib_rule
 {
 	public function evaluate($value)
 	{
-		$cs = array('1', '2', '3');
+		$cs = ['1', '2', '3'];
 		foreach ($cs as $c)
 		{
 			if (!preg_match('|^[0-9]{2}$|i', $value[$c]))
@@ -346,7 +346,7 @@ class formslib_rule_composite_timerangeformat extends formslib_rule
 {
 	public function evaluate($value)
 	{
-		$cs = array('start', 'end', 'time');
+		$cs = ['start', 'end', 'time'];
 		foreach ($cs as $c)
 		{
 			if (isset($value[$c]) && $value[$c] != '' &&  !preg_match('/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/', $value[$c]))

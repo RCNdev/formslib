@@ -1,6 +1,8 @@
 <?php
 namespace formslib\BootstrapUtil;
 
+use formslib\Utility\Security;
+
 /**
  * Utility class to create HTML code for a Bootstrap alerts
  */
@@ -38,7 +40,7 @@ class Alert
 
 	public function &setText($text)
 	{
-		$this->content = htmlentities($text);
+		$this->content = Security::escapeHtml($text);
 
 		return $this;
 	}
