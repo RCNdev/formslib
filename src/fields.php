@@ -1364,6 +1364,8 @@ class formslib_dateselecttime extends formslib_composite
 	public function &setDateRange($startDate, $endDate)
 	{
 	    $this->field_date->setDateRange($startDate, $endDate);
+
+	    return $this;
 	}
 
 	protected function _prepareOutput()
