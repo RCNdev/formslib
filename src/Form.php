@@ -1170,7 +1170,7 @@ EOF;
 			{
 				$conditions[$condition->getFieldName()][] = ['fs', $fs->getName(), $condition];
 
-				$jq .= '	var fld = $(\''.$this->fields[$condition->getFieldName()]->getJquerySelectorOnLoad().'\');'.CRLF;
+				$jq .= '	var fld = $(\''.$this->getField($condition->getFieldName())->getJquerySelectorOnLoad().'\');'.CRLF;
 				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fs', $fs->getName(), $condition->getValue(), $condition->getFieldName());
 			}
 		}
@@ -1183,7 +1183,7 @@ EOF;
 			{
 				$conditions[$condition->getFieldName()][] = ['fld', $fld->getName(), $condition];
 
-				$jq .= '	var fld = $(\''.$this->fields[$condition->getFieldName()]->getJquerySelectorOnLoad().'\');'.CRLF;
+				$jq .= '	var fld = $(\''.$this->getField($condition->getFieldName())->getJquerySelectorOnLoad().'\');'.CRLF;
 				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fld', $fld->getName(), $condition->getValue(), $condition->getFieldName());
 			}
 		}
