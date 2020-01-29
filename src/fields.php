@@ -471,7 +471,9 @@ class formslib_checkbox extends formslib_field
 
 	public function &getObjectValue()
 	{
-		return $this->isChecked();
+		$objVal = ($this->isChecked()) ? true : false;
+
+		return ($objVal);
 	}
 }
 
