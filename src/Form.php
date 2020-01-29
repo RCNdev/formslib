@@ -34,6 +34,7 @@ class Form
 	private $doubleClickTimeout = null;
 	private $fsorder = [];
 	private $optionalLabels = false;
+	private $errorIntroText = null;
 
 	public function __construct($name)
 	{
@@ -792,16 +793,38 @@ JS;
 				$classes = '';
 			}
 
-			echo '<ul class="' . $classes . '">' . CRLF;
-
-			foreach ($this->errorlist as $err)
+			if (!is_null($this->errorIntroText))
 			{
-				echo '<li class="error">';
-				echo $err['message'];
-				echo '</li>' . CRLF;
-			}
+				echo '<div class="' . $classes . '">' . CRLF;
 
-			echo '</ul>' . CRLF;
+				echo '<p>'.Security::escapeHtml($this->errorIntroText).'</p>' . CRLF;
+
+				echo '<ul>' . CRLF;
+
+				foreach ($this->errorlist as $err)
+				{
+					echo '<li>';
+					echo $err['message'];
+					echo '</li>' . CRLF;
+				}
+
+				echo '</ul>' . CRLF;
+				echo '</div>' . CRLF;
+
+			}
+			else
+			{
+				echo '<ul class="' . $classes . '">' . CRLF;
+
+				foreach ($this->errorlist as $err)
+				{
+					echo '<li class="error">';
+					echo $err['message'];
+					echo '</li>' . CRLF;
+				}
+
+				echo '</ul>' . CRLF;
+			}
 		}
 	}
 
@@ -1300,5 +1323,10 @@ JS;
 		}
 
 		return $jq;
+	}
+
+	public function setErrorIntroText($text)
+	{
+		$this->errorIntroText = $text;
 	}
 }

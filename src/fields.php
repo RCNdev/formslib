@@ -313,11 +313,16 @@ class formslib_checkbox extends formslib_field
 		return $this;
 	}
 
+	public function isChecked()
+	{
+		return ($this->value == $this->checkedvalue);
+	}
+
 	public function getHTML()
 	{
 		$html = '';
 
-		$checked = ($this->value == $this->checkedvalue) ? ' checked="checked"' : '';
+		$checked = ($this->isChecked()) ? ' checked="checked"' : '';
 
 		$labelclass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
 
@@ -446,7 +451,7 @@ class formslib_checkbox extends formslib_field
 		$html = '';
 
 		$ids = 'name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '"';
-		$checked = ($this->value == $this->checkedvalue) ? '<span ' . $ids . ' class="colour-positive">&#10004;</span>' : '<span ' . $ids . ' class="colour-negative">&#10008;</span>';
+		$checked = ($this->isChecked()) ? '<span ' . $ids . ' class="colour-positive">&#10004;</span>' : '<span ' . $ids . ' class="colour-negative">&#10008;</span>';
 
 		$text = Security::escapeHtml($this->label) . CRLF;
 
@@ -466,9 +471,9 @@ class formslib_checkbox extends formslib_field
 
 	public function &getObjectValue()
 	{
-		$value = ($this->value == $this->checkedvalue) ? true : false;
+		$objVal = ($this->isChecked()) ? true : false;
 
-		return $value;
+		return ($objVal);
 	}
 }
 
@@ -1091,8 +1096,8 @@ class formslib_toggle_button extends formslib_checkbox
 	{
 		$html = '';
 
-		$checked = ($this->value == $this->checkedvalue) ? ' checked="checked"' : '';
-		$active = ($this->value == $this->checkedvalue) ? ' active' : '';
+		$checked = ($this->isChecked()) ? ' checked="checked"' : '';
+		$active = ($this->isChecked()) ? ' active' : '';
 
 		$html .= '<div class="btn-group" data-toggle="buttons">' . CRLF;
 		$html .= '<label for="fld_' . $this->name . '" class="btn' . $this->btnclass . $active . '">' . CRLF;
