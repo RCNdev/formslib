@@ -795,19 +795,36 @@ JS;
 
 			if (!is_null($this->errorIntroText))
 			{
-				echo '<p>'.Security::escapeHtml($this->errorIntroText).'</p>';
+				echo '<div class="' . $classes . '">' . CRLF;
+
+				echo '<p>'.Security::escapeHtml($this->errorIntroText).'</p>' . CRLF;
+
+				echo '<ul>' . CRLF;
+
+				foreach ($this->errorlist as $err)
+				{
+					echo '<li>';
+					echo $err['message'];
+					echo '</li>' . CRLF;
+				}
+
+				echo '</ul>' . CRLF;
+				echo '</div>' . CRLF;
+
 			}
-
-			echo '<ul class="' . $classes . '">' . CRLF;
-
-			foreach ($this->errorlist as $err)
+			else
 			{
-				echo '<li class="error">';
-				echo $err['message'];
-				echo '</li>' . CRLF;
-			}
+				echo '<ul class="' . $classes . '">' . CRLF;
 
-			echo '</ul>' . CRLF;
+				foreach ($this->errorlist as $err)
+				{
+					echo '<li class="error">';
+					echo $err['message'];
+					echo '</li>' . CRLF;
+				}
+
+				echo '</ul>' . CRLF;
+			}
 		}
 	}
 
