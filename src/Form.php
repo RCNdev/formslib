@@ -952,7 +952,7 @@ EOF;
 		{
 			$class_set = '';
 
-			if (substr($type, 0, 1) == '\\')
+			if (strpos($type, '\\') !== false)
 			{
 				$class = $type;
 			}
