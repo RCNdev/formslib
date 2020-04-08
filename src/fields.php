@@ -606,7 +606,6 @@ class formslib_confirmtick extends formslib_checkbox
 	public function __construct($name)
 	{
 		parent::__construct($name);
-		$this->setRawOutput();
 		$this->setMandatory();
 	}
 }
