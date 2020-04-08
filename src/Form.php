@@ -1279,7 +1279,7 @@ JS;
 			case \formslib\Operator::CHECKED:
 				$jq .= <<<JS
 				
-	if (fld.prop('checked') == '$value')
+	if (fld.prop('checked') == $value)
 	{
 		$('[data-formslib-owner="{$type}_$id"]').show();
 	}
