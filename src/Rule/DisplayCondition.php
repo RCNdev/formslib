@@ -53,13 +53,12 @@ class DisplayCondition
 
 
             case Operator::CHECKED:
-                //TODO: Implement CHECKED operator
-                return true;
+                return (isset($vars[$this->field_name]));
                 break;
 
 
             case Operator::PRESENT:
-                return (isset($vars[$this->field_name.'__'.$this->value]));
+                return (isset($vars[$this->field_name.'__'.$this->value]) == $this->value);
                 break;
 
             default:
@@ -83,8 +82,7 @@ class DisplayCondition
 
 
             case Operator::CHECKED:
-                //TODO: Implement CHECKED operator
-                return true;
+                return (($field->value == $field->checkedvalue) == $this->value);
                 break;
 
 
