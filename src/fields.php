@@ -379,16 +379,25 @@ class formslib_checkbox extends formslib_field
 
 				case FORMSLIB_STYLE_BOOTSTRAP3:
 				    echo $this->htmlbefore;
+				    echo '<div data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">'.CRLF;
+				    echo $this->innerhtmlbefore;
 				    echo '<div class="checkbox">'.CRLF;
 				    echo $this->getHTML() . CRLF;
 				    echo '</div>'.CRLF;
+				    echo $this->innerhtmlafter;
+				    echo '</div>'.CRLF;
 				    echo $this->htmlafter;
+
 				    break;
 
 				case FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL:
 					echo $this->htmlbefore;
+					echo '<div data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">'.CRLF;
+					echo $this->innerhtmlbefore;
 					echo '<div class="checkbox">'.CRLF;
 					echo $this->getHTML() . CRLF;
+					echo '</div>'.CRLF;
+					echo $this->innerhtmlafter;
 					echo '</div>'.CRLF;
 					echo $this->htmlafter;
 					break;
