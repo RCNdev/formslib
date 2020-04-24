@@ -25,6 +25,11 @@ class formslib_text extends formslib_field
 {
 	protected $buttonlefttype, $buttonrighttype, $buttonlefthtml, $buttonrighthtml;
 
+	public function __construct()
+	{
+		$this->inputType = 'text';
+	}
+
 	public function getHTML()
 	{
 		$left = ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 && isset($this->buttonlefttype));
@@ -44,7 +49,7 @@ class formslib_text extends formslib_field
 			$html .= '</span>'.CRLF;
 		}
 
-		$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . Security::escapeHtml($this->name) . '" id="fld_' . Security::escapeHtml($this->name) . '" value="' . Security::escapeHtml($this->value) . '" />'.CRLF;
+		$html .= '<input type="'.$this->inputType.'"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . Security::escapeHtml($this->name) . '" id="fld_' . Security::escapeHtml($this->name) . '" value="' . Security::escapeHtml($this->value) . '" />'.CRLF;
 
 		if ($right)
 		{
@@ -502,16 +507,49 @@ class formslib_email extends formslib_text
 	{
 		parent::__construct($name);
 		$this->addRule('regex', '/^' . EMAIL_VALIDATE . '$/i', 'Invalid email address format');
+		$this->_setInputType();
+	}
+
+	private function _setInputType()
+	{
+		if ($this->inputTypeMode & Formslib::INPUT_MODE_COMPAT)
+		{
+			$this->inputType = 'email';
+			$this->addAttr('inputmode', 'email');
+		}
+	}
+
+	public function getHTML()
+	{
+		$this->_setInputType();
+
+		return parent::getHTML();
 	}
 }
 
 class formslib_phone extends formslib_text
 {
-
 	public function __construct($name)
 	{
 		parent::__construct($name);
 		$this->addRule('regex', '|^[0-9\+ ]+$|i', 'Phone number may only contain numbers, spaces, and the plus symbol.');
+		$this->_setInputType();
+	}
+
+	private function _setInputType()
+	{
+		if ($this->inputTypeMode & Formslib::INPUT_MODE_COMPAT)
+		{
+			$this->inputType = 'tel';
+			$this->addAttr('inputmode', 'tel');
+		}
+	}
+
+	public function getHTML()
+	{
+		$this->_setInputType();
+
+		return parent::getHTML();
 	}
 }
 
@@ -564,6 +602,23 @@ class formslib_url extends formslib_text
 	{
 		parent::__construct($name);
 		$this->addRule('regex', '`' . VALIDATE_URL . '`i', 'Invalid URL format');
+		$this->_setInputType();
+	}
+
+	private function _setInputType()
+	{
+		if ($this->inputTypeMode & Formslib::INPUT_MODE_COMPAT)
+		{
+			$this->inputType = 'url';
+			$this->addAttr('inputmode', 'url');
+		}
+	}
+
+	public function getHTML()
+	{
+		$this->_setInputType();
+
+		return parent::getHTML();
 	}
 }
 

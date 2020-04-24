@@ -1,6 +1,11 @@
 <?php
 final class Formslib
 {
+	const INPUT_MODE_NONE = 0;
+	const INPUT_MODE_COMPAT = 1;
+	const INPUT_MODE_SUPPORTED = 2;
+	const INPUT_MODE_STRICT = 4;
+
 	/**
 	 * Replace text line breaks with HTML tags
 	 * @param string $text Input unformatted text

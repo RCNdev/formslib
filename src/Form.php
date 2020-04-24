@@ -35,6 +35,7 @@ class Form
 	private $fsorder = [];
 	private $optionalLabels = false;
 	private $errorIntroText = null;
+	private $inputTypeMode = 1;
 
 	public function __construct($name)
 	{
@@ -1328,5 +1329,15 @@ JS;
 	public function setErrorIntroText($text)
 	{
 		$this->errorIntroText = $text;
+	}
+
+	public function setInputTypeMode($mode)
+	{
+		$this->inputTypeMode = $mode;
+	}
+
+	public function getInputTypeMode()
+	{
+		return $this->inputTypeMode;
 	}
 }
