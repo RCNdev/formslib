@@ -630,24 +630,7 @@ class formslib_number extends formslib_text
 	{
 		parent::__construct($name);
 		$this->addRule('regex', '|^-?[0-9.]+$|i', 'Not a number');
-		$this->_setInputType();
-		$this->addAttr('inputmode', 'decimal');
-	}
-
-	private function _setInputType()
-	{
-		if ($this->inputTypeMode & Formslib::INPUT_MODE_SUPPORTED)
-		{
-			$this->inputType = 'number';
-			$this->addAttr('step', 'any');
-		}
-	}
-
-	public function getHTML()
-	{
-		$this->_setInputType();
-
-		return parent::getHTML();
+		$this->addAttr('inputmode', 'tel'); // Android (or Samsung) sucks and doesn't diplay a - on numeric controls
 	}
 }
 
@@ -666,7 +649,6 @@ class formslib_integer extends formslib_number
 	{
 		if ($this->inputTypeMode & Formslib::INPUT_MODE_SUPPORTED)
 		{
-			$this->inputType = 'number';
 			$this->addAttr('step', $this->step);
 		}
 	}

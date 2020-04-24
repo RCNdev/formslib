@@ -184,6 +184,7 @@ class formslib_rule_positive extends formslib_rule
 		if (is_a($field, \formslib_number::class))
 		{
 			$field->addAttr('min', 0);
+			$field->addAttr('inputmode', 'decimal');
 		}
 	}
 
