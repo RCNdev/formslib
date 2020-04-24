@@ -784,6 +784,7 @@ class formslib_cardnumber extends formslib_text
 		parent::__construct($name);
 		$this->addRule('maxlength', 19, 'Card number must only contain digits and be between 15 and 19 digits long');
 		$this->addRule('regex', '|^[0-9{15,19}]+$|i', 'Card number must only contain digits and be between 15 and 19 digits long');
+		$this->addAttr('inputmode', 'numeric');
 	}
 }
 
@@ -795,6 +796,7 @@ class formslib_cardmonthyear extends formslib_text
 		parent::__construct($name);
 		$this->addRule('maxlength', 4, 'Must be a valid date in the format MMYY');
 		$this->addRule('regex', '/^(0[1-9]|1[0-2])[0-2][0-9]$/', 'Must be a valid date in the format MMYY');
+		$this->addAttr('inputmode', 'numeric');
 	}
 }
 
@@ -806,6 +808,7 @@ class formslib_cardcvc extends formslib_text
 		parent::__construct($name);
 		$this->addRule('maxlength', 3, 'Must be a three digit number');
 		$this->addRule('regex', '/^[0-9]{3}$/', 'Must be a three digit number');
+		$this->addAttr('inputmode', 'numeric');
 	}
 }
 
@@ -982,6 +985,7 @@ class formslib_ukbankacct extends formslib_text
 		parent::__construct($name);
 		$this->addRule('maxlength', 8, 'Bank account number must only contain digits and be between 7 and 8 digits long');
 		$this->addRule('regex', '|^[0-9]{7,8}$|i', 'Bank account number must only contain digits and be between 7 and 8 digits long');
+		$this->addAttr('inputmode', 'numeric');
 	}
 }
 
@@ -999,6 +1003,7 @@ class formslib_uksortcode extends formslib_composite
 		$this->addRule('compsite_sortcode', '', 'Each part of your sort code must contain 2 digits');
 		$this->addAttr('maxlength', '2');
 		$this->addAttr('size', '2'); // Text box width, in characters
+		$this->addAttr('inputmode', 'numeric');
 	}
 
 	public function getHTML()
