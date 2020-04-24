@@ -25,8 +25,9 @@ class formslib_text extends formslib_field
 {
 	protected $buttonlefttype, $buttonrighttype, $buttonlefthtml, $buttonrighthtml;
 
-	public function __construct()
+	public function __construct($name)
 	{
+		parent::__construct($name);
 		$this->inputType = 'text';
 	}
 
