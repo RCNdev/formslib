@@ -92,7 +92,7 @@ class Form
 
 		if (isset($this->fields[$name])) throw new \Exception('FORMSLIB ERROR: Duplicate field name: ' . $name);
 
-		if (substr($type, 0, 1) == '\\')
+		if (strpos($type, '\\') !== false)
 		{
 			$classnamespace = $type;
 		}
