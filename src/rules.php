@@ -171,6 +171,22 @@ class formslib_rule_sqldate extends formslib_rule
 
 class formslib_rule_positive extends formslib_rule
 {
+	/**
+	 *
+	 * @param mixed $ruledfn
+	 * @param string $errormessage
+	 * @param \formslib\Field\Field $field
+	 */
+	public function __construct($ruledfn, $errormessage, &$field)
+	{
+		parent::__construct($ruledfn, $errormessage, $field);
+
+		if (is_a($field, \formslib_number::class))
+		{
+			$field->addAttr('min', 0);
+		}
+	}
+
 	public function evaluate($value)
 	{
 		if ($value < 0)
