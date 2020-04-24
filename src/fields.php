@@ -608,7 +608,7 @@ class formslib_url extends formslib_text
 
 	private function _setInputType()
 	{
-		if ($this->inputTypeMode & Formslib::INPUT_MODE_COMPAT)
+		if ($this->inputTypeMode & Formslib::INPUT_MODE_SUPPORTED)
 		{
 			$this->inputType = 'url';
 			$this->addAttr('inputmode', 'url');
@@ -623,16 +623,6 @@ class formslib_url extends formslib_text
 	}
 }
 
-class formslib_integer extends formslib_text
-{
-
-	public function __construct($name)
-	{
-		parent::__construct($name);
-		$this->addRule('regex', '|^-?[0-9]+$|i', 'Not a whole number');
-	}
-}
-
 class formslib_number extends formslib_text
 {
 
@@ -640,6 +630,57 @@ class formslib_number extends formslib_text
 	{
 		parent::__construct($name);
 		$this->addRule('regex', '|^-?[0-9.]+$|i', 'Not a number');
+		$this->_setInputType();
+		$this->addAttr('inputmode', 'decimal');
+	}
+
+	private function _setInputType()
+	{
+		if ($this->inputTypeMode & Formslib::INPUT_MODE_SUPPORTED)
+		{
+			$this->inputType = 'number';
+			$this->addAttr('step', 'any');
+		}
+	}
+
+	public function getHTML()
+	{
+		$this->_setInputType();
+
+		return parent::getHTML();
+	}
+}
+
+class formslib_integer extends formslib_number
+{
+	protected $step = 1;
+
+	public function __construct($name)
+	{
+		parent::__construct($name);
+		$this->addRule('regex', '|^-?[0-9]+$|i', 'Not a whole number');
+		$this->_setInputType();
+	}
+
+	private function _setInputType()
+	{
+		if ($this->inputTypeMode & Formslib::INPUT_MODE_SUPPORTED)
+		{
+			$this->inputType = 'number';
+			$this->addAttr('step', $this->step);
+		}
+	}
+
+	public function getHTML()
+	{
+		$this->_setInputType();
+
+		return parent::getHTML();
+	}
+
+	public function setStep($step)
+	{
+		$this->step = $step;
 	}
 }
 

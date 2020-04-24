@@ -5,7 +5,8 @@ use formslib\Utility\Security;
 
 class Form
 {
-	private $name, $id, $action, $method;
+	private $name, $id, $method;
+	private $action = '?';
 
 	/** @var Field\Field[] */
 	public $fields = [];
@@ -14,7 +15,7 @@ class Form
 	public $fieldsets = [];
 
 	public $outputstyle;
-	public $submitlabel;
+	public $submitlabel = 'Submit';
 	public $mandatoryHTML, $semimandatoryHTML;
 	public $optionalHTML = ' <small class="formslib_optional">(optional)</small>';
 
@@ -42,8 +43,11 @@ class Form
 		$this->name = $name;
 		$this->method = FORMSLIB_METHOD_POST;
 		$this->outputstyle = FORMSLIB_STYLE_DL;
-		$this->action = '?';
-		$this->submitlabel = 'Submit';
+
+		if (defined('FORMSLIB_DEFAULT_INPUT_TYPE_MODE'))
+		{
+			$this->inputTypeMode = FORMSLIB_DEFAULT_INPUT_TYPE_MODE;
+		}
 	}
 
 	public function setID($id)
