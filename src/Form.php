@@ -5,7 +5,8 @@ use formslib\Utility\Security;
 
 class Form
 {
-	private $name, $id, $action, $method;
+	private $name, $id, $method;
+	private $action = '?';
 
 	/** @var Field\Field[] */
 	public $fields = [];
@@ -14,7 +15,7 @@ class Form
 	public $fieldsets = [];
 
 	public $outputstyle;
-	public $submitlabel;
+	public $submitlabel = 'Submit';
 	public $mandatoryHTML, $semimandatoryHTML;
 	public $optionalHTML = ' <small class="formslib_optional">(optional)</small>';
 
@@ -35,14 +36,18 @@ class Form
 	private $fsorder = [];
 	private $optionalLabels = false;
 	private $errorIntroText = null;
+	private $inputTypeMode = 1;
 
 	public function __construct($name)
 	{
 		$this->name = $name;
 		$this->method = FORMSLIB_METHOD_POST;
 		$this->outputstyle = FORMSLIB_STYLE_DL;
-		$this->action = '?';
-		$this->submitlabel = 'Submit';
+
+		if (defined('FORMSLIB_DEFAULT_INPUT_TYPE_MODE'))
+		{
+			$this->inputTypeMode = FORMSLIB_DEFAULT_INPUT_TYPE_MODE;
+		}
 	}
 
 	public function setID($id)
@@ -87,7 +92,7 @@ class Form
 
 		if (isset($this->fields[$name])) throw new \Exception('FORMSLIB ERROR: Duplicate field name: ' . $name);
 
-		if (substr($type, 0, 1) == '\\')
+		if (strpos($type, '\\') !== false)
 		{
 			$classnamespace = $type;
 		}
@@ -1328,5 +1333,15 @@ JS;
 	public function setErrorIntroText($text)
 	{
 		$this->errorIntroText = $text;
+	}
+
+	public function setInputTypeMode($mode)
+	{
+		$this->inputTypeMode = $mode;
+	}
+
+	public function getInputTypeMode()
+	{
+		return $this->inputTypeMode;
 	}
 }

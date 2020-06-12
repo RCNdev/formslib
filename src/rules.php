@@ -67,7 +67,7 @@ class formslib_rule_maxlength extends formslib_rule
 {
 	public function __construct($ruledfn, $errormessage, &$field)
 	{
-		parent::__construct($ruledfn, $errormessage, $field); // Parent constructor
+		parent::__construct($ruledfn, $errormessage, $field);
 		$field->addAttr('maxlength', $ruledfn);
 	}
 
@@ -96,6 +96,22 @@ class formslib_rule_maxwords extends formslib_rule
 
 class formslib_rule_minval extends formslib_rule
 {
+	/**
+	 *
+	 * @param mixed $ruledfn
+	 * @param string $errormessage
+	 * @param \formslib\Field\Field $field
+	 */
+	public function __construct($ruledfn, $errormessage, &$field)
+	{
+		parent::__construct($ruledfn, $errormessage, $field);
+
+		if (is_a($field, \formslib_number::class))
+		{
+			$field->addAttr('min', $ruledfn);
+		}
+	}
+
 	public function evaluate($value)
 	{
 		return ($value >= $this->ruledfn) ? true : false;
@@ -109,6 +125,22 @@ class formslib_rule_minval extends formslib_rule
 
 class formslib_rule_maxval extends formslib_rule
 {
+	/**
+	 *
+	 * @param mixed $ruledfn
+	 * @param string $errormessage
+	 * @param \formslib\Field\Field $field
+	 */
+	public function __construct($ruledfn, $errormessage, &$field)
+	{
+		parent::__construct($ruledfn, $errormessage, $field); // Parent constructor
+
+		if (is_a($field, \formslib_number::class))
+		{
+			$field->addAttr('max', $ruledfn);
+		}
+	}
+
 	public function evaluate($value)
 	{
 		return ($value <= $this->ruledfn) ? true : false;
@@ -139,6 +171,23 @@ class formslib_rule_sqldate extends formslib_rule
 
 class formslib_rule_positive extends formslib_rule
 {
+	/**
+	 *
+	 * @param mixed $ruledfn
+	 * @param string $errormessage
+	 * @param \formslib\Field\Field $field
+	 */
+	public function __construct($ruledfn, $errormessage, &$field)
+	{
+		parent::__construct($ruledfn, $errormessage, $field);
+
+		if (is_a($field, \formslib_number::class))
+		{
+			$field->addAttr('min', 0);
+			$field->addAttr('inputmode', 'decimal');
+		}
+	}
+
 	public function evaluate($value)
 	{
 		if ($value < 0)

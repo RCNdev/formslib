@@ -29,6 +29,8 @@ abstract class Field
     protected $outputstyle = null;
     protected $ajaxFormIdentifier;
     protected $disabled = false;
+    protected $inputTypeMode = 1;
+    protected $inputType = '';
 
     /** @var \formslib\Rule\DisplayCondition */
     protected $display_condition;
@@ -190,6 +192,7 @@ abstract class Field
     public function display(Form &$form)
     {
         $this->outputstyle = $outputstyle = $form->outputstyle;
+        $this->inputTypeMode = $form->getInputTypeMode();
 
         $mand = $optionalLabel = null;
         if ($form->getOptionalLabels())
@@ -759,5 +762,10 @@ abstract class Field
         if (trim((string)$vars[$this->name]) === '') return false;
 
         return true;
+    }
+
+    public function setInputTypeMode($mode)
+    {
+    	$this->inputTypeMode = $mode;
     }
 }
