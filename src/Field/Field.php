@@ -31,6 +31,7 @@ abstract class Field
     protected $disabled = false;
     protected $inputTypeMode = 1;
     protected $inputType = '';
+    protected $overrideOptionalText = null;
 
     /** @var \formslib\Rule\DisplayCondition */
     protected $display_condition;
@@ -197,7 +198,14 @@ abstract class Field
         $mand = $optionalLabel = null;
         if ($form->getOptionalLabels())
         {
-            if (!$this->mandatory && !$this->disabled) $optionalLabel = $form->optionalHTML;
+            if (!is_null($this->overrideOptionalText))
+            {
+                $optionalLabel = ' <small class="formslib_optional">'.Security::escapeHtml($this->overrideOptionalText).'</small>';
+            }
+            elseif (!$this->mandatory && !$this->disabled)
+            {
+                $optionalLabel = $form->optionalHTML;
+            }
         }
         else
         {
@@ -767,5 +775,12 @@ abstract class Field
     public function setInputTypeMode($mode)
     {
     	$this->inputTypeMode = $mode;
+    }
+
+    public function &setOverrideOptionalText($text)
+    {
+        $this->overrideOptionalText = $text;
+
+        return $this;
     }
 }
