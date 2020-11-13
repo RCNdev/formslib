@@ -172,7 +172,7 @@ abstract class formslib_options extends formslib_field
 			$valid = false;
 			$this->errorlist[] = [
 					'name' => $this->name,
-					'message' => 'A valid option for ' . $this->label . ' was not selected '
+					'message' => 'A valid option for ' . $this->getLabelText() . ' was not selected '
 			];
 		}
 
@@ -332,7 +332,7 @@ class formslib_checkbox extends formslib_field
 
 		$labelclass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
 
-		$text = Security::escapeHtml($this->label) . CRLF;
+		$text = $this->getLabelInnerHtml() . CRLF;
 		$input = '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '" />' . CRLF;
 
 		if ($this->rawboxonly)
@@ -360,7 +360,7 @@ class formslib_checkbox extends formslib_field
 				case FORMSLIB_STYLE_P:
 					echo $this->htmlbefore;
 					echo '<p>' . CRLF;
-					// echo '<label for="'.$this->name.'">'.Security::escapeHtml($this->label).'</label> '.CRLF;
+					// echo '<label for="'.$this->name.'">'.$this->getLabelInnerHtml().'</label> '.CRLF;
 					echo $this->getHTML() . CRLF;
 					echo $mand;
 					echo '</p>' . CRLF . CRLF;
@@ -371,7 +371,7 @@ class formslib_checkbox extends formslib_field
 				default:
 					echo $this->htmlbefore;
 					echo '<dl>' . CRLF;
-					echo '<dt><label for="' . $this->name . '">' . Security::escapeHtml($this->label) . '</label></dt>' . CRLF;
+					echo '<dt><label for="' . $this->name . '">' . $this->getLabelInnerHtml() . '</label></dt>' . CRLF;
 					echo '<dd>' . $this->getHTML() . $mand . '</dd>' . CRLF;
 					echo '</dl>' . CRLF . CRLF;
 					echo $this->htmlafter;
@@ -468,7 +468,7 @@ class formslib_checkbox extends formslib_field
 		$ids = 'name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '"';
 		$checked = ($this->isChecked()) ? '<span ' . $ids . ' class="colour-positive">&#10004;</span>' : '<span ' . $ids . ' class="colour-negative">&#10008;</span>';
 
-		$text = Security::escapeHtml($this->label) . CRLF;
+		$text = $this->getLabelInnerHtml() . CRLF;
 
 		if ($this->rawboxonly)
 		{
@@ -1194,7 +1194,7 @@ class formslib_toggle_button extends formslib_checkbox
 
 		$html .= '<div class="btn-group" data-toggle="buttons">' . CRLF;
 		$html .= '<label for="fld_' . $this->name . '" class="btn' . $this->btnclass . $active . '">' . CRLF;
-		$html .= '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '" title="' . Security::escapeHtml($this->label) . '" />' . CRLF;
+		$html .= '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '" title="' . Security::escapeHtml($this->getLabelText()) . '" />' . CRLF;
 		$html .= Security::escapeHtml($this->button_text);
 		$html .= '</label>' . CRLF;
 		$html .= '</div>' . CRLF;

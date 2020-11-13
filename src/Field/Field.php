@@ -32,6 +32,7 @@ abstract class Field
     protected $inputTypeMode = 1;
     protected $inputType = '';
     protected $overrideOptionalText = null;
+    protected $labelUsesMarkdown = false;
 
     /** @var \formslib\Rule\DisplayCondition */
     protected $display_condition;
@@ -227,7 +228,7 @@ abstract class Field
                     echo $this->htmlbefore;
                     echo '<p>' . CRLF;
                     echo $this->innerhtmlbefore;
-                    echo '<label for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $optionalLabel . '</label> ' . CRLF;
+                    echo '<label for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $optionalLabel . '</label> ' . CRLF;
                     echo $this->getHTML() . CRLF;
                     echo $mand;
                     echo $this->innerhtmlafter;
@@ -239,7 +240,7 @@ abstract class Field
                 default:
                     echo $this->htmlbefore;
                     echo '<dl>' . CRLF;
-                    echo '<dt><label for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $optionalLabel . '</label></dt>' . CRLF;
+                    echo '<dt><label for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $optionalLabel . '</label></dt>' . CRLF;
                     echo '<dd>' . $this->getHTML() . $mand . '</dd>' . CRLF;
                     echo '</dl>' . CRLF . CRLF;
                     echo $this->htmlafter;
@@ -252,7 +253,7 @@ abstract class Field
                     echo $this->htmlbefore . CRLF;
                     echo '<div class="control-group' . $group_class_str . '">' . CRLF;
                     echo $this->innerhtmlbefore . CRLF;
-                    echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $optionalLabel . '</label> ' . CRLF;
+                    echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $optionalLabel . '</label> ' . CRLF;
                     echo '	<div class="controls">' . CRLF;
                     echo '		' . $this->getHTML() . CRLF;
                     echo '		' . $mand . CRLF;
@@ -276,7 +277,7 @@ abstract class Field
                     echo $this->htmlbefore . CRLF;
                     echo '<div class="form-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
                     echo $this->innerhtmlbefore . CRLF;
-                    echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand. $optionalLabel . '</label> ' . CRLF;
+                    echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand. $optionalLabel . '</label> ' . CRLF;
                     echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
                     echo '		' . $this->getHTML() . CRLF;
                     if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with help inline
@@ -296,7 +297,7 @@ abstract class Field
                     echo $this->htmlbefore . CRLF;
                     echo '<div class="form-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
                     echo $this->innerhtmlbefore . CRLF;
-                    echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand . $optionalLabel . '</label> ' . CRLF;
+                    echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand . $optionalLabel . '</label> ' . CRLF;
                     // 					echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
                     echo '		' . $this->getHTML() . CRLF;
                     // 					if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with help inline/help block for BOOTSTRAP3_INLINE
@@ -317,7 +318,7 @@ abstract class Field
                     echo '<div class="form-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
                     echo $this->innerhtmlbefore . CRLF;
 
-                    echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand . $optionalLabel . '</label> ' . CRLF;
+                    echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand . $optionalLabel . '</label> ' . CRLF;
 
                     if ($this->helpblock && $this->helpbefore) echo '		<p class="help-block">' . $this->helpblock . '</p>' . CRLF;
 
@@ -396,7 +397,7 @@ abstract class Field
                 $valid = false;
                 $this->errorlist[] = [
                     'name' => $this->name,
-                    'message' => $this->label . ' invalid: ' . $this->rules[$rule]->getError()
+                    'message' => $this->getLabelText() . ' invalid: ' . $this->rules[$rule]->getError()
                 ];
             }
         }
@@ -446,7 +447,7 @@ abstract class Field
 
         $data['type'] = str_replace('formslib_', '', get_class($this));
         $data['name'] = $this->name;
-        $data['label'] = $this->label;
+        $data['label'] = $this->getLabelText();
         $data['value'] = $this->value;
 
         return $data;
@@ -543,7 +544,7 @@ abstract class Field
                     echo $this->htmlbefore;
                     echo '<p data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
                     echo $this->innerhtmlbefore;
-                    echo '<label for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label> ' . CRLF;
+                    echo '<label for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . '</label> ' . CRLF;
                     echo $this->getHTMLReadOnly() . CRLF;
                     echo $mand;
                     echo $this->innerhtmlafter;
@@ -555,7 +556,7 @@ abstract class Field
                 default:
                     echo $this->htmlbefore;
                     echo '<dl data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
-                    echo '<dt><label for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label></dt>' . CRLF;
+                    echo '<dt><label for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . '</label></dt>' . CRLF;
                     echo '<dd>' . $this->getHTMLReadOnly() . $mand . '</dd>' . CRLF;
                     echo '</dl>' . CRLF . CRLF;
                     echo $this->htmlafter;
@@ -568,7 +569,7 @@ abstract class Field
                     echo $this->htmlbefore . CRLF;
                     echo '<div class="control-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
                     echo $this->innerhtmlbefore . CRLF;
-                    echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . '</label> ' . CRLF;
+                    echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . '</label> ' . CRLF;
                     echo '	<div class="controls">' . CRLF;
                     echo '		' . $this->getHTMLReadOnly() . CRLF;
                     echo '		' . $mand . CRLF;
@@ -594,7 +595,7 @@ abstract class Field
                     echo $this->htmlbefore . CRLF;
                     echo '<div class="form-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
                     echo $this->innerhtmlbefore . CRLF;
-                    echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand . '</label> ' . CRLF;
+                    echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand . '</label> ' . CRLF;
                     echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
                     echo '		' . $this->getHTMLReadOnly() . CRLF;
                     if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with help inline
@@ -782,5 +783,36 @@ abstract class Field
         $this->overrideOptionalText = $text;
 
         return $this;
+    }
+
+    public function &setLabelMarkdown($useMarkdown = true)
+    {
+        $this->labelUsesMarkdown = $useMarkdown;
+
+        return $this;
+    }
+
+    public function getLabelInnerHtml()
+    {
+        $label = Security::escapeHtml($this->label);
+
+        if ($this->labelUsesMarkdown)
+        {
+            $label = preg_replace('/\*{2}(.*?)\*{2}/i', '<strong>\\1</strong>', $label);
+        }
+
+        return $label;
+    }
+
+    public function getLabelText()
+    {
+        $label = Security::escapeHtml($this->label);
+
+        if ($this->labelUsesMarkdown)
+        {
+            $label = preg_replace('/\*{2}(.*?)\*{2}/i', '\\1', $label);
+        }
+
+        return $label;
     }
 }
