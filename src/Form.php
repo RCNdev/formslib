@@ -315,7 +315,7 @@ class Form
     			{
     			    if (!$field->checkMandatoryVars($vars))
     			    {
-    			        $message = (! is_a($field, 'formslib_checkbox')) ? 'You must enter something for ' . $field->label : 'You must tick "' . $field->label . '" to be able to complete this form';
+    			        $message = (! is_a($field, 'formslib_checkbox')) ? 'You must enter something for ' . $field->getLabelText() : 'You must tick "' . $field->getLabelText() . '" to be able to complete this form';
 
     			        $this->addError($name, null, $message);
 
@@ -891,7 +891,7 @@ EOF;
 			echo '<p>FORMSLIB ERROR: undefined field: ' . Security::escapeHtml($fieldname) . '</p>';
 			return '';
 		}
-		return '<label for="' . $fieldname . '">' . Security::escapeHtml($this->fields[$fieldname]->label) . '</label>';
+		return '<label for="' . $fieldname . '">' . Security::escapeHtml($this->fields[$fieldname]->getLabelText()) . '</label>';
 	}
 
 	public function displayRawField($fieldname)
