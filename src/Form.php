@@ -146,6 +146,12 @@ class Form
 	    if (! in_array($type, $this->types_used)) $this->types_used[] = $type;
 	}
 
+	/**
+	 * Create a fieldset as part of the form
+	 *
+	 * @param string $name
+	 * @return \formslib\Fieldset
+	 */
 	public function &addFieldSet($name)
 	{
 		if (isset($this->fieldsets[$name])) throw new \Exception('FORMSLIB ERROR: Duplicate fieldset name');

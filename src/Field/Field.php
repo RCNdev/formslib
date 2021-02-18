@@ -799,6 +799,7 @@ abstract class Field
         if ($this->labelUsesMarkdown)
         {
             $label = preg_replace('/\*{2}(.*?)\*{2}/i', '<strong>\\1</strong>', $label);
+            $label = preg_replace('/\^{2}(.*?)\^{2}/i', '<small>\\1</small>', $label);
         }
 
         return $label;
@@ -811,6 +812,7 @@ abstract class Field
         if ($this->labelUsesMarkdown)
         {
             $label = preg_replace('/\*{2}(.*?)\*{2}/i', '\\1', $label);
+            $label = preg_replace('/\^{2}(.*?)\^{2}/i', '\\1', $label);
         }
 
         return $label;
