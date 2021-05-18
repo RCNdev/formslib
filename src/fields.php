@@ -259,6 +259,44 @@ class formslib_radio extends formslib_options
 	{
 		return 'input[name='.$this->name.']:checked';
 	}
+
+	public function getHTMLReadOnly()
+	{
+	    $html = '';
+
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '<div class="radio">';
+
+		foreach ($this->options as $value => $label)
+		{
+			$id = $this->name . '__' . Security::escapeHtml($value);
+
+			$checked = false;
+			if ($this->requireEquivalency)
+			{
+				if ($this->value === $value) $checked = true;
+			}
+			elseif ($this->ignoreNull)
+			{
+				if (!is_null($this->value) && $this->value == $value) $checked = true;
+			}
+			elseif ($this->value == $value)
+			{
+			    $checked = true;
+			}
+
+			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $this->labelclass[] = 'radio-inline';
+
+			$labelclass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
+
+			$icon = ($checked) ? '<span class="colour-positive">&#10004;</span>' : '<span class="colour-negative">&#10008;</span>';
+
+			$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelclass . '">'. $icon . '&nbsp;' . Security::escapeHtml($label) . '</label> ';
+		}
+
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '</div><!--/.radio-->';
+
+		return $html;
+	}
 }
 
 class formslib_select extends formslib_options
@@ -351,6 +389,16 @@ class formslib_checkbox extends formslib_field
 
 	public function display(Form &$form)
 	{
+	    $this->displayReal($form, false);
+	}
+
+	public function displayReadOnly(Form &$form)
+	{
+	    $this->displayReal($form, true);
+	}
+
+	protected function displayReal(Form &$form, $readOnly)
+	{
 		$mand = ($this->mandatory) ? $form->mandatoryHTML : '';
 
 		if (! $this->rawoutput)
@@ -361,7 +409,7 @@ class formslib_checkbox extends formslib_field
 					echo $this->htmlbefore;
 					echo '<p>' . CRLF;
 					// echo '<label for="'.$this->name.'">'.$this->getLabelInnerHtml().'</label> '.CRLF;
-					echo $this->getHTML() . CRLF;
+				    echo (!$readOnly) ? $this->getHTML() . CRLF : $this->getHTMLReadOnly() . CRLF;
 					echo $mand;
 					echo '</p>' . CRLF . CRLF;
 					echo $this->htmlafter;
@@ -372,14 +420,14 @@ class formslib_checkbox extends formslib_field
 					echo $this->htmlbefore;
 					echo '<dl>' . CRLF;
 					echo '<dt><label for="' . $this->name . '">' . $this->getLabelInnerHtml() . '</label></dt>' . CRLF;
-					echo '<dd>' . $this->getHTML() . $mand . '</dd>' . CRLF;
+					echo '<dd>' . ((!$readOnly) ? $this->getHTML() . $mand : $this->getHTMLReadOnly()) . '</dd>' . CRLF;
 					echo '</dl>' . CRLF . CRLF;
 					echo $this->htmlafter;
 					break;
 
 				case FORMSLIB_STYLE_BOOTSTRAP:
 					echo $this->htmlbefore;
-					echo $this->getHTML() . CRLF;
+					echo (!$readOnly) ? $this->getHTML() . CRLF : $this->getHTMLReadOnly() . CRLF;
 					echo $this->htmlafter;
 					break;
 
@@ -388,7 +436,7 @@ class formslib_checkbox extends formslib_field
 				    echo '<div data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">'.CRLF;
 				    echo $this->innerhtmlbefore;
 				    echo '<div class="checkbox">'.CRLF;
-				    echo $this->getHTML() . CRLF;
+				    echo (!$readOnly) ? $this->getHTML() . CRLF : $this->getHTMLReadOnly() . CRLF;
 				    echo '</div>'.CRLF;
 				    echo $this->innerhtmlafter;
 				    echo '</div>'.CRLF;
@@ -401,7 +449,7 @@ class formslib_checkbox extends formslib_field
 					echo '<div data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">'.CRLF;
 					echo $this->innerhtmlbefore;
 					echo '<div class="checkbox">'.CRLF;
-					echo $this->getHTML() . CRLF;
+					echo (!$readOnly) ? $this->getHTML() . CRLF : $this->getHTMLReadOnly() . CRLF;
 					echo '</div>'.CRLF;
 					echo $this->innerhtmlafter;
 					echo '</div>'.CRLF;
@@ -412,7 +460,7 @@ class formslib_checkbox extends formslib_field
 		else
 		{
 			echo $this->htmlbefore;
-			echo $this->getHTML() . $mand . CRLF;
+			echo ((!$readOnly) ? $this->getHTML() . $mand : $this->getHTML()) . CRLF;
 			echo $this->htmlafter;
 		}
 	}
@@ -462,11 +510,12 @@ class formslib_checkbox extends formslib_field
 
 	public function getHTMLReadOnly()
 	{
-	    // TODO: Complete getHTMLReadOnly()
 		$html = '';
 
 		$ids = 'name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '"';
 		$checked = ($this->isChecked()) ? '<span ' . $ids . ' class="colour-positive">&#10004;</span>' : '<span ' . $ids . ' class="colour-negative">&#10008;</span>';
+
+		$labelclass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
 
 		$text = $this->getLabelInnerHtml() . CRLF;
 
@@ -476,8 +525,8 @@ class formslib_checkbox extends formslib_field
 		}
 		else
 		{
-			$html .= '<label for="fld_' . $this->name . '" class="formslib_label_checkbox">' . CRLF;
-			$html .= ($this->tickbefore) ? $checked . $text : $text . $checked;
+			$html .= '<label for="fld_' . $this->name . '" class="formslib_label_checkbox '. $labelclass . '">' . CRLF;
+			$html .= ($this->tickbefore) ? $checked . ' ' . $text : $text . ' ' . $checked;
 			$html .= '</label>';
 		}
 
@@ -952,6 +1001,10 @@ class formslib_date extends formslib_composite
 	    return $this;
 	}
 
+	/**
+	 *
+	 * @return \DateTime
+	 */
 	public function &getObjectValue()
 	{
 		$date = null;
@@ -974,6 +1027,13 @@ class formslib_date extends formslib_composite
 	    }
 
 	    return !$missing;
+	}
+
+	public function getHTMLReadOnly()
+	{
+	    $value = $this->getObjectValue()->format('d M Y');
+
+	    return '<span name="' . Security::escapeHtml($this->name) . '" id="fld_' . Security::escapeHtml($this->name) . '" ' . $this->_custom_attr() . $this->_class_attr() . '><strong>' . $value . '</strong></span>'; // TODO: Move strong to a class
 	}
 }
 

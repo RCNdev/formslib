@@ -44,7 +44,7 @@ class Fieldset extends \formslib_fieldset
         $this->fieldorder[] = $name;
     }
 
-    public function display(Form &$form, $submitbutton = false, $encasing_html = true)
+    public function display(Form &$form, $submitbutton = false, $encasing_html = true, $readOnly = false)
     {
         echo $this->htmlbefore;
 
@@ -70,7 +70,14 @@ class Fieldset extends \formslib_fieldset
             {
                 if (is_object($form->fields[$fieldname]))
                 {
-                    $form->fields[$fieldname]->display($form);
+                    if (!$readOnly)
+                    {
+                        $form->fields[$fieldname]->display($form);
+                    }
+                    else
+                    {
+                        $form->fields[$fieldname]->displayReadOnly($form);
+                    }
                 }
                 else
                 {
@@ -115,10 +122,11 @@ class Fieldset extends \formslib_fieldset
 
                     $outputted = true;
 
+                    //TODO: Read-only table layout display
                     echo '<td>';
                     echo '<label class="sr-only control-label" for="fld_' . Security::escapeHtml($fieldname) . '">' . Security::escapeHtml($fld->getLabel()) . '</label> ' . CRLF;
                     echo $fld->getHTML($form);
-                    // TODO: Mandatory mark?
+                    // TODO: Mandatory/optional markings?
                     echo '</td>';
 
                     $first = false;
@@ -241,7 +249,7 @@ class Fieldset extends \formslib_fieldset
                             case FORMSLIB_EMAILSTYLE_HTML_COLSPAN:
                                 $cell = ($style == FORMSLIB_EMAILSTYLE_HTML_TH || FORMSLIB_EMAILSTYLE_HTML_COLSPAN) ? 'th' : 'td';
                                 $body .= '<tr>' . CRLF;
-                                $body .= '<' . $cell . '>' . Security::escapeHtml($field->getLabel()) . '</' . $cell . '>' . CRLF;
+                                $body .= '<' . $cell . '>' . $field->getLabelInnerHtml() . '</' . $cell . '>' . CRLF;
                                 $body .= '<td>' . str_replace("\n", "<br />\n", Security::escapeHtml($field->getEmailValue())) . '</td>' . CRLF;
                                 $body .= '</tr>' . CRLF;
                                 break;
@@ -475,5 +483,10 @@ class Fieldset extends \formslib_fieldset
     public function hasField($name)
     {
         return (in_array($name, $this->fields));
+    }
+
+    public function displayReadOnly(Form &$form)
+    {
+        $this->display($form, false, false, true);
     }
 }
