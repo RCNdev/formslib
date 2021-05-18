@@ -389,6 +389,16 @@ class formslib_checkbox extends formslib_field
 
 	public function display(Form &$form)
 	{
+	    $this->displayReal($form, false);
+	}
+
+	public function displayReadOnly(Form &$form)
+	{
+	    $this->displayReal($form, true);
+	}
+
+	protected function displayReal(Form &$form, $readOnly)
+	{
 		$mand = ($this->mandatory) ? $form->mandatoryHTML : '';
 
 		if (! $this->rawoutput)
@@ -399,7 +409,7 @@ class formslib_checkbox extends formslib_field
 					echo $this->htmlbefore;
 					echo '<p>' . CRLF;
 					// echo '<label for="'.$this->name.'">'.$this->getLabelInnerHtml().'</label> '.CRLF;
-					echo $this->getHTML() . CRLF;
+				    echo (!$readOnly) ? $this->getHTML() . CRLF : $this->getHTMLReadOnly() . CRLF;
 					echo $mand;
 					echo '</p>' . CRLF . CRLF;
 					echo $this->htmlafter;
@@ -410,14 +420,14 @@ class formslib_checkbox extends formslib_field
 					echo $this->htmlbefore;
 					echo '<dl>' . CRLF;
 					echo '<dt><label for="' . $this->name . '">' . $this->getLabelInnerHtml() . '</label></dt>' . CRLF;
-					echo '<dd>' . $this->getHTML() . $mand . '</dd>' . CRLF;
+					echo '<dd>' . ((!$readOnly) ? $this->getHTML() . $mand : $this->getHTMLReadOnly()) . '</dd>' . CRLF;
 					echo '</dl>' . CRLF . CRLF;
 					echo $this->htmlafter;
 					break;
 
 				case FORMSLIB_STYLE_BOOTSTRAP:
 					echo $this->htmlbefore;
-					echo $this->getHTML() . CRLF;
+					echo (!$readOnly) ? $this->getHTML() . CRLF : $this->getHTMLReadOnly() . CRLF;
 					echo $this->htmlafter;
 					break;
 
@@ -426,7 +436,7 @@ class formslib_checkbox extends formslib_field
 				    echo '<div data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">'.CRLF;
 				    echo $this->innerhtmlbefore;
 				    echo '<div class="checkbox">'.CRLF;
-				    echo $this->getHTML() . CRLF;
+				    echo (!$readOnly) ? $this->getHTML() . CRLF : $this->getHTMLReadOnly() . CRLF;
 				    echo '</div>'.CRLF;
 				    echo $this->innerhtmlafter;
 				    echo '</div>'.CRLF;
@@ -439,7 +449,7 @@ class formslib_checkbox extends formslib_field
 					echo '<div data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">'.CRLF;
 					echo $this->innerhtmlbefore;
 					echo '<div class="checkbox">'.CRLF;
-					echo $this->getHTML() . CRLF;
+					echo (!$readOnly) ? $this->getHTML() . CRLF : $this->getHTMLReadOnly() . CRLF;
 					echo '</div>'.CRLF;
 					echo $this->innerhtmlafter;
 					echo '</div>'.CRLF;
@@ -450,7 +460,7 @@ class formslib_checkbox extends formslib_field
 		else
 		{
 			echo $this->htmlbefore;
-			echo $this->getHTML() . $mand . CRLF;
+			echo ((!$readOnly) ? $this->getHTML() . $mand : $this->getHTML()) . CRLF;
 			echo $this->htmlafter;
 		}
 	}
