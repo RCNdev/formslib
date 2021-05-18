@@ -1001,6 +1001,10 @@ class formslib_date extends formslib_composite
 	    return $this;
 	}
 
+	/**
+	 *
+	 * @return \DateTime
+	 */
 	public function &getObjectValue()
 	{
 		$date = null;
@@ -1023,6 +1027,13 @@ class formslib_date extends formslib_composite
 	    }
 
 	    return $missing;
+	}
+
+	public function getHTMLReadOnly()
+	{
+	    $value = $this->getObjectValue()->format('d M Y');
+
+	    return '<span name="' . Security::escapeHtml($this->name) . '" id="fld_' . Security::escapeHtml($this->name) . '" ' . $this->_custom_attr() . $this->_class_attr() . '><strong>' . $value . '</strong></span>'; // TODO: Move strong to a class
 	}
 }
 
