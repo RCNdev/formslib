@@ -1031,7 +1031,9 @@ class formslib_date extends formslib_composite
 
 	public function getHTMLReadOnly()
 	{
-	    $value = $this->getObjectValue()->format('d M Y');
+	    $val = $this->getObjectValue();
+
+	    $value = (is_a($val, \DateTime::class)) ? $val->format('d M Y') : '';
 
 	    return '<span name="' . Security::escapeHtml($this->name) . '" id="fld_' . Security::escapeHtml($this->name) . '" ' . $this->_custom_attr() . $this->_class_attr() . '><strong>' . $value . '</strong></span>'; // TODO: Move strong to a class
 	}
