@@ -259,6 +259,44 @@ class formslib_radio extends formslib_options
 	{
 		return 'input[name='.$this->name.']:checked';
 	}
+
+	public function getHTMLReadOnly()
+	{
+	    $html = '';
+
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '<div class="radio">';
+
+		foreach ($this->options as $value => $label)
+		{
+			$id = $this->name . '__' . Security::escapeHtml($value);
+
+			$checked = false;
+			if ($this->requireEquivalency)
+			{
+				if ($this->value === $value) $checked = true;
+			}
+			elseif ($this->ignoreNull)
+			{
+				if (!is_null($this->value) && $this->value == $value) $checked = true;
+			}
+			elseif ($this->value == $value)
+			{
+			    $checked = true;
+			}
+
+			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $this->labelclass[] = 'radio-inline';
+
+			$labelclass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
+
+			$icon = ($checked) ? '<span class="colour-positive">&#10004;</span>' : '<span class="colour-negative">&#10008;</span>';
+
+			$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelclass . '">'. $icon . '&nbsp;' . Security::escapeHtml($label) . '</label> ';
+		}
+
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '</div><!--/.radio-->';
+
+		return $html;
+	}
 }
 
 class formslib_select extends formslib_options
@@ -462,11 +500,12 @@ class formslib_checkbox extends formslib_field
 
 	public function getHTMLReadOnly()
 	{
-	    // TODO: Complete getHTMLReadOnly()
 		$html = '';
 
 		$ids = 'name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '"';
 		$checked = ($this->isChecked()) ? '<span ' . $ids . ' class="colour-positive">&#10004;</span>' : '<span ' . $ids . ' class="colour-negative">&#10008;</span>';
+
+		$labelclass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
 
 		$text = $this->getLabelInnerHtml() . CRLF;
 
@@ -476,8 +515,8 @@ class formslib_checkbox extends formslib_field
 		}
 		else
 		{
-			$html .= '<label for="fld_' . $this->name . '" class="formslib_label_checkbox">' . CRLF;
-			$html .= ($this->tickbefore) ? $checked . $text : $text . $checked;
+			$html .= '<label for="fld_' . $this->name . '" class="formslib_label_checkbox '. $labelclass . '">' . CRLF;
+			$html .= ($this->tickbefore) ? $checked . ' ' . $text : $text . ' ' . $checked;
 			$html .= '</label>';
 		}
 
