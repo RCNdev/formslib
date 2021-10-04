@@ -26,7 +26,6 @@ class Form
 	private $submitfieldset = false;
 	private $nosubmitbutton = false;
 	private $jqueryvalidate = false;
-	private $obfuscate_js = false;
 	private $customjs;
 	private $types_used = [];
 	private $submitclass = ['btn', 'btn-primary'];
@@ -602,9 +601,16 @@ class Form
 		$this->jqueryvalidate = $validate;
 	}
 
+	/**
+	 * Set whether or not to obfuscate JavaScript
+	 *
+	 * @deprecated - obfuscation is dead
+	 *
+	 * @param boolean $obfuscate
+	 */
 	public function setObfuscateJS($obfuscate = true)
 	{
-		$this->obfuscate_js = $obfuscate;
+        // Do nothing, obfuscation is dead
 	}
 
 	private function _generate_jquery_validation()
@@ -742,27 +748,7 @@ JS;
 		$jq .= '});
 ';
 
-		if ($this->obfuscate_js)
-		{
-			// Obfuscate returned JS
-			$jqp = $jq;
-			$jqp = str_replace("\\\r\n", "\\n", $jqp);
-			$jqp = str_replace("\\\n", "\\n", $jqp);
-			$jqp = str_replace("\\\r", "\\n", $jqp);
-			$jqp = str_replace("}\r\n", "};\r\n", $jqp);
-			$jqp = str_replace("}\n", "};\n", $jqp);
-			$jqp = str_replace("}\r", "};\r", $jqp);
-
-			$myPacker = new \JavaScriptPacker($jqp, 62, true, false);
-			$packed = $myPacker->pack();
-			unset($myPacker);
-
-			return $packed;
-		}
-		else
-		{
-			return $jq;
-		}
+		return $jq;
 	}
 
 	public function displayTopOnly()
@@ -853,7 +839,7 @@ JS;
 			echo $this->customjs . CRLF;
 			foreach ($field_js as $fjs)
 			{
-				echo $fjs.CRLF; //TODO: Obfuscate?
+				echo $fjs.CRLF;
 			}
 
 			if (!is_null($this->doubleClickTimeout))
@@ -1243,27 +1229,7 @@ JS;
 			$jq .= '});';
 		}
 
-		if ($this->obfuscate_js)
-		{
-			// Obfuscate returned JS
-			$jqp = $jq;
-			$jqp = str_replace("\\\r\n", "\\n", $jqp);
-			$jqp = str_replace("\\\n", "\\n", $jqp);
-			$jqp = str_replace("\\\r", "\\n", $jqp);
-			$jqp = str_replace("}\r\n", "};\r\n", $jqp);
-			$jqp = str_replace("}\n", "};\n", $jqp);
-			$jqp = str_replace("}\r", "};\r", $jqp);
-
-			$myPacker = new \JavaScriptPacker($jqp);
-			$packed = $myPacker->pack();
-			unset($myPacker);
-
-			return $packed;
-		}
-		else
-		{
-			return $jq;
-		}
+        return $jq;
 	}
 
 	private function _generateDisplayCondition($operator, $type, $id, $value, $field)
