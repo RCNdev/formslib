@@ -67,4 +67,13 @@ abstract class Composite extends Field
 
         return !$missing;
     }
+
+    public function getDataDump()
+    {
+    	$data = parent::getDataDump();
+
+    	$data['value'] = $this->getEmailValue();
+
+    	return $data;
+    }
 }
