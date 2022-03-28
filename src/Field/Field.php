@@ -31,6 +31,7 @@ abstract class Field
     protected $disabled = false;
     protected $inputTypeMode = 1;
     protected $inputType = '';
+    protected $hideOptionalText = false;
     protected $overrideOptionalText = null;
     protected $labelUsesMarkdown = false;
 
@@ -124,6 +125,13 @@ abstract class Field
         return $this;
     }
 
+    public function &hideOptionalText($hide = true)
+    {
+        $this->hideOptionalText = $hide;
+
+        return $this;
+    }
+
     public function &addRule($ruletype, $ruledfn, $errormessage, $return_rule_oject = false)
     {
         $ruleclassnamespace = 'formslib\Rule\\'.str_replace('_', '\\', $ruletype);
@@ -202,6 +210,10 @@ abstract class Field
             if (!is_null($this->overrideOptionalText))
             {
                 $optionalLabel = ' <small class="formslib_optional">'.Security::escapeHtml($this->overrideOptionalText).'</small>';
+            }
+            elseif($this->hideOptionalText)
+            {
+                $optionalLabel = '';
             }
             elseif (!$this->mandatory && !$this->disabled)
             {
