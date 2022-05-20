@@ -1026,7 +1026,7 @@ class formslib_date extends formslib_composite
 	        if (! isset($vars[$this->name . '__' . $key]) || trim($vars[$this->name . '__' . $key]) === '' || (string)$vars[$this->name . '__' . $key] === '0') $missing = true;
 	    }
 
-	    return $missing;
+	    return !$missing;
 	}
 
 	public function getHTMLReadOnly()
