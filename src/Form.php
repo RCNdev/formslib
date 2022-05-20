@@ -5,7 +5,8 @@ use formslib\Utility\Security;
 
 class Form
 {
-	private $name, $id, $action, $method;
+	private $name, $id, $method;
+	private $action = '?';
 
 	/** @var Field\Field[] */
 	public $fields = [];
@@ -14,7 +15,7 @@ class Form
 	public $fieldsets = [];
 
 	public $outputstyle;
-	public $submitlabel;
+	public $submitlabel = 'Submit';
 	public $mandatoryHTML, $semimandatoryHTML;
 	public $optionalHTML = ' <small class="formslib_optional">(optional)</small>';
 
@@ -25,7 +26,6 @@ class Form
 	private $submitfieldset = false;
 	private $nosubmitbutton = false;
 	private $jqueryvalidate = false;
-	private $obfuscate_js = false;
 	private $customjs;
 	private $types_used = [];
 	private $submitclass = ['btn', 'btn-primary'];
@@ -35,14 +35,18 @@ class Form
 	private $fsorder = [];
 	private $optionalLabels = false;
 	private $errorIntroText = null;
+	private $inputTypeMode = 1;
 
 	public function __construct($name)
 	{
 		$this->name = $name;
 		$this->method = FORMSLIB_METHOD_POST;
 		$this->outputstyle = FORMSLIB_STYLE_DL;
-		$this->action = '?';
-		$this->submitlabel = 'Submit';
+
+		if (defined('FORMSLIB_DEFAULT_INPUT_TYPE_MODE'))
+		{
+			$this->inputTypeMode = FORMSLIB_DEFAULT_INPUT_TYPE_MODE;
+		}
 	}
 
 	public function setID($id)
@@ -87,7 +91,7 @@ class Form
 
 		if (isset($this->fields[$name])) throw new \Exception('FORMSLIB ERROR: Duplicate field name: ' . $name);
 
-		if (substr($type, 0, 1) == '\\')
+		if (strpos($type, '\\') !== false)
 		{
 			$classnamespace = $type;
 		}
@@ -141,6 +145,12 @@ class Form
 	    if (! in_array($type, $this->types_used)) $this->types_used[] = $type;
 	}
 
+	/**
+	 * Create a fieldset as part of the form
+	 *
+	 * @param string $name
+	 * @return \formslib\Fieldset
+	 */
 	public function &addFieldSet($name)
 	{
 		if (isset($this->fieldsets[$name])) throw new \Exception('FORMSLIB ERROR: Duplicate fieldset name');
@@ -310,7 +320,7 @@ class Form
     			{
     			    if (!$field->checkMandatoryVars($vars))
     			    {
-    			        $message = (! is_a($field, 'formslib_checkbox')) ? 'You must enter something for ' . $field->label : 'You must tick "' . $field->label . '" to be able to complete this form';
+    			        $message = (! is_a($field, 'formslib_checkbox')) ? 'You must enter something for ' . $field->getLabelText() : 'You must tick "' . $field->getLabelText() . '" to be able to complete this form';
 
     			        $this->addError($name, null, $message);
 
@@ -591,9 +601,16 @@ class Form
 		$this->jqueryvalidate = $validate;
 	}
 
+	/**
+	 * Set whether or not to obfuscate JavaScript
+	 *
+	 * @deprecated - obfuscation is dead
+	 *
+	 * @param boolean $obfuscate
+	 */
 	public function setObfuscateJS($obfuscate = true)
 	{
-		$this->obfuscate_js = $obfuscate;
+        // Do nothing, obfuscation is dead
 	}
 
 	private function _generate_jquery_validation()
@@ -731,27 +748,7 @@ JS;
 		$jq .= '});
 ';
 
-		if ($this->obfuscate_js)
-		{
-			// Obfuscate returned JS
-			$jqp = $jq;
-			$jqp = str_replace("\\\r\n", "\\n", $jqp);
-			$jqp = str_replace("\\\n", "\\n", $jqp);
-			$jqp = str_replace("\\\r", "\\n", $jqp);
-			$jqp = str_replace("}\r\n", "};\r\n", $jqp);
-			$jqp = str_replace("}\n", "};\n", $jqp);
-			$jqp = str_replace("}\r", "};\r", $jqp);
-
-			$myPacker = new \JavaScriptPacker($jqp, 62, true, false);
-			$packed = $myPacker->pack();
-			unset($myPacker);
-
-			return $packed;
-		}
-		else
-		{
-			return $jq;
-		}
+		return $jq;
 	}
 
 	public function displayTopOnly()
@@ -842,7 +839,7 @@ JS;
 			echo $this->customjs . CRLF;
 			foreach ($field_js as $fjs)
 			{
-				echo $fjs.CRLF; //TODO: Obfuscate?
+				echo $fjs.CRLF;
 			}
 
 			if (!is_null($this->doubleClickTimeout))
@@ -886,7 +883,7 @@ EOF;
 			echo '<p>FORMSLIB ERROR: undefined field: ' . Security::escapeHtml($fieldname) . '</p>';
 			return '';
 		}
-		return '<label for="' . $fieldname . '">' . Security::escapeHtml($this->fields[$fieldname]->label) . '</label>';
+		return '<label for="' . $fieldname . '">' . Security::escapeHtml($this->fields[$fieldname]->getLabelText()) . '</label>';
 	}
 
 	public function displayRawField($fieldname)
@@ -1232,27 +1229,7 @@ JS;
 			$jq .= '});';
 		}
 
-		if ($this->obfuscate_js)
-		{
-			// Obfuscate returned JS
-			$jqp = $jq;
-			$jqp = str_replace("\\\r\n", "\\n", $jqp);
-			$jqp = str_replace("\\\n", "\\n", $jqp);
-			$jqp = str_replace("\\\r", "\\n", $jqp);
-			$jqp = str_replace("}\r\n", "};\r\n", $jqp);
-			$jqp = str_replace("}\n", "};\n", $jqp);
-			$jqp = str_replace("}\r", "};\r", $jqp);
-
-			$myPacker = new \JavaScriptPacker($jqp);
-			$packed = $myPacker->pack();
-			unset($myPacker);
-
-			return $packed;
-		}
-		else
-		{
-			return $jq;
-		}
+        return $jq;
 	}
 
 	private function _generateDisplayCondition($operator, $type, $id, $value, $field)
@@ -1328,5 +1305,15 @@ JS;
 	public function setErrorIntroText($text)
 	{
 		$this->errorIntroText = $text;
+	}
+
+	public function setInputTypeMode($mode)
+	{
+		$this->inputTypeMode = $mode;
+	}
+
+	public function getInputTypeMode()
+	{
+		return $this->inputTypeMode;
 	}
 }

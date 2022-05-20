@@ -79,7 +79,7 @@ class Hierarchy extends MultiValue
 		$output = '';
 
 		// TODO: Labelling
-		// echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . Security::escapeHtml($this->label) . $mand . '</label> ' . CRLF;
+		// echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand . '</label> ' . CRLF;
 
 		$output .=  '	<div class="col-xs-12">' . CRLF;
 		$output .= $field->getHTML() . CRLF;

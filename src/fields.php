@@ -25,6 +25,12 @@ class formslib_text extends formslib_field
 {
 	protected $buttonlefttype, $buttonrighttype, $buttonlefthtml, $buttonrighthtml;
 
+	public function __construct($name)
+	{
+		parent::__construct($name);
+		$this->inputType = 'text';
+	}
+
 	public function getHTML()
 	{
 		$left = ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 && isset($this->buttonlefttype));
@@ -44,7 +50,7 @@ class formslib_text extends formslib_field
 			$html .= '</span>'.CRLF;
 		}
 
-		$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . Security::escapeHtml($this->name) . '" id="fld_' . Security::escapeHtml($this->name) . '" value="' . Security::escapeHtml($this->value) . '" />'.CRLF;
+		$html .= '<input type="'.$this->inputType.'"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . Security::escapeHtml($this->name) . '" id="fld_' . Security::escapeHtml($this->name) . '" value="' . Security::escapeHtml($this->value) . '" />'.CRLF;
 
 		if ($right)
 		{
@@ -166,7 +172,7 @@ abstract class formslib_options extends formslib_field
 			$valid = false;
 			$this->errorlist[] = [
 					'name' => $this->name,
-					'message' => 'A valid option for ' . $this->label . ' was not selected '
+					'message' => 'A valid option for ' . $this->getLabelText() . ' was not selected '
 			];
 		}
 
@@ -253,6 +259,44 @@ class formslib_radio extends formslib_options
 	{
 		return 'input[name='.$this->name.']:checked';
 	}
+
+	public function getHTMLReadOnly()
+	{
+	    $html = '';
+
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '<div class="radio">';
+
+		foreach ($this->options as $value => $label)
+		{
+			$id = $this->name . '__' . Security::escapeHtml($value);
+
+			$checked = false;
+			if ($this->requireEquivalency)
+			{
+				if ($this->value === $value) $checked = true;
+			}
+			elseif ($this->ignoreNull)
+			{
+				if (!is_null($this->value) && $this->value == $value) $checked = true;
+			}
+			elseif ($this->value == $value)
+			{
+			    $checked = true;
+			}
+
+			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $this->labelclass[] = 'radio-inline';
+
+			$labelclass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
+
+			$icon = ($checked) ? '<span class="colour-positive">&#10004;</span>' : '<span class="colour-negative">&#10008;</span>';
+
+			$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelclass . '">'. $icon . '&nbsp;' . Security::escapeHtml($label) . '</label> ';
+		}
+
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '</div><!--/.radio-->';
+
+		return $html;
+	}
 }
 
 class formslib_select extends formslib_options
@@ -326,7 +370,7 @@ class formslib_checkbox extends formslib_field
 
 		$labelclass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
 
-		$text = Security::escapeHtml($this->label) . CRLF;
+		$text = $this->getLabelInnerHtml() . CRLF;
 		$input = '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '" />' . CRLF;
 
 		if ($this->rawboxonly)
@@ -345,6 +389,16 @@ class formslib_checkbox extends formslib_field
 
 	public function display(Form &$form)
 	{
+	    $this->displayReal($form, false);
+	}
+
+	public function displayReadOnly(Form &$form)
+	{
+	    $this->displayReal($form, true);
+	}
+
+	protected function displayReal(Form &$form, $readOnly)
+	{
 		$mand = ($this->mandatory) ? $form->mandatoryHTML : '';
 
 		if (! $this->rawoutput)
@@ -354,8 +408,8 @@ class formslib_checkbox extends formslib_field
 				case FORMSLIB_STYLE_P:
 					echo $this->htmlbefore;
 					echo '<p>' . CRLF;
-					// echo '<label for="'.$this->name.'">'.Security::escapeHtml($this->label).'</label> '.CRLF;
-					echo $this->getHTML() . CRLF;
+					// echo '<label for="'.$this->name.'">'.$this->getLabelInnerHtml().'</label> '.CRLF;
+				    echo (!$readOnly) ? $this->getHTML() . CRLF : $this->getHTMLReadOnly() . CRLF;
 					echo $mand;
 					echo '</p>' . CRLF . CRLF;
 					echo $this->htmlafter;
@@ -365,15 +419,15 @@ class formslib_checkbox extends formslib_field
 				default:
 					echo $this->htmlbefore;
 					echo '<dl>' . CRLF;
-					echo '<dt><label for="' . $this->name . '">' . Security::escapeHtml($this->label) . '</label></dt>' . CRLF;
-					echo '<dd>' . $this->getHTML() . $mand . '</dd>' . CRLF;
+					echo '<dt><label for="' . $this->name . '">' . $this->getLabelInnerHtml() . '</label></dt>' . CRLF;
+					echo '<dd>' . ((!$readOnly) ? $this->getHTML() . $mand : $this->getHTMLReadOnly()) . '</dd>' . CRLF;
 					echo '</dl>' . CRLF . CRLF;
 					echo $this->htmlafter;
 					break;
 
 				case FORMSLIB_STYLE_BOOTSTRAP:
 					echo $this->htmlbefore;
-					echo $this->getHTML() . CRLF;
+					echo (!$readOnly) ? $this->getHTML() . CRLF : $this->getHTMLReadOnly() . CRLF;
 					echo $this->htmlafter;
 					break;
 
@@ -382,7 +436,7 @@ class formslib_checkbox extends formslib_field
 				    echo '<div data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">'.CRLF;
 				    echo $this->innerhtmlbefore;
 				    echo '<div class="checkbox">'.CRLF;
-				    echo $this->getHTML() . CRLF;
+				    echo (!$readOnly) ? $this->getHTML() . CRLF : $this->getHTMLReadOnly() . CRLF;
 				    echo '</div>'.CRLF;
 				    echo $this->innerhtmlafter;
 				    echo '</div>'.CRLF;
@@ -395,7 +449,7 @@ class formslib_checkbox extends formslib_field
 					echo '<div data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">'.CRLF;
 					echo $this->innerhtmlbefore;
 					echo '<div class="checkbox">'.CRLF;
-					echo $this->getHTML() . CRLF;
+					echo (!$readOnly) ? $this->getHTML() . CRLF : $this->getHTMLReadOnly() . CRLF;
 					echo '</div>'.CRLF;
 					echo $this->innerhtmlafter;
 					echo '</div>'.CRLF;
@@ -406,7 +460,7 @@ class formslib_checkbox extends formslib_field
 		else
 		{
 			echo $this->htmlbefore;
-			echo $this->getHTML() . $mand . CRLF;
+			echo ((!$readOnly) ? $this->getHTML() . $mand : $this->getHTML()) . CRLF;
 			echo $this->htmlafter;
 		}
 	}
@@ -456,13 +510,14 @@ class formslib_checkbox extends formslib_field
 
 	public function getHTMLReadOnly()
 	{
-	    // TODO: Complete getHTMLReadOnly()
 		$html = '';
 
 		$ids = 'name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '"';
 		$checked = ($this->isChecked()) ? '<span ' . $ids . ' class="colour-positive">&#10004;</span>' : '<span ' . $ids . ' class="colour-negative">&#10008;</span>';
 
-		$text = Security::escapeHtml($this->label) . CRLF;
+		$labelclass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
+
+		$text = $this->getLabelInnerHtml() . CRLF;
 
 		if ($this->rawboxonly)
 		{
@@ -470,8 +525,8 @@ class formslib_checkbox extends formslib_field
 		}
 		else
 		{
-			$html .= '<label for="fld_' . $this->name . '" class="formslib_label_checkbox">' . CRLF;
-			$html .= ($this->tickbefore) ? $checked . $text : $text . $checked;
+			$html .= '<label for="fld_' . $this->name . '" class="formslib_label_checkbox '. $labelclass . '">' . CRLF;
+			$html .= ($this->tickbefore) ? $checked . ' ' . $text : $text . ' ' . $checked;
 			$html .= '</label>';
 		}
 
@@ -502,16 +557,49 @@ class formslib_email extends formslib_text
 	{
 		parent::__construct($name);
 		$this->addRule('regex', '/^' . EMAIL_VALIDATE . '$/i', 'Invalid email address format');
+		$this->_setInputType();
+	}
+
+	private function _setInputType()
+	{
+		if ($this->inputTypeMode & Formslib::INPUT_MODE_COMPAT)
+		{
+			$this->inputType = 'email';
+			$this->addAttr('inputmode', 'email');
+		}
+	}
+
+	public function getHTML()
+	{
+		$this->_setInputType();
+
+		return parent::getHTML();
 	}
 }
 
 class formslib_phone extends formslib_text
 {
-
 	public function __construct($name)
 	{
 		parent::__construct($name);
 		$this->addRule('regex', '|^[0-9\+ ]+$|i', 'Phone number may only contain numbers, spaces, and the plus symbol.');
+		$this->_setInputType();
+	}
+
+	private function _setInputType()
+	{
+		if ($this->inputTypeMode & Formslib::INPUT_MODE_COMPAT)
+		{
+			$this->inputType = 'tel';
+			$this->addAttr('inputmode', 'tel');
+		}
+	}
+
+	public function getHTML()
+	{
+		$this->_setInputType();
+
+		return parent::getHTML();
 	}
 }
 
@@ -564,16 +652,23 @@ class formslib_url extends formslib_text
 	{
 		parent::__construct($name);
 		$this->addRule('regex', '`' . VALIDATE_URL . '`i', 'Invalid URL format');
+		$this->_setInputType();
 	}
-}
 
-class formslib_integer extends formslib_text
-{
-
-	public function __construct($name)
+	private function _setInputType()
 	{
-		parent::__construct($name);
-		$this->addRule('regex', '|^-?[0-9]+$|i', 'Not a whole number');
+		if ($this->inputTypeMode & Formslib::INPUT_MODE_SUPPORTED)
+		{
+			$this->inputType = 'url';
+			$this->addAttr('inputmode', 'url');
+		}
+	}
+
+	public function getHTML()
+	{
+		$this->_setInputType();
+
+		return parent::getHTML();
 	}
 }
 
@@ -584,6 +679,39 @@ class formslib_number extends formslib_text
 	{
 		parent::__construct($name);
 		$this->addRule('regex', '|^-?[0-9.]+$|i', 'Not a number');
+		$this->addAttr('inputmode', 'tel'); // Android (or Samsung) sucks and doesn't diplay a - on numeric controls
+	}
+}
+
+class formslib_integer extends formslib_number
+{
+	protected $step = 1;
+
+	public function __construct($name)
+	{
+		parent::__construct($name);
+		$this->addRule('regex', '|^-?[0-9]+$|i', 'Not a whole number');
+		$this->_setInputType();
+	}
+
+	private function _setInputType()
+	{
+		if ($this->inputTypeMode & Formslib::INPUT_MODE_SUPPORTED)
+		{
+			$this->addAttr('step', $this->step);
+		}
+	}
+
+	public function getHTML()
+	{
+		$this->_setInputType();
+
+		return parent::getHTML();
+	}
+
+	public function setStep($step)
+	{
+		$this->step = $step;
 	}
 }
 
@@ -705,6 +833,7 @@ class formslib_cardnumber extends formslib_text
 		parent::__construct($name);
 		$this->addRule('maxlength', 19, 'Card number must only contain digits and be between 15 and 19 digits long');
 		$this->addRule('regex', '|^[0-9{15,19}]+$|i', 'Card number must only contain digits and be between 15 and 19 digits long');
+		$this->addAttr('inputmode', 'numeric');
 	}
 }
 
@@ -716,6 +845,7 @@ class formslib_cardmonthyear extends formslib_text
 		parent::__construct($name);
 		$this->addRule('maxlength', 4, 'Must be a valid date in the format MMYY');
 		$this->addRule('regex', '/^(0[1-9]|1[0-2])[0-2][0-9]$/', 'Must be a valid date in the format MMYY');
+		$this->addAttr('inputmode', 'numeric');
 	}
 }
 
@@ -727,6 +857,7 @@ class formslib_cardcvc extends formslib_text
 		parent::__construct($name);
 		$this->addRule('maxlength', 3, 'Must be a three digit number');
 		$this->addRule('regex', '/^[0-9]{3}$/', 'Must be a three digit number');
+		$this->addAttr('inputmode', 'numeric');
 	}
 }
 
@@ -870,6 +1001,10 @@ class formslib_date extends formslib_composite
 	    return $this;
 	}
 
+	/**
+	 *
+	 * @return \DateTime
+	 */
 	public function &getObjectValue()
 	{
 		$date = null;
@@ -893,6 +1028,15 @@ class formslib_date extends formslib_composite
 
 	    return !$missing;
 	}
+
+	public function getHTMLReadOnly()
+	{
+	    $val = $this->getObjectValue();
+
+	    $value = (is_a($val, \DateTime::class)) ? $val->format('d M Y') : '';
+
+	    return '<span name="' . Security::escapeHtml($this->name) . '" id="fld_' . Security::escapeHtml($this->name) . '" ' . $this->_custom_attr() . $this->_class_attr() . '><strong>' . $value . '</strong></span>'; // TODO: Move strong to a class
+	}
 }
 
 class formslib_ukbankacct extends formslib_text
@@ -903,6 +1047,7 @@ class formslib_ukbankacct extends formslib_text
 		parent::__construct($name);
 		$this->addRule('maxlength', 8, 'Bank account number must only contain digits and be between 7 and 8 digits long');
 		$this->addRule('regex', '|^[0-9]{7,8}$|i', 'Bank account number must only contain digits and be between 7 and 8 digits long');
+		$this->addAttr('inputmode', 'numeric');
 	}
 }
 
@@ -920,6 +1065,7 @@ class formslib_uksortcode extends formslib_composite
 		$this->addRule('compsite_sortcode', '', 'Each part of your sort code must contain 2 digits');
 		$this->addAttr('maxlength', '2');
 		$this->addAttr('size', '2'); // Text box width, in characters
+		$this->addAttr('inputmode', 'numeric');
 	}
 
 	public function getHTML()
@@ -1110,7 +1256,7 @@ class formslib_toggle_button extends formslib_checkbox
 
 		$html .= '<div class="btn-group" data-toggle="buttons">' . CRLF;
 		$html .= '<label for="fld_' . $this->name . '" class="btn' . $this->btnclass . $active . '">' . CRLF;
-		$html .= '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '" title="' . Security::escapeHtml($this->label) . '" />' . CRLF;
+		$html .= '<input type="checkbox" value="' . $this->checkedvalue . '"' . $checked . ' ' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" id="fld_' . Security::escapeHtml($this->name) . '" title="' . Security::escapeHtml($this->getLabelText()) . '" />' . CRLF;
 		$html .= Security::escapeHtml($this->button_text);
 		$html .= '</label>' . CRLF;
 		$html .= '</div>' . CRLF;
