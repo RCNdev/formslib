@@ -113,11 +113,12 @@ class Fieldset extends \formslib_fieldset
                 {
                     $fld =& $form->fields[$fieldname];
 
-                    if ($fld->isRowStarter())
+                    $class = null;
+                    if ($fld->isRowStarter($class))
                     {
                         if (! $first) echo '</tr>' . CRLF . CRLF;
 
-                        echo '<tr>';
+                        echo ($class != '') ? '<tr class="'.Security::escapeHtml($class).'">' : '<tr>';
                     }
 
                     $outputted = true;
