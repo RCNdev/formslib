@@ -829,4 +829,15 @@ abstract class Field
 
         return $label;
     }
+    
+    public function removeRulesOfType($className)
+    {
+        foreach ($this->rules as $index => $rule)
+        {
+            if (is_a($rule, $className))
+            {
+                unset($this->rules[$index]);
+            }
+        }
+    }
 }
