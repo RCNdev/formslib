@@ -9,7 +9,7 @@ class MultiPair extends GenericMulti
 	{
 		if (!$this->preprocessed)
 		{
-			$indices_str = trim($this->multi_values['control']);
+		    $indices_str = isset($this->multi_values['control']) ? trim($this->multi_values['control']) : '';
 			$indices = explode(',', $indices_str);
 
 			foreach ($indices as $i)

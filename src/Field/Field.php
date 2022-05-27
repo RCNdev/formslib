@@ -26,6 +26,7 @@ abstract class Field
     protected $group_classes = [];
     protected $gridRatio = 3;
     protected $starts_new_row = false;
+    protected $new_row_class = null;
     protected $outputstyle = null;
     protected $ajaxFormIdentifier;
     protected $disabled = false;
@@ -648,15 +649,17 @@ abstract class Field
         return $this;
     }
 
-    public function &setStartsNewRow($new_row = true)
+    public function &setStartsNewRow($new_row = true, $class = null)
     {
         $this->starts_new_row = $new_row;
+        $this->new_row_class = $class;
 
         return $this;
     }
 
-    public function isRowStarter()
+    public function isRowStarter(&$class = null)
     {
+        $class = $this->_new_row_class;
         return $this->starts_new_row;
     }
 
