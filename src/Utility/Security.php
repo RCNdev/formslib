@@ -9,7 +9,8 @@ final class Security
      */
     public static function escapeHtml($text)
     {
-        $htmltext = htmlentities($text, ENT_COMPAT, 'UTF-8');
+        $htmltext = htmlentities((is_null($text)) ? '' : $text, ENT_COMPAT, 'UTF-8');
+
         return $htmltext;
     }
 }
