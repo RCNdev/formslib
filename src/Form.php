@@ -1253,6 +1253,21 @@ JS;
 JS;
 				break;
 
+			case \formslib\Operator::NE:
+				$jq .= <<<JS
+				
+	if (fld.val() != '$value')
+	{
+		$('[data-formslib-owner="{$type}_$id"]').show();
+	}
+	else
+	{
+		$('[data-formslib-owner="{$type}_$id"]').hide();
+	}
+	
+JS;
+				break;
+
 			case \formslib\Operator::CHECKED:
 				$jq .= <<<JS
 				

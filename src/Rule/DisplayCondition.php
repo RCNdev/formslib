@@ -46,6 +46,11 @@ class DisplayCondition
                 break;
 
 
+            case Operator::NE:
+            	return (!isset($vars[$this->field_name]) || $vars[$this->field_name] != $this->value);
+            	break;
+
+
             case Operator::IN:
                 //TODO: Implement IN operator
                 return true;
@@ -73,6 +78,11 @@ class DisplayCondition
             case Operator::EQ:
                 return ($field->value == $this->value);
                 break;
+
+
+            case Operator::NE:
+            	return ($field->value != $this->value);
+            	break;
 
 
             case Operator::IN:
