@@ -31,7 +31,7 @@ class Modal
 
 	/**
 	 * Set the heading level (defaults to h4)
-	 * @param integer $headingLevel The numeric heading level
+	 * @param int $headingLevel The numeric heading level
 	 * @throws \Exception
 	 * @return \formslib\BootstrapUtil\Modal
 	 */

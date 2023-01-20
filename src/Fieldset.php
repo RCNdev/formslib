@@ -195,7 +195,7 @@ class Fieldset extends \formslib_fieldset
      * Get the body of an email with the results of the form
      *
      * @param \formslib\Form $form
-     * @param integer $style
+     * @param int $style
      * @return string
      */
     public function getEmailBody(&$form, &$style, $includeConditionalDisplay = false)

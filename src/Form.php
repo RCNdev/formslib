@@ -81,7 +81,7 @@ class Form
 	 *        	Type of the field
 	 * @param string $name
 	 *        	Name of the field
-	 * @param integer $error
+	 * @param int $error
 	 *        	Pointer for error code
 	 * @return \formslib_field_paramset
 	 */
