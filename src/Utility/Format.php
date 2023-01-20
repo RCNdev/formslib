@@ -69,7 +69,7 @@ final class Format
 	 */
 	public static function phoneUK($number)
 	{
-		$input = str_replace(' ', '', trim($number));
+		$input = (is_null($number)) ? '' : str_replace(' ', '', trim($number));
 
 		if (substr($input, 0, 1) === '0')
 		{
