@@ -38,7 +38,7 @@ final class Format
 	 */
 	public static function nameCasing($names)
 	{
-		$n = explode(' ', $names);
+		$n = (is_null($names)) ? [] : explode(' ', $names);
 
 		foreach ($n as $index => $name)
 		{
