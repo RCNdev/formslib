@@ -227,7 +227,7 @@ class formslib_radio extends formslib_options
 			$data_str = ($this->addDataLabels) ? ' data-label="'.Security::escapeHtml($label).'"' : '';
 
 			$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelclass . '">';
-			$html .= '<input type="radio" name="' . Security::escapeHtml($this->name) . '" id="' . $id . '"' . $selected .$dis_str.$data_str.$this->_custom_attr(). ' value="' . Security::escapeHtml($value) . '" />';
+			$html .= '<input type="radio" name="' . Security::escapeHtml($this->name) . '" id="' . $id . '"' . $selected .$dis_str.$data_str.$this->_custom_attr().$this->_class_attr(). ' value="' . Security::escapeHtml($value) . '" />';
 			$html .= '&nbsp;' . Security::escapeHtml($label);
 			$html .= '</label> ';
 		}
