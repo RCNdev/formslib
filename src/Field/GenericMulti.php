@@ -54,7 +54,7 @@ abstract class GenericMulti extends MultiValue
 
 		$new = json_encode($html);
 
-		$js[] = <<<EOF
+		$js[] = <<<JS
 $(document).on('click', 'a.btn.formslib-multiremove[data-formslib-field="{$this->name}"]', function(e){
 	field = $(this).data('formslib-field');
 	index = $(this).data('index');
@@ -90,7 +90,7 @@ $(document).on('click', '.formslib-multiadd a.btn[data-formslib-field="{$this->n
 
 	return false;
 });
-EOF;
+JS;
 
 		return $js;
 	}

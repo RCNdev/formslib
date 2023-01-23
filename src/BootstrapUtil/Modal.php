@@ -108,7 +108,7 @@ class Modal
 
 		$js = implode("\r\n", $newline);
 
-		$this->js = <<<EOF
+		$this->js = <<<JS
 $(document).ready(function(){
 	$('#{$this->id}').on('show.bs.modal', function(event) {
 		var button = $(event.relatedTarget);
@@ -116,7 +116,7 @@ $(document).ready(function(){
 $js
 	});
 });
-EOF;
+JS;
 		return $this;
 	}
 
@@ -170,16 +170,16 @@ EOF;
 
 		if ($this->js != '')
 		{
-			$js = <<<EOF
+			$js = <<<HTML
 <script type="text/javascript">
 <!--
 {$this->js}
 //-->
 </script>
-EOF;
+HTML;
 		}
 
-		return <<<EOF
+		return <<<HTML
 
 
 <div class="modal fade" id="{$this->id}" tabindex="-1" role="dialog" aria-labelledby="{$this->id}Label">
@@ -200,7 +200,7 @@ EOF;
 </div>
 $js
 
-EOF;
+HTML;
 	}
 
 	/**

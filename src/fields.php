@@ -1214,13 +1214,13 @@ class formslib_wysiwyg_light extends formslib_textarea
 
 	    if(isset($this->attrib['disabled']))
 	    {
-	        $disable = <<<EOF
+	        $disable = <<<JS
 $('#fld_{$this->name}').prev().find('.nicEdit-main').attr('contenteditable', 'false').parent().addClass('disabled');
 $('#fld_{$this->name}').prev().prev().hide();
-EOF;
+JS;
 	    }
 
-	    $html = <<<EOF
+	    $html = <<<HTML
 <script type="text/javascript">
 <!--
 bkLib.onDomLoaded(function() {
@@ -1231,7 +1231,7 @@ bkLib.onDomLoaded(function() {
 });
 //-->
 </script>
-EOF;
+HTML;
 
 	    $html .= parent::getHTML();
 
@@ -1461,7 +1461,7 @@ class formslib_datepicker extends formslib_text
 			$end = '';
     	}
 
-		return <<<EOF
+		return <<<HTML
 <script type="text/javascript">
 $(document).ready(function()
 {
@@ -1475,7 +1475,7 @@ $(document).ready(function()
     });
 });
 </script>
-EOF;
+HTML;
 
     }
 

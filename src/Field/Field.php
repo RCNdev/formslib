@@ -285,7 +285,7 @@ abstract class Field
                     $group_class_str = implode(' ', $this->group_classes);
                     if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
 
-                    if (! isset($this->classes['form-control']) && get_class($this) != 'formslib_radio' && get_class($this) != 'formslib\Field\TickList' && get_class($this) != 'formslib_ticklist')
+                    if (!isset($this->classes['form-control']) && !is_a($this, \formslib_radio::class) && !is_a($this, \formslib\Field\TickList::class))
                     {
                     	$this->addClass('form-control');
                     }
@@ -308,7 +308,7 @@ abstract class Field
                     $group_class_str = implode(' ', $this->group_classes);
                     if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
 
-                    if (! isset($this->classes['form-control']) && get_class($this) != 'formslib_radio' && get_class($this) != 'formslib\Field\TickList' && get_class($this) != 'formslib_ticklist')
+                    if (!isset($this->classes['form-control']) && !is_a($this, \formslib_radio::class) && !is_a($this, \formslib\Field\TickList::class))
                     {
                     	$this->addClass('form-control');
                     }
@@ -331,7 +331,7 @@ abstract class Field
                     $group_class_str = implode(' ', $this->group_classes);
                     if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
 
-                    if (! isset($this->classes['form-control']) && get_class($this) != 'formslib_radio' && get_class($this) != 'formslib\Field\TickList' && get_class($this) != 'formslib_ticklist')
+                    if (!isset($this->classes['form-control']) && !is_a($this, \formslib_radio::class) && !is_a($this, \formslib\Field\TickList::class))
                     {
                     	$this->addClass('form-control');
                     }
@@ -612,7 +612,7 @@ abstract class Field
                     $group_class_str = implode(' ', $this->group_classes);
                     if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
 
-                    if (! isset($this->classes['form-control']) && get_class($this) != 'formslib_radio' && get_class($this) != 'formslib\Field\TickList' && get_class($this) != 'formslib_ticklist')
+                    if (!isset($this->classes['form-control']) && !is_a($this, \formslib_radio::class) && !is_a($this, \formslib\Field\TickList::class))
                     {
                     	$this->addClass('form-control');
                     }

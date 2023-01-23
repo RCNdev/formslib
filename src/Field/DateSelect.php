@@ -3,6 +3,8 @@ namespace formslib\Field;
 
 class DateSelect extends \formslib_select
 {
+	protected $dateformat;
+
 	public function &setDateRange($startDate, $endDate)
 	{
 		$patternDate = '/[0-9]{4}-[0-9]{2}-[0-9]{2}/';

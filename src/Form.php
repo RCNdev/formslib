@@ -620,7 +620,7 @@ class Form
 		// Generic stuff
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
 		{
-			$jq = <<<EOF
+			$jq = <<<JS
 $(document).ready(function(){
 $('.formslib_jq_mand').focus(function(){
 	$(this).removeClass('formslibinvalid');
@@ -634,11 +634,11 @@ $('.formslib_jq_mand').blur(function(){
 		$(this).parent().parent().addClass('error');
 	}
 });
-EOF;
+JS;
 		}
 		elseif ($bootstrap3)
 		{
-			$jq = <<<EOF
+			$jq = <<<JS
 $(document).ready(function(){
 $('.formslib_jq_mand').focus(function(){
 	$(this).removeClass('formslibinvalid');
@@ -652,11 +652,11 @@ $('.formslib_jq_mand').blur(function(){
 		$(this).parents('.form-group').addClass('has-error');
 	}
 });
-EOF;
+JS;
 		}
 		else
 		{
-			$jq = <<<EOF
+			$jq = <<<JS
 $(document).ready(function(){
 $('.formslib_jq_mand').focus(function(){
 	$(this).removeClass('formslibinvalid');
@@ -668,7 +668,7 @@ $('.formslib_jq_mand').blur(function(){
 		$(this).addClass('formslibinvalid');
 	}
 });
-EOF;
+JS;
 		}
 
 		$fields = array_keys($this->fields);
@@ -688,12 +688,12 @@ $('[name=$name]').focus(function(){
 				}
 				elseif ($bootstrap3)
 				{
-					$jq .= <<<EOF
+					$jq .= <<<JS
 $('[name=$name]').focus(function(){
 	$(this).removeClass('formslibinvalid');
 	$(this).parents('.form-group').removeClass('has-error');
 });
-EOF;
+JS;
 				}
 				else
 				{
@@ -848,7 +848,7 @@ JS;
 				$timeout = $this->doubleClickTimeout * 1000;
 				$class = implode(' ', $this->submitclass);
 
-				echo <<<EOF
+				echo <<<JS
 $(document).ready(function(){
 	$('form[name="$name"] input[type="submit"]').click(function(e){
 		var btn = $(e.target);
@@ -862,7 +862,7 @@ $(document).ready(function(){
 		}, $timeout);
 	});
 });
-EOF;
+JS;
 			}
 
 			echo '//-->' . CRLF . '</script>' . CRLF . CRLF;

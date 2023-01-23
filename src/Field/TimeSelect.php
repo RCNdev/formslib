@@ -28,7 +28,7 @@ class TimeSelect extends Composite
      * @param string $startTime
      * @param string $endTime
      * @throws \Exception
-     * @return \formslib\Field\DateSelect
+     * @return \formslib\Field\TimeSelect
      */
     public function &setTimeRange($startTime, $endTime, $minuteInterval = 15, $minuteOffset = 0)
 	{

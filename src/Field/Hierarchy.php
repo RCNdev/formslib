@@ -5,7 +5,6 @@ class Hierarchy extends MultiValue
 {
 	protected $tree;
 	protected $maxlevels;
-	protected $clientside;
 
 	public function &setOptions($tree)
 	{
@@ -94,7 +93,7 @@ class Hierarchy extends MultiValue
 
 		$path = FORMSLIB_AJAX_SERVICE;
 
-		$js[] = <<<EOF
+		$js[] = <<<JS
 $(document).on('change', 'select[data-formslib-field="{$this->name}"]', function(e){
 	var caller = this;
 	field = $(this).attr('data-formslib-field');
@@ -143,7 +142,7 @@ $(document).on('change', 'select[data-formslib-field="{$this->name}"]', function
 		}
 	});
 });
-EOF;
+JS;
 
 		return $js;
 	}

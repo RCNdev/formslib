@@ -6,6 +6,7 @@ abstract class MultiValue extends Field
 	public $multi_values = [];
 	public $composite_values = null;
 	protected $maxvalue;
+	protected $clientside;
 
 	protected function _class_attr($extraclass = '')
 	{
