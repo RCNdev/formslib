@@ -226,7 +226,10 @@ class formslib_radio extends formslib_options
 
 			$data_str = ($this->addDataLabels) ? ' data-label="'.Security::escapeHtml($label).'"' : '';
 
-			$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelclass . '"><input type="radio" name="' . Security::escapeHtml($this->name) . '" id="' . $id . '"' . $selected .$dis_str.$data_str. ' value="' . Security::escapeHtml($value) . '" />&nbsp;' . Security::escapeHtml($label) . '</label> ';
+			$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelclass . '">';
+			$html .= '<input type="radio" name="' . Security::escapeHtml($this->name) . '" id="' . $id . '"' . $selected .$dis_str.$data_str.$this->_custom_attr(). ' value="' . Security::escapeHtml($value) . '" />';
+			$html .= '&nbsp;' . Security::escapeHtml($label);
+			$html .= '</label> ';
 		}
 
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '</div><!--/.radio-->';
@@ -1101,6 +1104,7 @@ class formslib_uksortcode extends formslib_composite
 
 class formslib_carddate extends formslib_composite
 {
+	protected $startyear, $endyear;
 
 	public function __construct($name)
 	{
@@ -1636,6 +1640,7 @@ class formslib_dateselecttimerange extends formslib_dateselecttime
 
 	public function getEmailValue()
 	{
+		//BUG: Date format not declared anywhere
 		return date($this->dateformat, strtotime($this->composite_values['date'])).' '.$this->composite_values['start'].'-'.$this->composite_values['end'];
 	}
 }
@@ -1723,6 +1728,7 @@ class formslib_datepickertime extends formslib_composite
 
 	public function getEmailValue()
 	{
+		//BUG: Date format not declared anywhere
 		return date($this->dateformat, strtotime($this->composite_values['date'])).' '.$this->composite_values['time'];
 	}
 
