@@ -285,7 +285,10 @@ abstract class Field
                     $group_class_str = implode(' ', $this->group_classes);
                     if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
 
-                    if (! isset($this->classes['form-control']) && get_class($this) != 'formslib\Field\TickList' && get_class($this) != 'formslib_ticklist') $this->addClass('form-control');
+                    if (! isset($this->classes['form-control']) && get_class($this) != 'formslib_radio' && get_class($this) != 'formslib\Field\TickList' && get_class($this) != 'formslib_ticklist')
+                    {
+                    	$this->addClass('form-control');
+                    }
 
                     echo $this->htmlbefore . CRLF;
                     echo '<div class="form-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
@@ -305,7 +308,10 @@ abstract class Field
                     $group_class_str = implode(' ', $this->group_classes);
                     if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
 
-                    if (! isset($this->classes['form-control']) && get_class($this) != 'formslib\Field\TickList' && get_class($this) != 'formslib_ticklist') $this->addClass('form-control');
+                    if (! isset($this->classes['form-control']) && get_class($this) != 'formslib_radio' && get_class($this) != 'formslib\Field\TickList' && get_class($this) != 'formslib_ticklist')
+                    {
+                    	$this->addClass('form-control');
+                    }
 
                     echo $this->htmlbefore . CRLF;
                     echo '<div class="form-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
@@ -603,7 +609,10 @@ abstract class Field
                     $group_class_str = implode(' ', $this->group_classes);
                     if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
 
-                    if (! isset($this->classes['form-control']) && get_class($this) != 'formslib\Field\TickList' && get_class($this) != 'formslib_ticklist') $this->addClass('form-control');
+                    if (! isset($this->classes['form-control']) && get_class($this) != 'formslib_radio' && get_class($this) != 'formslib\Field\TickList' && get_class($this) != 'formslib_ticklist')
+                    {
+                    	$this->addClass('form-control');
+                    }
 
                     echo $this->htmlbefore . CRLF;
                     echo '<div class="form-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
@@ -832,7 +841,7 @@ abstract class Field
 
         return $label;
     }
-    
+
     public function removeRulesOfType($className)
     {
         foreach ($this->rules as $index => $rule)
