@@ -36,6 +36,7 @@ class Form
 	private $optionalLabels = false;
 	private $errorIntroText = null;
 	private $inputTypeMode = 1;
+	private $hideOptionalText = false;
 
 	public function __construct($name)
 	{
@@ -222,6 +223,13 @@ class Form
 	public function setOptionalHTML($html)
 	{
 	    $this->optionalHTML = $html;
+	}
+
+	public function hideOptionalText($hide = true)
+	{
+	    $this->hideOptionalText = $hide;
+
+	    return $this;
 	}
 
 	/**
