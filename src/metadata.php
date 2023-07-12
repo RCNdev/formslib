@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dummy abstract class to cover all field types for autocomplete purposes
  *
@@ -6,6 +7,7 @@
  */
 abstract class formslib_field_paramset extends formslib_field
 {
+
 	public function &setLabel($label)
 	{
 		return $this;
@@ -158,11 +160,15 @@ abstract class formslib_field_paramset extends formslib_field
 
 	public function &setSelectAll($text = 'Select all')
 	{
-	    return $this;
+		return $this;
+	}
+
+	public function &setEmailDateFormat($format)
+	{
+		return $this;
 	}
 }
 
 class Services_JSON
 {
-
 }
