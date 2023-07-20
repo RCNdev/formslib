@@ -1284,8 +1284,20 @@ JS;
 				break;
 
 			case \formslib\Operator::IN:
+
+				$values = json_encode($value);
+
 				$jq .= <<<JS
-// TODO: Conditional display on IN
+	var values = $values;
+
+	if (vals.contains(fld.val()))
+	{
+		$('[data-formslib-owner="{$type}_$id"]').show();
+	}
+	else
+	{
+		$('[data-formslib-owner="{$type}_$id"]').hide();
+	}
 JS;
 				break;
 
