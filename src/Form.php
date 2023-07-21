@@ -1290,7 +1290,7 @@ JS;
 				$jq .= <<<JS
 	var values = $values;
 
-	if (vals.contains(fld.val()))
+	if (values.contains(fld.val()))
 	{
 		$('[data-formslib-owner="{$type}_$id"]').show();
 	}
