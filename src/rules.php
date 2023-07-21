@@ -22,7 +22,7 @@ abstract class formslib_rule
 
 	public function get_jquery_condition()
 	{
-		return 'if (!true){';
+		return 'if (!true) {';
 	}
 }
 
@@ -59,7 +59,7 @@ class formslib_rule_regex extends formslib_rule
 			$jsregex = $regex;
 		}
 
-		return 'if (!val.match('.$jsregex.')){';
+		return 'if (!val.match('.$jsregex.')) {';
 	}
 }
 
@@ -78,7 +78,7 @@ class formslib_rule_maxlength extends formslib_rule
 
 	public function get_jquery_condition()
 	{
-		return 'if (!(val.length<='.$this->ruledfn.')){';
+		return 'if (!(val.length<='.$this->ruledfn.')) {';
 	}
 }
 
@@ -119,7 +119,7 @@ class formslib_rule_minval extends formslib_rule
 
 	public function get_jquery_condition()
 	{
-		return 'if (!(val>='.$this->ruledfn.')){';
+		return 'if (!(val>='.$this->ruledfn.')) {';
 	}
 }
 
@@ -148,7 +148,7 @@ class formslib_rule_maxval extends formslib_rule
 
 	public function get_jquery_condition()
 	{
-		return 'if (!(val<='.$this->ruledfn.')){';
+		return 'if (!(val<='.$this->ruledfn.')) {';
 	}
 }
 
@@ -298,7 +298,7 @@ class formslib_rule_minlength extends formslib_rule
 
 	public function get_jquery_condition()
 	{
-		return 'if (!(val.length>='.$this->ruledfn.')){';
+		return 'if (!(val.length>='.$this->ruledfn.')) {';
 	}
 }
 
@@ -362,7 +362,7 @@ class formslib_rule_date_format extends formslib_rule
     public function get_jquery_condition()
     {
         //TODO: Return some regex
-        return 'if (!true){';
+        return 'if (!true) {';
     }
 }
 
@@ -399,7 +399,9 @@ class formslib_rule_composite_timerangeformat extends formslib_rule
 		foreach ($cs as $c)
 		{
 			if (isset($value[$c]) && $value[$c] != '' &&  !preg_match('/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/', $value[$c]))
+			{
 				return false;
+			}
 		}
 		return true;
 	}
