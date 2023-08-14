@@ -14,6 +14,11 @@ class DisplayCondition
         $this->field_name = $fieldName;
         $this->operator = $operator;
         $this->value = $value;
+
+        if ($operator == Operator::IN && !is_array($value))
+        {
+        	throw new \Exception('When setting an IN display condition, value must be an array');
+        }
     }
 
     public function getFieldName()
@@ -52,8 +57,7 @@ class DisplayCondition
 
 
             case Operator::IN:
-                //TODO: Implement IN operator
-                return true;
+                return (isset($vars[$this->field_name]) && in_array($vars[$this->field_name], $this->value));
                 break;
 
 
@@ -86,8 +90,7 @@ class DisplayCondition
 
 
             case Operator::IN:
-                //TODO: Implement IN operator
-                return true;
+                return in_array($field->value, $this->value);
                 break;
 
 

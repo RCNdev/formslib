@@ -463,7 +463,7 @@ class formslib_checkbox extends formslib_field
 		else
 		{
 			echo $this->htmlbefore;
-			echo ((!$readOnly) ? $this->getHTML() . $mand : $this->getHTML()) . CRLF;
+			echo ((!$readOnly) ? $this->getHTML() . $mand : $this->getHTMLReadOnly()) . CRLF;
 			echo $this->htmlafter;
 		}
 	}
@@ -737,8 +737,9 @@ class formslib_confirmtick extends formslib_checkbox
 	public function __construct($name)
 	{
 		parent::__construct($name);
-		$this->setRawOutput();
+
 		$this->setMandatory();
+		$this->setTickBefore();
 	}
 }
 
