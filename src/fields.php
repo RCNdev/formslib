@@ -121,9 +121,13 @@ abstract class formslib_options extends formslib_field
 	public function getEmailValue()
 	{
 		if (isset($this->options[$this->value]))
+		{
 			return $this->options[$this->value];
+		}
 		else
+		{
 			return '';
+		}
 	}
 
 	public function getDataDump()
@@ -798,8 +802,6 @@ class formslib_multiselect extends formslib_select
 		{
 
 			$html .= '<option value="' . Security::escapeHtml($value) . '"';
-			// if ($this->value == $value)
-			// $html .= ' selected="selected"';
 			if (is_array($this->value))
 			{
 				if (in_array($value, $this->value))
@@ -821,11 +823,12 @@ class formslib_multiselect extends formslib_select
 	{
 		if (is_array($this->value))
 		{
-			// if (isset($this->options[$this->value]))
 			return implode(';', $this->value);
 		}
 		else
+		{
 			return '';
+		}
 	}
 }
 
@@ -995,7 +998,6 @@ class formslib_date extends formslib_composite
 		{
 	       return $this->composite_values['year'] . '-' . sprintf('%02d', $this->composite_values['month']) . '-' . sprintf('%02d', $this->composite_values['day']);
 		}
-
 	}
 
 	public function &setEmailDateFormat($format)

@@ -453,7 +453,7 @@ abstract class Field
 
     public function getEmailValue()
     {
-        return $this->value;
+    	return (!is_null($this->value)) ? $this->value : '';
     }
 
     public function &setDoNotEmail()

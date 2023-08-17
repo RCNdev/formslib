@@ -347,13 +347,13 @@ class Form
     			}
     			elseif (is_a($field, 'formslib\Field\MultiValue'))
     			{
-    			    $count = 0;
+    			    $i = 1;
 
     			    $mv = [];
-    			    while (isset($vars[$name . '__'. $count]) && ($vars[$name . '__'. $count]) != '')
+    			    while (isset($vars[$name . '__'. $i]) && ($vars[$name . '__'. $i]) != '')
     			    {
-    			        $count++;
-    			        $mv[] = $vars[$name . '__'. $count];
+    			        $mv[] = $vars[$name . '__'. $i];
+    			        $i++;
     			    }
 
     			    $valid = $field->validate($mv);
