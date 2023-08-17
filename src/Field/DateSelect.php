@@ -8,9 +8,15 @@ class DateSelect extends \formslib_select
 	public function &setDateRange($startDate, $endDate)
 	{
 		$patternDate = '/[0-9]{4}-[0-9]{2}-[0-9]{2}/';
-		if (!preg_match($patternDate, $startDate) || !preg_match($patternDate, $endDate)) throw new \Exception('Invalid date format');
+		if (!preg_match($patternDate, $startDate) || !preg_match($patternDate, $endDate))
+		{
+			throw new \Exception('Invalid date format');
+		}
 
-		if ($startDate > $endDate) throw new \Exception('End date constraint before start date');
+		if ($startDate > $endDate)
+		{
+			throw new \Exception('End date constraint before start date');
+		}
 
 		$start = new \DateTime($startDate);
 		$end = new \DateTime($endDate);

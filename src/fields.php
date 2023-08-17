@@ -1516,6 +1516,8 @@ HTML;
 class formslib_dateselecttime extends formslib_composite
 {
 	protected $startDate, $endDate, $time;
+
+	/** @var \formslib\Field\DateSelect */
 	protected $field_date;
 
 	public function __construct($name)
@@ -1605,9 +1607,15 @@ class formslib_dateselecttimerange extends formslib_dateselecttime
 	public function &setTimeRange($startTime, $endTime)
 	{
 		$patternTime = '/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/';
-		if (!preg_match($patternTime, $startTime) || !preg_match($patternTime, $endTime)) throw new Exception('Invalid time format');
+		if (!preg_match($patternTime, $startTime) || !preg_match($patternTime, $endTime))
+		{
+			throw new Exception('Invalid time format');
+		}
 
-		if (str_replace($endTime, ':', '') <= str_replace($startTime, ':', '')) throw new Exception('End time constraint before start time');
+		if (str_replace($endTime, ':', '') <= str_replace($startTime, ':', ''))
+		{
+			throw new Exception('End time constraint before start time');
+		}
 
 		$this->startTime = $startTime;
 		$this->endTime = $endTime;
@@ -1654,7 +1662,7 @@ class formslib_dateselecttimerange extends formslib_dateselecttime
 
 	public function getEmailValue()
 	{
-		return date($this->emaildateformat, strtotime($this->composite_values['date'])).' '.$this->composite_values['start'].'-'.$this->composite_values['end'];
+		return $this->field_date->getEmailValue().' '.$this->composite_values['start'].'-'.$this->composite_values['end'];
 	}
 }
 
@@ -1664,7 +1672,6 @@ class formslib_datepickertime extends formslib_composite
 	protected $startdate, $enddate;
 	protected $time;
 	protected $field_date;
-	protected $emaildateformat = 'd/m/Y';
 
 	public function __construct($name)
 	{
@@ -1740,16 +1747,9 @@ class formslib_datepickertime extends formslib_composite
 		return $html;
 	}
 
-	public function &setEmailDateFormat($format)
-	{
-		$this->emaildateformat = $format;
-
-		return $this;
-	}
-
 	public function getEmailValue()
 	{
-		return date($this->emaildateformat, strtotime($this->composite_values['date'])).' '.$this->composite_values['time'];
+		return $this->composite_values['date'].' '.$this->composite_values['time'];
 	}
 
 	public function &getObjectValue()
