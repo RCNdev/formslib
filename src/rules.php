@@ -375,7 +375,10 @@ class formslib_rule_date_exists extends formslib_rule
 
 	public function evaluate($value)
 	{
-		if (trim($value) == '') return true;
+		if (is_null($value) || trim($value) == '')
+		{
+			return true;
+		}
 
 		switch ($this->ruledfn)
 		{

@@ -1716,14 +1716,14 @@ class formslib_datepickertime extends formslib_composite
 			$html .= $this->field_date->getHTML();
 			$html .= '</div>' . CRLF;
 			$html .= '<div class="col-sm-3">' . CRLF;
-			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__time" value="' . Security::escapeHtml($this->composite_values['time']) . '" />';
+			$html .= '<input type="time"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__time" value="' . Security::escapeHtml($this->composite_values['time']) . '" />';
 			$html .= '</div><!-- /.col-sm-3 -->' . CRLF;
 			$html .= '</div><!-- /.row -->' . CRLF;
 		}
 		else
 		{
 			$html .= $this->field_date->getHTML().' - ';
-			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__time" value="' . Security::escapeHtml($this->composite_values['time']) . '" />';
+			$html .= '<input type="time"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '__time" value="' . Security::escapeHtml($this->composite_values['time']) . '" />';
 		}
 
 		return $html;

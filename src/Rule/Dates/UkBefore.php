@@ -5,7 +5,10 @@ class UkBefore extends \formslib\Rule\Rule
 {
 	public function evaluate($value)
 	{
-		if (trim($value) == '') return true;
+		if (is_null($value) || trim($value) == '')
+		{
+			return true;
+		}
 
 		$check = \Formslib::getUkDate($this->ruledfn);
 
