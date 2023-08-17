@@ -986,11 +986,11 @@ class formslib_date extends formslib_composite
 
 	public function getEmailValue()
 	{
-	    if($this->composite_values['year'] == '00')
+	    if ($this->composite_values['year'] == '00')
 	    {
 	        return '';
 	    }
-	    elseif(isset($this->emaildateformat) && $this->emaildateformat == 'ddmmyyyy')
+	    elseif (isset($this->emaildateformat) && $this->emaildateformat == 'ddmmyyyy')
 		{
 		    return $this->composite_values['day'] . '-' . sprintf('%02d', $this->composite_values['month']) . '-' . sprintf('%02d', $this->composite_values['year']);
 		}
@@ -1504,7 +1504,10 @@ HTML;
     {
     	$date = null;
 
-    	if ($this->value != '') $date = Formslib::getUkDate($this->value);
+    	if ($this->value != '')
+    	{
+    		$date = Formslib::getUkDate($this->value);
+    	}
 
     	return $date;
     }
@@ -1585,6 +1588,7 @@ class formslib_dateselecttime extends formslib_composite
 class formslib_dateselecttimerange extends formslib_dateselecttime
 {
 	private $startTime, $endTime;
+	protected $emaildateformat = 'd/m/Y';
 
 	public function __construct($name)
 	{
@@ -1641,10 +1645,16 @@ class formslib_dateselecttimerange extends formslib_dateselecttime
 		return $html;
 	}
 
+	public function &setEmailDateFormat($format)
+	{
+		$this->emaildateformat = $format;
+
+		return $this;
+	}
+
 	public function getEmailValue()
 	{
-		//BUG: Date format not declared anywhere
-		return date($this->dateformat, strtotime($this->composite_values['date'])).' '.$this->composite_values['start'].'-'.$this->composite_values['end'];
+		return date($this->emaildateformat, strtotime($this->composite_values['date'])).' '.$this->composite_values['start'].'-'.$this->composite_values['end'];
 	}
 }
 
@@ -1654,6 +1664,7 @@ class formslib_datepickertime extends formslib_composite
 	protected $startdate, $enddate;
 	protected $time;
 	protected $field_date;
+	protected $emaildateformat = 'd/m/Y';
 
 	public function __construct($name)
 	{
@@ -1729,15 +1740,24 @@ class formslib_datepickertime extends formslib_composite
 		return $html;
 	}
 
+	public function &setEmailDateFormat($format)
+	{
+		$this->emaildateformat = $format;
+
+		return $this;
+	}
+
 	public function getEmailValue()
 	{
-		//BUG: Date format not declared anywhere
-		return date($this->dateformat, strtotime($this->composite_values['date'])).' '.$this->composite_values['time'];
+		return date($this->emaildateformat, strtotime($this->composite_values['date'])).' '.$this->composite_values['time'];
 	}
 
 	public function &getObjectValue()
 	{
-		if ($this->composite_values['date'] == '' || $this->composite_values['time'] == '') return null;
+		if ($this->composite_values['date'] == '' || $this->composite_values['time'] == '')
+		{
+			return null;
+		}
 
 		$date = \DateTime::createFromFormat('!d/m/Y H:i', $this->composite_values['date'].' '.$this->composite_values['time']);
 
