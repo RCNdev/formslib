@@ -45,6 +45,9 @@ abstract class Field
         $this->addClass('formslib_'.$this->getType());
     }
 
+    /**
+     * @return static
+     */
     public static function &create($name, Form &$f, Fieldset &$fs = null)
     {
         $field = new static($name);
