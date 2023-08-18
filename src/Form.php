@@ -347,7 +347,7 @@ class Form
     			}
     			elseif (is_a($field, 'formslib\Field\MultiValue'))
     			{
-    			    $i = 1;
+    			    $i = 0;
 
     			    $mv = [];
     			    while (isset($vars[$name . '__'. $i]) && ($vars[$name . '__'. $i]) != '')
