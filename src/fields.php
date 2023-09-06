@@ -774,11 +774,40 @@ class formslib_file extends formslib_field
 	 * {@inheritDoc}
 	 * @see \formslib\Field\Field::checkMandatoryVars()
 	 *
-	 * @todo Validate mandatory file fields
 	 */
 	public function checkMandatoryVars(array &$vars)
 	{
+	    if (!isset($_FILES[$this->name]))
+	    {
+	    	return false;
+	    }
+
+	    if (!isset($_FILES[$this->name]['name']))
+	    {
+	    	return false;
+	    }
+
+	    if (!isset($_FILES[$this->name]['tmp_name']))
+	    {
+	    	return false;
+	    }
+
 	    return true;
+	}
+
+	public function getEmailValue()
+	{
+		if (!isset($_FILES[$this->name]))
+		{
+			return '';
+		}
+
+		if (!isset($_FILES[$this->name]['name']))
+		{
+			return '';
+		}
+
+		return $_FILES[$this->name]['name'];
 	}
 }
 
