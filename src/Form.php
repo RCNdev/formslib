@@ -1243,7 +1243,7 @@ JS;
 
 	if (fld.val() == '$value')
 	{
-		$('[data-formslib-owner="{$type}_$id"]').show();
+		$('[data-formslib-owner="{$type}_$id"]').slideDown();
 	}
 	else
 	{
@@ -1258,7 +1258,7 @@ JS;
 				
 	if (fld.val() != '$value')
 	{
-		$('[data-formslib-owner="{$type}_$id"]').show();
+		$('[data-formslib-owner="{$type}_$id"]').slideDown();
 	}
 	else
 	{
@@ -1273,7 +1273,7 @@ JS;
 				
 	if (fld.prop('checked') == $value)
 	{
-		$('[data-formslib-owner="{$type}_$id"]').show();
+		$('[data-formslib-owner="{$type}_$id"]').slideDown();
 	}
 	else
 	{
@@ -1292,7 +1292,7 @@ JS;
 
 	if (values.includes(fld.val()))
 	{
-		$('[data-formslib-owner="{$type}_$id"]').show();
+		$('[data-formslib-owner="{$type}_$id"]').slideDown();
 	}
 	else
 	{
@@ -1309,7 +1309,7 @@ JS;
 		{
 			if ($(this).prop('checked'))
 			{
-				$('[data-formslib-owner="{$type}_$id"]').show();
+				$('[data-formslib-owner="{$type}_$id"]').slideDown();
 			}
 			else
 			{
