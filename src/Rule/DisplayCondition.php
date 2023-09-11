@@ -95,7 +95,8 @@ class DisplayCondition
 
 
             case Operator::CHECKED:
-                return (($field->value == $field->checkedvalue) == $this->value);
+            	/** @var \formslib_checkbox $field */
+                return ($field->isChecked() == $this->value);
                 break;
 
 
