@@ -442,9 +442,15 @@ class formslib_checkbox extends formslib_field
 				    echo $this->htmlbefore;
 				    echo '<div data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">'.CRLF;
 				    echo $this->innerhtmlbefore;
-				    echo '<div class="checkbox">'.CRLF;
+				    if ($this->tickbefore)
+				    {
+				    	echo '<div class="checkbox">'.CRLF;
+				    }
 				    echo (!$readOnly) ? $this->getHTML() . CRLF : $this->getHTMLReadOnly() . CRLF;
-				    echo '</div>'.CRLF;
+				    if ($this->tickbefore)
+				    {
+				    	echo '</div><!-- /.checkbox -->'.CRLF;
+				    }
 				    echo $this->innerhtmlafter;
 				    echo '</div>'.CRLF;
 				    echo $this->htmlafter;
@@ -455,9 +461,15 @@ class formslib_checkbox extends formslib_field
 					echo $this->htmlbefore;
 					echo '<div data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">'.CRLF;
 					echo $this->innerhtmlbefore;
-					echo '<div class="checkbox">'.CRLF;
+					if ($this->tickbefore)
+					{
+						echo '<div class="checkbox">'.CRLF;
+					}
 					echo (!$readOnly) ? $this->getHTML() . CRLF : $this->getHTMLReadOnly() . CRLF;
-					echo '</div>'.CRLF;
+					if ($this->tickbefore)
+					{
+						echo '</div><!-- /.checkbox -->'.CRLF;
+					}
 					echo $this->innerhtmlafter;
 					echo '</div>'.CRLF;
 					echo $this->htmlafter;
