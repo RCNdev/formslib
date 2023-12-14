@@ -1321,6 +1321,28 @@ JS;
 JS;
 				break;
 
+			case \formslib\Operator::ANY:
+				$jq .= <<<JS
+
+	var any = false;
+	fld.parents('div[data-formslib-owner]').find('input').each(function(index){
+		if ($(this).prop('checked'))
+		{
+			any = true;
+		}
+	});
+	if (any)
+	{				
+		$('[data-formslib-owner="{$type}_$id"]').slideDown();
+	}
+	else
+	{
+		$('[data-formslib-owner="{$type}_$id"]').hide();
+	}
+	
+JS;
+				break;
+
 			default:
 				throw new \Exception('Unable to process display condition operator "'.$operator.'"');
 				break;

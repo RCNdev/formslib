@@ -8,4 +8,5 @@ final class Operator
     const IN = 'in';
     const CHECKED = 'checked';
     const PRESENT = 'present';
+    const ANY = 'any';
 }
