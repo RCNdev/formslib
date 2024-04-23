@@ -120,7 +120,7 @@ class formslib_rule_minval extends formslib_rule
 
 	public function evaluate($value)
 	{
-		return ($value !== '' || $value >= $this->ruledfn) ? true : false;
+		return ($value === '' || $value >= $this->ruledfn) ? true : false;
 	}
 
 	public function get_jquery_condition()
