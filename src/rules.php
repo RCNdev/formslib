@@ -120,7 +120,7 @@ class formslib_rule_minval extends formslib_rule
 
 	public function evaluate($value)
 	{
-		return ($value >= $this->ruledfn) ? true : false;
+		return ($value !== '' || $value >= $this->ruledfn) ? true : false;
 	}
 
 	public function get_jquery_condition()
@@ -165,11 +165,17 @@ class formslib_rule_sqldate extends formslib_rule
 	public function evaluate($value)
 	{
 		// Allow blank values - mandatory validation is handled elsewhere
-		if (trim($value) == '') return true;
+		if (trim($value) == '')
+		{
+			return true;
+		}
 
 		// Check for correct SQL format
 		$matches = [];
-		if (!preg_match('|^([0-9]{4})-([0-9]{2})-([0-9]{2})$|i', $value, $matches)) return false;
+		if (!preg_match('|^([0-9]{4})-([0-9]{2})-([0-9]{2})$|i', $value, $matches))
+		{
+			return false;
+		}
 
 		return checkdate($matches[2], $matches[3], $matches[1]);
 	}
@@ -197,15 +203,22 @@ class formslib_rule_positive extends formslib_rule
 
 	public function evaluate($value)
 	{
-		if ($value < 0)
-			return false;
-		else
+		if ($value === '')
+		{
 			return true;
+		}
+
+		if ($value < 0)
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	public function get_jquery_condition()
 	{
-		return 'if (val<0){';
+		return 'if (val<0) {';
 	}
 }
 
@@ -214,9 +227,15 @@ class formslib_rule_composite_date_exists extends formslib_rule
 
 	public function evaluate($value)
 	{
-		if ($value['day'] == '' && $value['month'] == '' && $value['year'] == '') return true;
+		if ($value['day'] == '' && $value['month'] == '' && $value['year'] == '')
+		{
+			return true;
+		}
 
-		if ($value['day'] == '0' && $value['month'] == '0' && $value['year'] == '0') return true;
+		if ($value['day'] == '0' && $value['month'] == '0' && $value['year'] == '0')
+		{
+			return true;
+		}
 
 		return checkdate($value['month'], $value['day'], $value['year']);
 	}
@@ -278,10 +297,15 @@ class formslib_rule_compsite_sortcode extends formslib_rule
 			'2',
 			'3'
 		];
+
 		foreach ($cs as $c)
 		{
-			if (!preg_match('|^[0-9]{2}$|i', $value[$c])) return false;
+			if (!preg_match('|^[0-9]{2}$|i', $value[$c]))
+			{
+				return false;
+			}
 		}
+
 		return true;
 	}
 }
@@ -313,7 +337,10 @@ class formslib_rule_composite_minselections extends formslib_rule
 		$count = 0;
 		foreach ($value as $val)
 		{
-			if (!is_null($val) && $val != '') $count++;
+			if (!is_null($val) && $val != '')
+			{
+				$count++;
+			}
 		}
 
 		return ($count >= $this->ruledfn) ? true : false;
@@ -328,7 +355,10 @@ class formslib_rule_composite_maxselections extends formslib_rule
 		$count = 0;
 		foreach ($value as $val)
 		{
-			if (!is_null($val) && $val != '') $count++;
+			if (!is_null($val) && $val != '')
+			{
+				$count++;
+			}
 		}
 
 		return ($this->ruledfn >= $count) ? true : false;
@@ -408,6 +438,7 @@ class formslib_rule_composite_timerangeformat extends formslib_rule
 			'end',
 			'time'
 		];
+
 		foreach ($cs as $c)
 		{
 			if (isset($value[$c]) && $value[$c] != '' && !preg_match('/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/', $value[$c]))
@@ -415,6 +446,7 @@ class formslib_rule_composite_timerangeformat extends formslib_rule
 				return false;
 			}
 		}
+
 		return true;
 	}
 }
@@ -427,7 +459,10 @@ class formslib_rule_composite_timerangeorder extends formslib_rule
 		$start = (int)str_replace(':', '', $value['start']);
 		$end = (int)str_replace(':', '', $value['end']);
 
-		if ($end < $start) return false;
+		if ($end < $start)
+		{
+			return false;
+		}
 
 		return true;
 	}
