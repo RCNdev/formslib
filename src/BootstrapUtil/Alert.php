@@ -17,6 +17,7 @@ class Alert
 	private $context;
 	private $icon;
 	private $content;
+	private $sronly = null;
 
 	public function __construct()
 	{
@@ -31,7 +32,10 @@ class Alert
 
 	public function &setContext($context)
 	{
-		//TODO: Validate
+		if (!in_array($context, ['success', 'info', 'warning', 'danger']))
+		{
+			throw new \UnexpectedValueException('Invalid context class');
+		}
 
 		$this->context = $context;
 
@@ -52,10 +56,19 @@ class Alert
 		return $this;
 	}
 
-	public function setIcon($icon)
+	public function &setIcon($icon)
 	{
 		//TODO: Validate
 		$this->icon = $icon;
+
+		return $this;
+	}
+
+	public function &setIconScreenReader($label)
+	{
+		$this->sronly = $label;
+
+		return $this;
 	}
 
 	public function getHtml()
@@ -64,84 +77,185 @@ class Alert
 
 		if ($this->icon != '')
 		{
-			$html .= '<i class="fa fa-fw fa-'.$this->icon.'"></i> '; //TODO: Accessibility tagging
+			$html .= '<i class="fa fa-fw fa-'.$this->icon.'" aria-hidden="true"></i>';
+
+			if (!is_null($this->sronly))
+			{
+				$html .= '<span class="sr-only fa-sr-only">'.$this->sronly.'</span>';
+			}
+
+			$html .= ' ';
 		}
 
 		$html .= $this->content;
-		$html .= '</p>';
+		$html .= '</p>'.PHP_EOL;
 
 		return $html;
 	}
 
+	/**
+	 * Return a success alert
+	 *
+	 * @param string $alert Alert contents (text/HTML)
+	 * @param boolean $html
+	 * @return string
+	 */
 	public static function rsuccess($alert, $html = false)
 	{
 		$a = new self();
-		$a->setContext('success')->setIcon('check');
+		$a->setContext('success')->setIcon('check')->setIconScreenReader('Success:');
 
-		if ($html) $a->setHtml($alert);
-		else $a->setText($alert);
+		if ($html)
+		{
+			$a->setHtml($alert);
+		}
+		else
+		{
+			$a->setText($alert);
+		}
 
 		return $a->getHtml();
 	}
 
+	/**
+	 * Return an info alert
+	 *
+	 * @param string $alert Alert contents (text/HTML)
+	 * @param boolean $html
+	 * @return string
+	 */
 	public static function rinfo($alert, $html = false)
 	{
 		$a = new self();
-		$a->setContext('info')->setIcon('info');
+		$a->setContext('info')->setIcon('info')->setIconScreenReader('Information:');
 
-		if ($html) $a->setHtml($alert);
-		else $a->setText($alert);
+		if ($html)
+		{
+			$a->setHtml($alert);
+		}
+		else
+		{
+			$a->setText($alert);
+		}
 
 		return $a->getHtml();
 	}
 
+	/**
+	 * Return a warning alert
+	 *
+	 * @param string $alert Alert contents (text/HTML)
+	 * @param boolean $html
+	 * @return string
+	 */
 	public static function rwarning($alert, $html = false)
 	{
 		$a = new self();
-		$a->setContext('warning')->setIcon('exclamation-triangle');
+		$a->setContext('warning')->setIcon('exclamation-triangle')->setIconScreenReader('Warning:');
 
-		if ($html) $a->setHtml($alert);
-		else $a->setText($alert);
+		if ($html)
+		{
+			$a->setHtml($alert);
+		}
+		else
+		{
+			$a->setText($alert);
+		}
 
 		return $a->getHtml();
 	}
 
+	/**
+	 * Return a danger alert
+	 *
+	 * @param string $alert Alert contents (text/HTML)
+	 * @param boolean $html
+	 * @return string
+	 */
 	public static function rdanger($alert, $html = false)
 	{
 		$a = new self();
-		$a->setContext('danger')->setIcon('exclamation');
+		$a->setContext('danger')->setIcon('exclamation')->setIconScreenReader('Error or danger:');
 
-		if ($html) $a->setHtml($alert);
-		else $a->setText($alert);
+		if ($html)
+		{
+			$a->setHtml($alert);
+		}
+		else
+		{
+			$a->setText($alert);
+		}
 
 		return $a->getHtml();
 	}
 
+	/**
+	 * Return a danger (error) alert
+	 *
+	 * @param string $alert Alert contents (text/HTML)
+	 * @param boolean $html
+	 * @return string
+	 */
 	public static function rerror($alert, $html = false)
 	{
 		return self::rdanger($alert, $html);
 	}
 
+	/**
+	 * Output a success alert
+	 *
+	 * @param string $alert Alert contents (text/HTML)
+	 * @param boolean $html
+	 * @return void
+	 */
 	public static function success($alert, $html = false)
 	{
 		echo self::rsuccess($alert, $html);
 	}
 
+	/**
+	 * Output an info alert
+	 *
+	 * @param string $alert Alert contents (text/HTML)
+	 * @param boolean $html
+	 * @return void
+	 */
 	public static function info($alert, $html = false)
 	{
 		echo self::rinfo($alert, $html);
 	}
 
+	/**
+	 * Output a warning alert
+	 *
+	 * @param string $alert Alert contents (text/HTML)
+	 * @param boolean $html
+	 * @return void
+	 */
 	public static function warning($alert, $html = false)
 	{
 		echo self::rwarning($alert, $html);
 	}
 
+	/**
+	 * Output a danger alert
+	 *
+	 * @param string $alert Alert contents (text/HTML)
+	 * @param boolean $html
+	 * @return void
+	 */
 	public static function danger($alert, $html = false)
 	{
 		echo self::rdanger($alert, $html);
 	}
 
+	/**
+	 * Output a danger (error) alert
+	 *
+	 * @param string $alert Alert contents (text/HTML)
+	 * @param boolean $html
+	 * @return void
+	 */
 	public static function error($alert, $html = false)
 	{
 		self::danger($alert, $html);
