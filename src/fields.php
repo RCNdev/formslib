@@ -1440,6 +1440,7 @@ class formslib_datepicker extends formslib_text
 {
     protected $startyear, $endyear;
     protected $startdate, $enddate;
+    protected $emaildateformat = 'd/m/Y';
 
     public function __construct($name)
     {
@@ -1541,6 +1542,10 @@ HTML;
         return $this;
     }
 
+    /**
+     * {@inheritDoc}
+     * return \DateTime|null
+     */
     public function &getObjectValue()
     {
     	$date = null;
@@ -1551,6 +1556,34 @@ HTML;
     	}
 
     	return $date;
+    }
+
+    /**
+     * Set the format to be returned in emails
+     *
+     * @param string $format PHP date format
+     * @return formslib_datepicker
+     */
+    public function &setEmailDateFormat($format)
+    {
+    	$this->emaildateformat = $format;
+
+    	return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see \formslib\Field\Field::getEmailValue()
+     * @return string
+     */
+    public function getEmailValue()
+    {
+    	if (is_null($this->getObjectValue()))
+    	{
+    		return '';
+    	}
+
+		return $this->getObjectValue()->format($this->emaildateformat);
     }
 }
 
@@ -1793,11 +1826,18 @@ class formslib_datepickertime extends formslib_composite
 		return $this->composite_values['date'].' '.$this->composite_values['time'];
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see \formslib\Field\Composite::getObjectValue()
+	 * @return \DateTime|null
+	 */
 	public function &getObjectValue()
 	{
+		$date = null;
+
 		if ($this->composite_values['date'] == '' || $this->composite_values['time'] == '')
 		{
-			return null;
+			return $date;
 		}
 
 		$date = \DateTime::createFromFormat('!d/m/Y H:i', $this->composite_values['date'].' '.$this->composite_values['time']);
