@@ -680,11 +680,12 @@ JS;
 			{
 				if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
 				{
-					$jq .= "
+					$jq .= <<<JS
 $('[name=$name]').focus(function(){
 	$(this).removeClass('formslibinvalid');
 	$(this).parent().parent().removeClass('error');
-});";
+});
+JS;
 				}
 				elseif ($bootstrap3)
 				{
@@ -697,32 +698,33 @@ JS;
 				}
 				else
 				{
-					$jq .= "
+					$jq .= <<<JS
 $('[name=$name]').focus(function(){
 	$(this).removeClass('formslibinvalid');
-});";
+});
+JS;
 				}
 
 				foreach ($conditions as $condition)
 				{
-					$jq .= "
+					$jq .= <<<JS
 $('[name=$name]').blur(function(){
 	val = $(this).val();
 
 	if (val == '') return;
 
-	";
+JS;
 
 					$jq .= $condition;
 
 					if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
 					{
-						$jq .= "
+						$jq .= <<<JS
 		$(this).parent().parent().addClass('error');
 		$(this).addClass('formslibinvalid');
 	}
 });
-";
+JS;
 					}
 					elseif ($bootstrap3)
 					{
@@ -735,18 +737,19 @@ JS;
 					}
 					else
 					{
-						$jq .= "
+						$jq .= <<<JS
 		$(this).addClass('formslibinvalid');
 	}
 });
-";
+JS;
 					}
 				}
 			}
 		}
 
-		$jq .= '});
-';
+		$jq .= <<<JS
+});
+JS;
 
 		return $jq;
 	}
