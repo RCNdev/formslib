@@ -2,7 +2,7 @@
 
 use formslib\Utility\Security;
 use formslib\Form;
-
+use formslib\GlobalConfig;
 
 
 class formslib_hidden extends formslib_field
@@ -1244,10 +1244,7 @@ class formslib_wysiwyg_light extends formslib_textarea
 	{
 		$class = __CLASS__;
 
-		if (!defined('CONFIG_PATH_NICEDIT'))
-			define('CONFIG_PATH_NICEDIT', '/phplib/nicEdit-latest.js');
-
-			return '<script type="text/javascript" src="'.CONFIG_PATH_NICEDIT.'"></script>'; // TODO: Alter nicEdit URL
+		return '<script type="text/javascript" src="'.GlobalConfig::$pathNicEdit.'"></script>';
 	}
 
 	public function getHTML()
