@@ -192,11 +192,11 @@ class Form
 				{
 					$fld = $this->getField($field);
 
-					if (is_a($fld, 'formslib\Field\Composite'))
+					if ($fld instanceof \formslib\Field\Composite)
 					{
 						$this->fields[$field]->composite_values[$composite] = $value;
 					}
-					elseif (is_a($fld, 'formslib\Field\MultiValue'))
+					elseif ($fld instanceof \formslib\Field\MultiValue)
 					{
 						$this->fields[$field]->multi_values[$composite] = $value;
 					}
@@ -243,7 +243,7 @@ class Form
 		$fields = array_keys($this->fields);
 		foreach ($fields as $field)
 		{
-			if (is_a($this->fields[$field], 'formslib_hidden'))
+			if ($this->fields[$field] instanceof \formslib_hidden)
 			{
 				echo $this->fields[$field]->getHTML() . CRLF;
 			}
@@ -320,7 +320,7 @@ class Form
     			{
     			    if (!$field->checkMandatoryVars($vars))
     			    {
-    			        $message = (! is_a($field, 'formslib_checkbox')) ? 'You must enter something for ' . $field->getLabelText() : 'You must tick "' . $field->getLabelText() . '" to be able to complete this form';
+    			        $message = (! $field instanceof \formslib_checkbox) ? 'You must enter something for ' . $field->getLabelText() : 'You must tick "' . $field->getLabelText() . '" to be able to complete this form'; //TODO: SOLID
 
     			        $this->addError($name, null, $message);
 
@@ -328,7 +328,7 @@ class Form
     			    }
     			}
 
-    			if (is_a($field, 'formslib\Field\Composite'))
+    			if ($field instanceof \formslib\Field\Composite)
     			{
     				$cv = [];
     				foreach ($field->get_composites() as $key)
@@ -345,11 +345,11 @@ class Form
     					$this->errorlist = array_merge($this->errorlist, $field->getErrors());
     				}
     			}
-    			elseif (is_a($field, 'formslib\Field\MultiValue'))
+    			elseif ($field instanceof \formslib\Field\MultiValue)
     			{
     			    $i = 0;
 
-    			    $mv = [];
+    			    $mv = []; //TODO: Review how multi-value array generation is done
     			    while (isset($vars[$name . '__'. $i]) && ($vars[$name . '__'. $i]) != '')
     			    {
     			        $mv[] = $vars[$name . '__'. $i];
@@ -365,7 +365,9 @@ class Form
     			        $this->errorlist = array_merge($this->errorlist, $field->getErrors());
     			    }
      			}
-    			elseif (! is_a($field, 'formslib_file') && ! is_a($field, 'formslib_checkbox') && ! is_a($field, 'formslib_radio'))
+    			elseif (! $field instanceof \formslib_file
+    				&& ! $field instanceof \formslib_checkbox
+    				&& ! $field instanceof \formslib_radio)
     			{
     				$data = (isset($vars[$name])) ? $vars[$name] : null;
 
@@ -447,7 +449,7 @@ class Form
 		$data = [];
 		foreach ($fields as $field)
 		{
-			if (is_a($this->fields[$field], 'formslib_hidden'))
+			if ($this->fields[$field] instanceof \formslib_hidden)
 			{
 				$data[$field] = $this->fields[$field]->getDataDump();
 			}
@@ -477,7 +479,7 @@ class Form
 
 		foreach ($fields as $field)
 		{
-			if (is_a($this->fields[$field], 'formslib_hidden') && ! $this->fields[$field]->getDoNotEmail())
+			if ($this->fields[$field] instanceof \formslib_hidden && ! $this->fields[$field]->getDoNotEmail())
 			{
 				switch ($style)
 				{
@@ -769,7 +771,7 @@ JS;
 		$fields = array_keys($this->fields);
 		foreach ($fields as $field)
 		{
-			if (is_a($this->fields[$field], 'formslib_hidden'))
+			if ($this->fields[$field] instanceof \formslib_hidden)
 			{
 				echo $this->fields[$field]->getHTML() . CRLF;
 			}
@@ -1085,7 +1087,7 @@ JS;
 		$fields = array_keys($this->fields);
 		foreach ($fields as $field)
 		{
-		    if (is_a($this->fields[$field], 'formslib_hidden') && ! $this->fields[$field]->getNoObject())
+		    if ($this->fields[$field] instanceof \formslib_hidden && ! $this->fields[$field]->getNoObject())
 			{
 				$result->{$field} = $this->fields[$field]->getObjectValue();
 			}
@@ -1115,7 +1117,7 @@ JS;
 		$fields = array_keys($this->fields);
 		foreach ($fields as $field)
 		{
-			if (!is_a($this->fields[$field], 'formslib_hidden'))
+			if (! $this->fields[$field] instanceof \formslib_hidden)
 			{
 				$this->fields[$field]->setDisabled();
 			}

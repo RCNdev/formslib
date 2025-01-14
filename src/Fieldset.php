@@ -49,7 +49,10 @@ class Fieldset extends \formslib_fieldset
         echo $this->htmlbefore;
 
         echo CRLF;
-        if ($this->nohtml == true) $encasing_html = false;
+        if ($this->nohtml == true)
+        {
+        	$encasing_html = false;
+        }
 
         if ($encasing_html)
         {
@@ -116,7 +119,10 @@ class Fieldset extends \formslib_fieldset
                     $class = null;
                     if ($fld->isRowStarter($class))
                     {
-                        if (! $first) echo '</tr>' . CRLF . CRLF;
+                        if (! $first)
+                        {
+                        	echo '</tr>' . CRLF . CRLF;
+                        }
 
                         echo ($class != '') ? '<tr class="'.Security::escapeHtml($class).'">' : '<tr>';
                     }
@@ -275,12 +281,18 @@ class Fieldset extends \formslib_fieldset
 
     public function unattachField($fieldname)
     {
-        if (! is_array($fieldname)) $fieldname = [$fieldname];
+        if (!is_array($fieldname))
+        {
+        	$fieldname = [$fieldname];
+        }
 
         foreach ($fieldname as $fn)
         {
             $index = array_search($fn, $this->fields);
-            if ($index === false) return false; // TODO: Throw exception on attempting to remove a non-existent field?
+            if ($index === false)
+            {
+            	return false; // TODO: Throw exception on attempting to remove a non-existent field?
+            }
 
             unset($this->fields[$index]);
             unset($this->fieldorder[$index]);
@@ -303,7 +315,10 @@ class Fieldset extends \formslib_fieldset
             $first = true;
             foreach ($this->classes as $classname)
             {
-                if (! $first) $class_str .= ' ';
+                if (! $first)
+                {
+                	$class_str .= ' ';
+                }
                 $class_str .= $classname;
                 $first = false;
             }
@@ -412,7 +427,10 @@ class Fieldset extends \formslib_fieldset
                         $displayed = true;
                     }
 
-                    if ($displayed) $result->{$fieldname} = $field->getObjectValue();
+                    if ($displayed)
+                    {
+                    	$result->{$fieldname} = $field->getObjectValue();
+                    }
                 }
             }
         }
@@ -420,11 +438,17 @@ class Fieldset extends \formslib_fieldset
 
     public function positionFieldTo($fieldname, $location)
     {
-        if ($location < 1 || $location > count($this->fieldorder)) throw new \Exception('Invalid field position');
+        if ($location < 1 || $location > count($this->fieldorder))
+        {
+        	throw new \Exception('Invalid field position');
+        }
 
         $oldpos = (array_search($fieldname, $this->fieldorder));
 
-        if ($oldpos === false) throw new \Exception('Field not found');
+        if ($oldpos === false)
+        {
+        	throw new \Exception('Field not found');
+        }
 
         unset($this->fieldorder[$oldpos]);
 
@@ -434,10 +458,16 @@ class Fieldset extends \formslib_fieldset
     public function positionFieldBelow($fieldname, $below)
     {
         $orig = array_search($fieldname, $this->fieldorder);
-        if ($orig === false) throw new \Exception('Field not found');
+        if ($orig === false)
+        {
+        	throw new \Exception('Field not found');
+        }
 
         $pos = array_search($below, $this->fieldorder);
-        if ($pos === false) throw new \Exception('Reference field not found');
+        if ($pos === false)
+        {
+        	throw new \Exception('Reference field not found');
+        }
 
         $location = ($pos >= $orig) ? $pos + 1 : $pos + 2;
 
@@ -447,10 +477,16 @@ class Fieldset extends \formslib_fieldset
     public function positionFieldAbove($fieldname, $above)
     {
         $orig = array_search($fieldname, $this->fieldorder);
-        if ($orig === false) throw new \Exception('Field not found');
+        if ($orig === false)
+        {
+        	throw new \Exception('Field not found');
+        }
 
         $pos = array_search($above, $this->fieldorder);
-        if ($pos === false) throw new \Exception('Reference field not found');
+        if ($pos === false)
+        {
+        	throw new \Exception('Reference field not found');
+        }
 
         $location = ($pos > $orig) ? $pos : $pos + 1;
 

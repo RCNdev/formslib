@@ -9,7 +9,13 @@ abstract class GenericMulti extends MultiValue
 
 	protected function _getAddButton()
 	{
-		return '<div class="col-xs-12 formslib-multiadd"><a class="btn btn-sm btn-success" href="#" data-formslib-field="'.$this->name.'"><i class="fa fa-plus"></i> Add</a></div>';
+		return <<<HTML
+<div class="col-xs-12 formslib-multiadd">
+	<a class="btn btn-sm btn-success" href="#" data-formslib-field="{$this->name}">
+		<i class="fa fa-plus"></i> Add
+	</a>
+</div>
+HTML;
 	}
 
 	public function getHTML()

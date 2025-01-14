@@ -46,7 +46,10 @@ class MultiUniversal extends GenericMulti
 
 		$call($field);
 
-		if ($setValue) $field->value = $this->multi_values[$i];
+		if ($setValue)
+		{
+			$field->value = $this->multi_values[$i];
+		}
 
 		return $field->getHTML() . CRLF;
 	}

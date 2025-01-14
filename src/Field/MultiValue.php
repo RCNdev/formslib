@@ -18,7 +18,10 @@ abstract class MultiValue extends Field
 		$first = true;
 		foreach ($classes as $classname)
 		{
-			if (! $first) $class_str .= ' ';
+			if (! $first)
+			{
+				$class_str .= ' ';
+			}
 			$class_str .= $classname;
 			$first = false;
 		}

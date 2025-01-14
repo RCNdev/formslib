@@ -112,7 +112,7 @@ class formslib_rule_minval extends formslib_rule
 	{
 		parent::__construct($ruledfn, $errormessage, $field);
 
-		if (is_a($field, \formslib_number::class))
+		if ($field instanceof \formslib_number)
 		{
 			$field->addAttr('min', $ruledfn);
 		}
@@ -142,7 +142,7 @@ class formslib_rule_maxval extends formslib_rule
 	{
 		parent::__construct($ruledfn, $errormessage, $field); // Parent constructor
 
-		if (is_a($field, \formslib_number::class))
+		if ($field instanceof \formslib_number)
 		{
 			$field->addAttr('max', $ruledfn);
 		}
@@ -194,7 +194,7 @@ class formslib_rule_positive extends formslib_rule
 	{
 		parent::__construct($ruledfn, $errormessage, $field);
 
-		if (is_a($field, \formslib_number::class))
+		if ($field instanceof \formslib_number)
 		{
 			$field->addAttr('min', 0);
 			$field->addAttr('inputmode', 'decimal');

@@ -107,7 +107,7 @@ abstract class formslib_options extends formslib_field
 
 	public function &setOptions($in_opt)
 	{
-		if (! is_array($in_opt))
+		if (!is_array($in_opt))
 		{
 			echo '<p>FORMSLIB ERROR: Options passed not an array, setting options for field: ' . Security::escapeHtml($this->name) . '</p>';
 			$this->options = ['' => 'FORMSLIB ERROR: No options set'];
@@ -1080,7 +1080,7 @@ class formslib_date extends formslib_composite
 	{
 	    $val = $this->getObjectValue();
 
-	    $value = (is_a($val, \DateTime::class)) ? $val->format('d M Y') : '';
+	    $value = ($val instanceof \DateTime) ? $val->format('d M Y') : '';
 
 	    return '<span name="' . Security::escapeHtml($this->name) . '" id="fld_' . Security::escapeHtml($this->name) . '" ' . $this->_custom_attr() . $this->_class_attr() . '><strong>' . $value . '</strong></span>'; // TODO: Move strong to a class
 	}

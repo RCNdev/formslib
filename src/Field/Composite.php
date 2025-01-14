@@ -62,7 +62,10 @@ abstract class Composite extends Field
 
         foreach ($this->composites as $key)
         {
-            if (! isset($vars[$this->name . '__' . $key]) || trim((string)$vars[$this->name . '__' . $key]) === '') $missing = true;
+            if (! isset($vars[$this->name . '__' . $key]) || trim((string)$vars[$this->name . '__' . $key]) === '')
+            {
+            	$missing = true;
+            }
         }
 
         return !$missing;

@@ -52,7 +52,10 @@ abstract class Field
     {
         $field = new static($name);
         $f->attachField($field);
-        if (is_object($fs)) $fs->attachField($name);
+        if (is_object($fs))
+        {
+        	$fs->attachField($name);
+        }
 
         return $field;
     }
@@ -76,8 +79,14 @@ abstract class Field
     {
         $type = get_class($this);
 
-        if (substr($type, 0, 9) == 'formslib_') $type = substr($type, 9);
-        elseif (substr($type, 0, 15) == 'formslib\Field\\') $type = substr($type, 15);
+        if (substr($type, 0, 9) == 'formslib_')
+        {
+        	$type = substr($type, 9);
+        }
+        elseif (substr($type, 0, 15) == 'formslib\Field\\')
+        {
+        	$type = substr($type, 15);
+        }
 
         return $type;
     }
@@ -144,22 +153,30 @@ abstract class Field
         if (class_exists($ruleclassnamespace))
         {
             $therule = new $ruleclassnamespace($ruledfn, $errormessage, $this);
+
             if ($therule !== false)
             {
                 $this->rules[] = &$therule;
             }
 
-            if ($return_rule_oject) return $therule;
+            if ($return_rule_oject)
+            {
+            	return $therule;
+            }
         }
         elseif (class_exists($ruleclass))
         {
             $therule = new $ruleclass($ruledfn, $errormessage, $this);
+
             if ($therule !== false)
             {
                 $this->rules[] = &$therule;
             }
 
-            if ($return_rule_oject) return $therule;
+            if ($return_rule_oject)
+            {
+            	return $therule;
+            }
         }
         else
         {
@@ -264,7 +281,10 @@ abstract class Field
 
                 case FORMSLIB_STYLE_BOOTSTRAP:
                     $group_class_str = implode(' ', $this->group_classes);
-                    if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
+                    if ($group_class_str != '')
+                    {
+                    	$group_class_str = ' ' . $group_class_str; // Prepend a space
+                    }
 
                     echo $this->htmlbefore . CRLF;
                     echo '<div class="control-group' . $group_class_str . '">' . CRLF;
@@ -273,8 +293,14 @@ abstract class Field
                     echo '	<div class="controls">' . CRLF;
                     echo '		' . $this->getHTML() . CRLF;
                     echo '		' . $mand . CRLF;
-                    if ($this->helpinline) echo '		<span class="help-inline">' . $this->helpinline . '</span>' . CRLF;
-                    if ($this->helpblock) echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
+                    if ($this->helpinline)
+                    {
+                    	echo '		<span class="help-inline">' . $this->helpinline . '</span>' . CRLF;
+                    }
+                    if ($this->helpblock)
+                    {
+                    	echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
+                    }
                     echo $this->innerhtmlafter . CRLF;
                     echo '	</div><!--/.controls-->' . CRLF;
                     echo '</div><!--/.control-group-->' . CRLF;
@@ -288,7 +314,9 @@ abstract class Field
                     $group_class_str = implode(' ', $this->group_classes);
                     if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
 
-                    if (!isset($this->classes['form-control']) && !is_a($this, \formslib_radio::class) && !is_a($this, \formslib\Field\TickList::class))
+                    if (!isset($this->classes['form-control'])
+                    	&& !($this instanceof \formslib_radio)
+                    	&& !($this instanceof \formslib\Field\TickList))
                     {
                     	$this->addClass('form-control');
                     }
@@ -299,8 +327,14 @@ abstract class Field
                     echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand. $optionalLabel . '</label> ' . CRLF;
                     echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
                     echo '		' . $this->getHTML() . CRLF;
-                    if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with help inline
-                    if ($this->helpblock) echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
+                    if ($this->helpinline)
+                    {
+                    	echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with help inline
+                    }
+                    if ($this->helpblock)
+                    {
+                    	echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
+                    }
                     echo $this->innerhtmlafter . CRLF;
                     echo '	</div><!--/.col-sm-' . $col_field . '-->' . CRLF;
                     echo '</div><!--/.form-group-->' . CRLF;
@@ -309,9 +343,14 @@ abstract class Field
 
                 case FORMSLIB_STYLE_BOOTSTRAP3_INLINE:
                     $group_class_str = implode(' ', $this->group_classes);
-                    if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
+                    if ($group_class_str != '')
+                    {
+                    	$group_class_str = ' ' . $group_class_str; // Prepend a space
+                    }
 
-                    if (!isset($this->classes['form-control']) && !is_a($this, \formslib_radio::class) && !is_a($this, \formslib\Field\TickList::class))
+                    if (!isset($this->classes['form-control'])
+                    	&& !($this instanceof \formslib_radio)
+                    	&& !($this instanceof \formslib\Field\TickList))
                     {
                     	$this->addClass('form-control');
                     }
@@ -334,7 +373,8 @@ abstract class Field
                     $group_class_str = implode(' ', $this->group_classes);
                     if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
 
-                    if (!isset($this->classes['form-control']) && !is_a($this, \formslib_radio::class) && !is_a($this, \formslib\Field\TickList::class))
+                    if (!isset($this->classes['form-control'])
+                    	&& !($this instanceof \formslib_radio) && !($this instanceof \formslib\Field\TickList))
                     {
                     	$this->addClass('form-control');
                     }
@@ -345,12 +385,21 @@ abstract class Field
 
                     echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand . $optionalLabel . '</label> ' . CRLF;
 
-                    if ($this->helpblock && $this->helpbefore) echo '		<p class="help-block">' . $this->helpblock . '</p>' . CRLF;
+                    if ($this->helpblock && $this->helpbefore)
+                    {
+                    	echo '		<p class="help-block">' . $this->helpblock . '</p>' . CRLF;
+                    }
 
                     echo '		' . $this->getHTML() . CRLF;
 
-                    if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with help inline
-                    if ($this->helpblock && !$this->helpbefore) echo '		<p class="help-block">' . $this->helpblock . '</p>' . CRLF;
+                    if ($this->helpinline)
+                    {
+                    	echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with help inline
+                    }
+                    if ($this->helpblock && !$this->helpbefore)
+                    {
+                    	echo '		<p class="help-block">' . $this->helpblock . '</p>' . CRLF;
+                    }
 
                     echo $this->innerhtmlafter . CRLF;
 
@@ -376,7 +425,10 @@ abstract class Field
             $first = true;
             foreach ($this->classes as $classname)
             {
-                if (! $first) $class_str .= ' ';
+                if (! $first)
+                {
+                	$class_str .= ' ';
+                }
                 $class_str .= $classname;
                 $first = false;
             }
@@ -589,7 +641,10 @@ abstract class Field
 
                 case FORMSLIB_STYLE_BOOTSTRAP:
                     $group_class_str = implode(' ', $this->group_classes);
-                    if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
+                    if ($group_class_str != '')
+                    {
+                    	$group_class_str = ' ' . $group_class_str; // Prepend a space
+                    }
 
                     echo $this->htmlbefore . CRLF;
                     echo '<div class="control-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
@@ -613,9 +668,14 @@ abstract class Field
                     $col_field = 12 - $this->gridRatio;
 
                     $group_class_str = implode(' ', $this->group_classes);
-                    if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
+                    if ($group_class_str != '')
+                    {
+                    	$group_class_str = ' ' . $group_class_str; // Prepend a space
+                    }
 
-                    if (!isset($this->classes['form-control']) && !is_a($this, \formslib_radio::class) && !is_a($this, \formslib\Field\TickList::class))
+                    if (!isset($this->classes['form-control'])
+                    	&& !($this instanceof \formslib_radio)
+                    	&& !($this instanceof \formslib\Field\TickList))
                     {
                     	$this->addClass('form-control');
                     }
@@ -626,8 +686,14 @@ abstract class Field
                     echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand . '</label> ' . CRLF;
                     echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
                     echo '		' . $this->getHTMLReadOnly() . CRLF;
-                    if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with help inline
-                    if ($this->helpblock) echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
+                    if ($this->helpinline)
+                    {
+                    	echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with help inline
+                    }
+                    if ($this->helpblock)
+                    {
+                    	echo '		<span class="help-block">' . $this->helpblock . '</span>' . CRLF;
+                    }
                     echo $this->innerhtmlafter . CRLF;
                     echo '	</div><!--/.col-sm-' . $col_field . '-->' . CRLF;
                     echo '</div><!--/.form-group-->' . CRLF;
@@ -689,7 +755,10 @@ abstract class Field
     {
         foreach ($classes as $class)
         {
-            if (!in_array($class, $this->classes)) $this->classes[] = $class;
+            if (!in_array($class, $this->classes))
+            {
+            	$this->classes[] = $class;
+            }
         }
 
         return $this;
@@ -797,8 +866,15 @@ abstract class Field
 
     public function checkMandatoryVars(array &$vars)
     {
-        if (!isset($vars[$this->name])) return false;
-        if (trim((string)$vars[$this->name]) === '') return false;
+        if (!isset($vars[$this->name]))
+        {
+        	return false;
+        }
+
+        if (trim((string)$vars[$this->name]) === '')
+        {
+        	return false;
+        }
 
         return true;
     }
