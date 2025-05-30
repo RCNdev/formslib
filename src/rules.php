@@ -77,7 +77,7 @@ class formslib_rule_maxlength extends formslib_rule
 
 	public function evaluate($value)
 	{
-		return (strlen($value) <= $this->ruledfn) ? true : false;
+		return (strlen($value ?? '') <= $this->ruledfn) ? true : false;
 	}
 
 	public function get_jquery_condition()
@@ -395,8 +395,18 @@ class formslib_rule_date_format extends formslib_rule
 
 	public function get_jquery_condition()
 	{
-		//TODO: Return some regex
-		return 'if (!true) {';
+		switch ($this->ruledfn)
+		{
+
+            case 'uk':
+                return <<<JS
+var regexUkDate = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/g;
+if (!regexUkDate.test(val)) {
+JS;
+
+            default:
+                throw new Exception('Unknown date format');
+		}
 	}
 }
 
@@ -414,6 +424,10 @@ class formslib_rule_date_exists extends formslib_rule
 		{
 			case 'uk':
 				$bits = explode('/', $value);
+				if (count($bits) != 3)
+				{
+				    return true;
+				}
 
 				$day = $bits[0];
 				$month = $bits[1];
