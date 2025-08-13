@@ -145,6 +145,16 @@ abstract class Field
         return $this;
     }
 
+    /**
+     * Add a validation rule to the field
+     *
+     * @param string $ruletype Short class name of rule
+     * @param string $ruledfn Definition of the rule
+     * @param string $errormessage Error message to be displayed when validation fails
+     * @param boolean $return_rule_oject Should the function return the rule object rather than a fluent interfacea to the field
+     *
+     * @return static|\formslib_rule
+     */
     public function &addRule($ruletype, $ruledfn, $errormessage, $return_rule_oject = false)
     {
         $ruleclassnamespace = 'formslib\Rule\\'.str_replace('_', '\\', $ruletype);
