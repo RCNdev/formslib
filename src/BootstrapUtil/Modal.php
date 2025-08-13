@@ -37,7 +37,10 @@ class Modal
 	 */
 	public function &setHeadingLevel($headingLevel)
 	{
-		if (!preg_match('/^[1-6]$/', $headingLevel)) throw new \Exception('Invalid heading level');
+		if (!preg_match('/^[1-6]$/', $headingLevel))
+		{
+			throw new \Exception('Invalid heading level');
+		}
 
 		$this->headingLevel = $headingLevel;
 

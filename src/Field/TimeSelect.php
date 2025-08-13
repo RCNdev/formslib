@@ -33,9 +33,15 @@ class TimeSelect extends Composite
     public function &setTimeRange($startTime, $endTime, $minuteInterval = 15, $minuteOffset = 0)
 	{
 		$patternTime = '/^[0-2][0-9]:[0-5][0-9]$/';
-		if (!preg_match($patternTime, $startTime) || !preg_match($patternTime, $endTime)) throw new \Exception('Invalid time format');
+		if (!preg_match($patternTime, $startTime) || !preg_match($patternTime, $endTime))
+		{
+			throw new \Exception('Invalid time format');
+		}
 
-		if ($startTime > $endTime) throw new \Exception('End time constraint before start date');
+		if ($startTime > $endTime)
+		{
+			throw new \Exception('End time constraint before start date');
+		}
 
         $startHour = (int)substr($startTime, 0, 2);
         $endHour = (int)substr($endTime, 0, 2);

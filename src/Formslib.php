@@ -30,7 +30,10 @@ final class Formslib
 	{
 		$string = trim($date_string);
 
-		if (!preg_match('|^[0-9]{1,2}/[0-9]{1,2}/[0-9]{2,4}$|', $string)) throw new \Exception('Invalid date format');
+		if (!preg_match('|^[0-9]{1,2}/[0-9]{1,2}/[0-9]{2,4}$|', $string))
+		{
+			throw new \Exception('Invalid date format');
+		}
 
 		$parts = explode('/', $string);
 

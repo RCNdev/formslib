@@ -5,7 +5,9 @@ use formslib\Utility\Security;
 
 class Form
 {
+
 	private $name, $id, $method;
+
 	private $action = '?';
 
 	/** @var Field\Field[] */
@@ -15,26 +17,48 @@ class Form
 	public $fieldsets = [];
 
 	public $outputstyle;
+
 	public $submitlabel = 'Submit';
+
 	public $mandatoryHTML, $semimandatoryHTML;
+
 	public $optionalHTML = ' <small class="formslib_optional">(optional)</small>';
 
 	private $errorlist = [];
+
 	private $htmltop, $htmlbottom, $htmlbeforesubmit;
+
 	private $classes = [];
+
 	private $attrib = [];
+
 	private $submitfieldset = false;
+
 	private $nosubmitbutton = false;
+
 	private $jqueryvalidate = false;
+
 	private $customjs;
+
 	private $types_used = [];
-	private $submitclass = ['btn', 'btn-primary'];
+
+	private $submitclass = [
+		'btn',
+		'btn-primary'
+	];
+
 	private $submit_grid_ratio = null;
+
 	private $resultClass = '\formslib\Result\ResultObject';
+
 	private $doubleClickTimeout = null;
+
 	private $fsorder = [];
+
 	private $optionalLabels = false;
+
 	private $errorIntroText = null;
+
 	private $inputTypeMode = 1;
 
 	public function __construct($name)
@@ -87,9 +111,15 @@ class Form
 	 */
 	public function &addField($type, $name)
 	{
-	    if ($type == 'field') throw new \Exception('FORMSLIB ERROR: Cannot add a field of abstract type "field": ' . $name);
+		if ($type == 'field')
+		{
+			throw new \Exception('FORMSLIB ERROR: Cannot add a field of abstract type "field": ' . $name);
+		}
 
-		if (isset($this->fields[$name])) throw new \Exception('FORMSLIB ERROR: Duplicate field name: ' . $name);
+		if (isset($this->fields[$name]))
+		{
+			throw new \Exception('FORMSLIB ERROR: Duplicate field name: ' . $name);
+		}
 
 		if (strpos($type, '\\') !== false)
 		{
@@ -97,7 +127,7 @@ class Form
 		}
 		else
 		{
-			$classnamespace = 'formslib\Field\\'.$type;
+			$classnamespace = 'formslib\Field\\' . $type;
 			$classname = 'formslib_' . $type;
 		}
 
@@ -105,7 +135,10 @@ class Form
 		{
 			/** @var \formslib\Field\Field $field */
 			$field = new $classnamespace($name);
-			if (!is_object($field)) throw new \Exception('FORMSLIB ERROR: Failed to create field object for: ' . $name);
+			if (!is_object($field))
+			{
+				throw new \Exception('FORMSLIB ERROR: Failed to create field object for: ' . $name);
+			}
 
 			$this->fields[$name] = &$field;
 		}
@@ -119,7 +152,7 @@ class Form
 			}
 			else
 			{
-                throw new \Exception('FORMSLIB ERROR: Failed to create field object for: ' . $name);
+				throw new \Exception('FORMSLIB ERROR: Failed to create field object for: ' . $name);
 			}
 		}
 		else
@@ -127,22 +160,25 @@ class Form
 			throw new \Exception('FORMSLIB ERROR: No such field type "' . $type . '" for field name "' . $name . '"');
 		}
 
-		if (! in_array($type, $this->types_used)) $this->types_used[] = $type;
+		if (!in_array($type, $this->types_used)) $this->types_used[] = $type;
 
 		return $field;
 	}
 
 	public function attachField(\formslib\Field\Field &$field)
 	{
-        $name = $field->getName();
+		$name = $field->getName();
 
-        if (isset($this->fields[$name])) throw new \Exception('FORMSLIB ERROR: Duplicate field name: ' . $name);
+		if (isset($this->fields[$name]))
+		{
+			throw new \Exception('FORMSLIB ERROR: Duplicate field name: ' . $name);
+		}
 
-        $this->fields[$name] = &$field;
+		$this->fields[$name] = &$field;
 
-        $type = $field->getType();
+		$type = $field->getType();
 
-	    if (! in_array($type, $this->types_used)) $this->types_used[] = $type;
+		if (!in_array($type, $this->types_used)) $this->types_used[] = $type;
 	}
 
 	/**
@@ -153,7 +189,10 @@ class Form
 	 */
 	public function &addFieldSet($name)
 	{
-		if (isset($this->fieldsets[$name])) throw new \Exception('FORMSLIB ERROR: Duplicate fieldset name');
+		if (isset($this->fieldsets[$name]))
+		{
+			throw new \Exception('FORMSLIB ERROR: Duplicate fieldset name');
+		}
 
 		$fieldset = new Fieldset($name);
 		if (is_object($fieldset))
@@ -221,7 +260,7 @@ class Form
 
 	public function setOptionalHTML($html)
 	{
-	    $this->optionalHTML = $html;
+		$this->optionalHTML = $html;
 	}
 
 	/**
@@ -253,7 +292,7 @@ class Form
 		$field_js = [];
 		foreach ($this->fsorder as $fieldset)
 		{
-			$fs =& $this->fieldsets[$fieldset];
+			$fs = &$this->fieldsets[$fieldset];
 
 			$submit = ($fieldset == $this->submitfieldset) ? true : false;
 
@@ -289,97 +328,95 @@ class Form
 		// Loop through the fields and check the validation rules
 		foreach ($fields as $name)
 		{
-			$field =& $this->fields[$name];
+			$field = &$this->fields[$name];
 
-            $displayed = true;
+			$displayed = true;
 
-            foreach ($this->fieldsets as &$fs)
-            {
-                if ($fs->hasField($name))
-                {
-                    $cond = $fs->getDisplayCondition();
-                    if (is_object($cond))
-                    {
-                        $displayed = $cond->evaluateVars($vars);
-                    }
-                }
-            }
-
-            if ($displayed)
-            {
-    			$cond = $field->getDisplayCondition();
-    			if (is_object($cond))
-    			{
-                    $displayed = $cond->evaluateVars($vars);
-    			}
-            }
+			foreach ($this->fieldsets as &$fs)
+			{
+				if ($fs->hasField($name))
+				{
+					$cond = $fs->getDisplayCondition();
+					if (is_object($cond))
+					{
+						$displayed = $cond->evaluateVars($vars);
+					}
+				}
+			}
 
 			if ($displayed)
 			{
-    			if ($field->mandatory)
-    			{
-    			    if (!$field->checkMandatoryVars($vars))
-    			    {
-    			        $message = (! $field instanceof \formslib_checkbox) ? 'You must enter something for ' . $field->getLabelText() : 'You must tick "' . $field->getLabelText() . '" to be able to complete this form'; //TODO: SOLID
+				$cond = $field->getDisplayCondition();
+				if (is_object($cond))
+				{
+					$displayed = $cond->evaluateVars($vars);
+				}
+			}
 
-    			        $this->addError($name, null, $message);
+			if ($displayed)
+			{
+				if ($field->mandatory)
+				{
+					if (!$field->checkMandatoryVars($vars))
+					{
+						$message = (!$field instanceof \formslib_checkbox) ? 'You must enter something for ' . $field->getLabelText() : 'You must tick "' . $field->getLabelText() . '" to be able to complete this form'; //TODO: SOLID
 
-    			        $is_valid = false;
-    			    }
-    			}
+						$this->addError($name, null, $message);
 
-    			if ($field instanceof \formslib\Field\Composite)
-    			{
-    				$cv = [];
-    				foreach ($field->get_composites() as $key)
-    				{
-    					$cv[$key] = (isset($vars[$name . '__' . $key])) ? $vars[$name . '__' . $key] : null;
-    				}
+						$is_valid = false;
+					}
+				}
 
-    				$valid = $field->validate($cv);
+				if ($field instanceof \formslib\Field\Composite)
+				{
+					$cv = [];
+					foreach ($field->get_composites() as $key)
+					{
+						$cv[$key] = (isset($vars[$name . '__' . $key])) ? $vars[$name . '__' . $key] : null;
+					}
 
-    				if (!$valid)
-    				{
-    					$is_valid = false;
-    				    $this->_markFieldInvalid($name);
-    					$this->errorlist = array_merge($this->errorlist, $field->getErrors());
-    				}
-    			}
-    			elseif ($field instanceof \formslib\Field\MultiValue)
-    			{
-    			    $i = 0;
+					$valid = $field->validate($cv);
 
-    			    $mv = []; //TODO: Review how multi-value array generation is done
-    			    while (isset($vars[$name . '__'. $i]) && ($vars[$name . '__'. $i]) != '')
-    			    {
-    			        $mv[] = $vars[$name . '__'. $i];
-    			        $i++;
-    			    }
+					if (!$valid)
+					{
+						$is_valid = false;
+						$this->_markFieldInvalid($name);
+						$this->errorlist = array_merge($this->errorlist, $field->getErrors());
+					}
+				}
+				elseif ($field instanceof \formslib\Field\MultiValue)
+				{
+					$i = 0;
 
-    			    $valid = $field->validate($mv);
+					$mv = []; //TODO: Review how multi-value array generation is done
+					while (isset($vars[$name . '__' . $i]) && ($vars[$name . '__' . $i]) != '')
+					{
+						$mv[] = $vars[$name . '__' . $i];
+						$i++;
+					}
 
-    			    if (!$valid)
-    			    {
-    			        $is_valid = false;
-    			        $this->_markFieldInvalid($name);
-    			        $this->errorlist = array_merge($this->errorlist, $field->getErrors());
-    			    }
-     			}
-    			elseif (! $field instanceof \formslib_file
-    				&& ! $field instanceof \formslib_checkbox
-    				&& ! $field instanceof \formslib_radio)
-    			{
-    				$data = (isset($vars[$name])) ? $vars[$name] : null;
+					$valid = $field->validate($mv);
 
-    				$valid = $field->validate($data);
+					if (!$valid)
+					{
+						$is_valid = false;
+						$this->_markFieldInvalid($name);
+						$this->errorlist = array_merge($this->errorlist, $field->getErrors());
+					}
+				}
+				elseif (!$field instanceof \formslib_file && !$field instanceof \formslib_checkbox && !$field instanceof \formslib_radio)
+				{
+					$data = (isset($vars[$name])) ? $vars[$name] : null;
 
-    				if (! $valid)
-    				{
-    					$is_valid = false;
-    					$this->_markFieldInvalid($name);
-    					$this->errorlist = array_merge($this->errorlist, $field->getErrors());
-    				}
-    			}
+					$valid = $field->validate($data);
+
+					if (!$valid)
+					{
+						$is_valid = false;
+						$this->_markFieldInvalid($name);
+						$this->errorlist = array_merge($this->errorlist, $field->getErrors());
+					}
+				}
 			}
 		}
 
@@ -409,9 +446,9 @@ class Form
 	 */
 	public function addError($name, $label, $message)
 	{
-	    $this->_markFieldInvalid($name);
+		$this->_markFieldInvalid($name);
 
-	    $this->errorlist[] = [
+		$this->errorlist[] = [
 			'name' => $name,
 			'message' => $message
 		];
@@ -419,26 +456,24 @@ class Form
 
 	private function _markFieldInvalid($name)
 	{
-	    if (isset($this->fields[$name]))
-	    {
-	        $field =& $this->fields[$name];
+		if (isset($this->fields[$name]))
+		{
+			$field = &$this->fields[$name];
 
-	        $field->valid = false;
-	        $field->addClass('formslibinvalid');
+			$field->valid = false;
+			$field->addClass('formslibinvalid');
 
-	        if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
-	        {
-	            $field->addGroupClass('error');
-	        }
-	        elseif ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3
-	            || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE
-	            || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
-	        {
-	            $field->addGroupClass('has-error');
-	        }
+			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
+			{
+				$field->addGroupClass('error');
+			}
+			elseif ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+			{
+				$field->addGroupClass('has-error');
+			}
 
-	        $field->addClass('formslibinvalid');
-	    }
+			$field->addClass('formslibinvalid');
+		}
 	}
 
 	public function getDataDump()
@@ -470,7 +505,7 @@ class Form
 
 		if ($style == FORMSLIB_EMAILSTYLE_HTML_COLSPAN)
 		{
-		    $body .= '<table class="table">' . CRLF;
+			$body .= '<table class="table">' . CRLF;
 		}
 
 		// Output any hidden fields
@@ -479,18 +514,18 @@ class Form
 
 		foreach ($fields as $field)
 		{
-			if ($this->fields[$field] instanceof \formslib_hidden && ! $this->fields[$field]->getDoNotEmail())
+			if ($this->fields[$field] instanceof \formslib_hidden && !$this->fields[$field]->getDoNotEmail())
 			{
 				switch ($style)
 				{
 					case FORMSLIB_EMAILSTYLE_HTML:
 					case FORMSLIB_EMAILSTYLE_HTML_TH:
-					    if (!$table_opened)
+						if (!$table_opened)
 						{
 							$body .= '<table class="table">' . CRLF;
 							$table_opened = true;
 						}
-						// No break
+					// No break
 
 					case FORMSLIB_EMAILSTYLE_HTML_COLSPAN:
 						$body .= '<tr>' . CRLF;
@@ -520,7 +555,7 @@ class Form
 
 		if ($style == FORMSLIB_EMAILSTYLE_HTML_COLSPAN)
 		{
-		    $body .= '</table>' . CRLF;
+			$body .= '</table>' . CRLF;
 		}
 
 		return $body;
@@ -560,7 +595,7 @@ class Form
 			$first = true;
 			foreach ($this->classes as $classname)
 			{
-				if (! $first) $class_str .= ' ';
+				if (!$first) $class_str .= ' ';
 				$class_str .= $classname;
 				$first = false;
 			}
@@ -589,7 +624,7 @@ class Form
 		}
 		else
 		{
-			throw new \Exception('Attempted to set submit fieldset to non-existent "'.$fieldset.'"');
+			throw new \Exception('Attempted to set submit fieldset to non-existent "' . $fieldset . '"');
 		}
 	}
 
@@ -612,24 +647,24 @@ class Form
 	 */
 	public function setObfuscateJS($obfuscate = true)
 	{
-        // Do nothing, obfuscation is dead
+		// Do nothing, obfuscation is dead
 	}
 
 	private function _generate_jquery_validation()
 	{
-	    $bootstrap3 = ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL);
+		$bootstrap3 = ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL);
 
 		// Generic stuff
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
 		{
 			$jq = <<<JS
 $(document).ready(function(){
-$('.formslib_jq_mand').focus(function(){
+$('.formslib_jq_mand').on('focus', function(){
 	$(this).removeClass('formslibinvalid');
 	$(this).parent().parent().removeClass('error');
 });
 
-$('.formslib_jq_mand').blur(function(){
+$('.formslib_jq_mand').on('blur', function(){
 	if ($(this).val() == '')
 	{
 		$(this).addClass('formslibinvalid');
@@ -642,12 +677,12 @@ JS;
 		{
 			$jq = <<<JS
 $(document).ready(function(){
-$('.formslib_jq_mand').focus(function(){
+$('.formslib_jq_mand').on('focus', function(){
 	$(this).removeClass('formslibinvalid');
 	$(this).parents('.form-group').removeClass('has-error');
 });
 
-$('.formslib_jq_mand').blur(function(){
+$('.formslib_jq_mand').on('blur', function(){
 	if ($(this).val() == '')
 	{
 		$(this).addClass('formslibinvalid');
@@ -660,11 +695,11 @@ JS;
 		{
 			$jq = <<<JS
 $(document).ready(function(){
-$('.formslib_jq_mand').focus(function(){
+$('.formslib_jq_mand').on('focus', function(){
 	$(this).removeClass('formslibinvalid');
 });
 
-$('.formslib_jq_mand').blur(function(){
+$('.formslib_jq_mand').on('blur', function(){
 	if ($(this).val() == '')
 	{
 		$(this).addClass('formslibinvalid');
@@ -683,7 +718,7 @@ JS;
 				if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
 				{
 					$jq .= <<<JS
-$('[name=$name]').focus(function(){
+$('[name=$name]').on('focus', function(){
 	$(this).removeClass('formslibinvalid');
 	$(this).parent().parent().removeClass('error');
 });
@@ -692,7 +727,7 @@ JS;
 				elseif ($bootstrap3)
 				{
 					$jq .= <<<JS
-$('[name=$name]').focus(function(){
+$('[name=$name]').on('focus', function(){
 	$(this).removeClass('formslibinvalid');
 	$(this).parents('.form-group').removeClass('has-error');
 });
@@ -701,7 +736,7 @@ JS;
 				else
 				{
 					$jq .= <<<JS
-$('[name=$name]').focus(function(){
+$('[name=$name]').on('focus', function(){
 	$(this).removeClass('formslibinvalid');
 });
 JS;
@@ -710,10 +745,13 @@ JS;
 				foreach ($conditions as $condition)
 				{
 					$jq .= <<<JS
-$('[name=$name]').blur(function(){
+$('[name=$name]').on('blur', function(){
 	val = $(this).val();
 
-	if (val == '') return;
+	if (val == '')
+	{
+		return;
+	}
 
 JS;
 
@@ -799,7 +837,7 @@ JS;
 			{
 				echo '<div class="' . $classes . '">' . CRLF;
 
-				echo '<p>'.Security::escapeHtml($this->errorIntroText).'</p>' . CRLF;
+				echo '<p>' . Security::escapeHtml($this->errorIntroText) . '</p>' . CRLF;
 
 				echo '<ul>' . CRLF;
 
@@ -812,7 +850,6 @@ JS;
 
 				echo '</ul>' . CRLF;
 				echo '</div>' . CRLF;
-
 			}
 			else
 			{
@@ -844,7 +881,7 @@ JS;
 			echo $this->customjs . CRLF;
 			foreach ($field_js as $fjs)
 			{
-				echo $fjs.CRLF;
+				echo $fjs . CRLF;
 			}
 
 			if (!is_null($this->doubleClickTimeout))
@@ -883,7 +920,7 @@ JS;
 
 	public function displayRawLabel($fieldname)
 	{
-		if (! isset($this->fields[$fieldname]))
+		if (!isset($this->fields[$fieldname]))
 		{
 			echo '<p>FORMSLIB ERROR: undefined field: ' . Security::escapeHtml($fieldname) . '</p>';
 			return '';
@@ -893,7 +930,7 @@ JS;
 
 	public function displayRawField($fieldname)
 	{
-		if (! isset($this->fields[$fieldname]))
+		if (!isset($this->fields[$fieldname]))
 		{
 			echo '<p>FORMSLIB ERROR: undefined field: ' . Security::escapeHtml($fieldname) . '</p>';
 			return '';
@@ -905,7 +942,7 @@ JS;
 
 	public function displayFormattedField($fieldname)
 	{
-		if (! isset($this->fields[$fieldname]))
+		if (!isset($this->fields[$fieldname]))
 		{
 			echo '<p>FORMSLIB ERROR: undefined field: ' . Security::escapeHtml($fieldname) . '</p>';
 			return '';
@@ -921,7 +958,7 @@ JS;
 
 	public function removeField($fieldname)
 	{
-	    if (! is_array($fieldname)) $fieldname = array(
+		if (!is_array($fieldname)) $fieldname = array(
 			$fieldname
 		);
 
@@ -960,12 +997,12 @@ JS;
 			}
 			else
 			{
-				$class = class_exists('formslib\Field\\'.$type) ? 'formslib\Field\\'.$type : 'formslib_'.$type;
+				$class = class_exists('formslib\Field\\' . $type) ? 'formslib\Field\\' . $type : 'formslib_' . $type;
 			}
 
 			$hdr = $class::getHeader($class_set);
 
-			if (! in_array($class_set, $set_headers))
+			if (!in_array($class_set, $set_headers))
 			{
 				$set_headers[] = $class_set;
 
@@ -978,7 +1015,7 @@ JS;
 
 	public function displayFormattedFieldReadOnly($fieldname)
 	{
-		if (! isset($this->fields[$fieldname]))
+		if (!isset($this->fields[$fieldname]))
 		{
 			echo '<p>FORMSLIB ERROR: undefined field: ' . Security::escapeHtml($fieldname) . '</p>';
 			return '';
@@ -989,7 +1026,7 @@ JS;
 
 	public function displayRawFieldReadOnly($fieldname)
 	{
-		if (! isset($this->fields[$fieldname]))
+		if (!isset($this->fields[$fieldname]))
 		{
 			echo '<p>FORMSLIB ERROR: undefined field: ' . Security::escapeHtml($fieldname) . '</p>';
 			return '';
@@ -1001,28 +1038,34 @@ JS;
 
 	/**
 	 * Get a field by name
+	 *
 	 * @param string $fieldname
 	 * @return \formslib_field_paramset
 	 */
 	public function &getField($fieldname)
 	{
-	    if (!isset($this->fields[$fieldname]))
-	        throw new \Exception('Unable to retrieve undefined field "'.$fieldname.'"');
+		if (!isset($this->fields[$fieldname]))
+		{
+			throw new \Exception('Unable to retrieve undefined field "' . $fieldname . '"');
+		}
 
-	    return $this->fields[$fieldname];
+		return $this->fields[$fieldname];
 	}
 
 	/**
 	 * Get a fieldset by name
+	 *
 	 * @param string $fsname
 	 * @return Fieldset
 	 */
 	public function &getFieldSet($fsname)
 	{
-	    if (!isset($this->fieldsets[$fsname]))
-	        throw new \Exception('Unable to retrieve undefined fieldset "'.$fsname.'"');
+		if (!isset($this->fieldsets[$fsname]))
+		{
+			throw new \Exception('Unable to retrieve undefined fieldset "' . $fsname . '"');
+		}
 
-	    return $this->fieldsets[$fsname];
+		return $this->fieldsets[$fsname];
 	}
 
 	public function addSubmitClass($classname)
@@ -1040,9 +1083,9 @@ JS;
 			if ($this->submit_grid_ratio > 0)
 			{
 				$offset = $this->submit_grid_ratio;
-				$cols = 12-$offset;
+				$cols = 12 - $offset;
 
-				$pre = '<div class="form-group"><div class="col-sm-'.$cols.' col-sm-offset-'.$offset.'">';
+				$pre = '<div class="form-group"><div class="col-sm-' . $cols . ' col-sm-offset-' . $offset . '">';
 				$post = '</div></div>';
 			}
 		}
@@ -1057,7 +1100,7 @@ JS;
 			$post = '</p>';
 		}
 
-		return $pre.'<input type="submit" name="submit" value="' . Security::escapeHtml($this->submitlabel) . '" class="'.implode(' ', $this->submitclass).'" />'.$post . CRLF;
+		return $pre . '<input type="submit" name="submit" value="' . Security::escapeHtml($this->submitlabel) . '" class="' . implode(' ', $this->submitclass) . '" />' . $post . CRLF;
 	}
 
 	public function &setSubmitGridRatio($label_cols)
@@ -1078,6 +1121,7 @@ JS;
 	}
 
 	/**
+	 *
 	 * @return \formslib\Result\ResultObject
 	 */
 	public function getResultObject($includeConditionalDisplay = true)
@@ -1087,7 +1131,7 @@ JS;
 		$fields = array_keys($this->fields);
 		foreach ($fields as $field)
 		{
-		    if ($this->fields[$field] instanceof \formslib_hidden && ! $this->fields[$field]->getNoObject())
+			if ($this->fields[$field] instanceof \formslib_hidden && !$this->fields[$field]->getNoObject())
 			{
 				$result->{$field} = $this->fields[$field]->getObjectValue();
 			}
@@ -1104,6 +1148,7 @@ JS;
 
 	/**
 	 * Does a named fieldset exist?
+	 *
 	 * @param string $fsname
 	 * @return boolean
 	 */
@@ -1117,7 +1162,7 @@ JS;
 		$fields = array_keys($this->fields);
 		foreach ($fields as $field)
 		{
-			if (! $this->fields[$field] instanceof \formslib_hidden)
+			if (!$this->fields[$field] instanceof \formslib_hidden)
 			{
 				$this->fields[$field]->setDisabled();
 			}
@@ -1135,24 +1180,38 @@ JS;
 
 	public function positionFieldsetTo($fsname, $location)
 	{
-		if ($location < 1 || $location > count($this->fsorder)) throw new \Exception('Invalid fieldset position');
+		if ($location < 1 || $location > count($this->fsorder))
+		{
+			throw new \Exception('Invalid fieldset position');
+		}
 
 		$oldpos = (array_search($fsname, $this->fsorder));
 
-		if ($oldpos === false) throw new \Exception('Field not found');
+		if ($oldpos === false)
+		{
+			throw new \Exception('Field not found');
+		}
 
 		unset($this->fsorder[$oldpos]);
 
-		array_splice($this->fsorder, $location-1, 0, [$fsname]);
+		array_splice($this->fsorder, $location - 1, 0, [
+			$fsname
+		]);
 	}
 
 	public function positionFieldsetBelow($fsname, $below)
 	{
 		$orig = array_search($fsname, $this->fsorder);
-		if ($orig === false) throw new \Exception('Fieldset not found');
+		if ($orig === false)
+		{
+			throw new \Exception('Fieldset not found');
+		}
 
 		$pos = array_search($below, $this->fsorder);
-		if ($pos === false) throw new \Exception('Reference fieldset not found');
+		if ($pos === false)
+		{
+			throw new \Exception('Reference fieldset not found');
+		}
 
 		$location = ($pos >= $orig) ? $pos + 1 : $pos + 2;
 
@@ -1162,10 +1221,16 @@ JS;
 	public function positionFieldsetAbove($fsname, $above)
 	{
 		$orig = array_search($fsname, $this->fsorder);
-		if ($orig === false) throw new \Exception('Fieldset not found');
+		if ($orig === false)
+		{
+			throw new \Exception('Fieldset not found');
+		}
 
 		$pos = array_search($above, $this->fsorder);
-		if ($pos === false) throw new \Exception('Reference fieldset not found');
+		if ($pos === false)
+		{
+			throw new \Exception('Reference fieldset not found');
+		}
 
 		$location = ($pos > $orig) ? $pos : $pos + 1;
 
@@ -1174,12 +1239,12 @@ JS;
 
 	public function setOptionalLabels($optional = true)
 	{
-	    $this->optionalLabels = true;
+		$this->optionalLabels = true;
 	}
 
 	public function getOptionalLabels()
 	{
-	    return $this->optionalLabels;
+		return $this->optionalLabels;
 	}
 
 	private function _generate_jquery_showhide()
@@ -1193,9 +1258,14 @@ JS;
 
 			if (is_object($condition))
 			{
-				$conditions[$condition->getFieldName()][] = ['fs', $fs->getName(), $condition];
+				$conditions[$condition->getFieldName()][] = [
+					'fs',
+					$fs->getName(),
+					$condition
+				];
 
-				$jq .= '	var fld = $(\''.$this->getField($condition->getFieldName())->getJquerySelectorOnLoad().'\');'.CRLF;
+				$jq .= '	var fld = $(\'' . $this->getField($condition->getFieldName())
+					->getJquerySelectorOnLoad() . '\');' . CRLF;
 				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fs', $fs->getName(), $condition->getValue(), $condition->getFieldName());
 			}
 		}
@@ -1206,9 +1276,14 @@ JS;
 
 			if (is_object($condition))
 			{
-				$conditions[$condition->getFieldName()][] = ['fld', $fld->getName(), $condition];
+				$conditions[$condition->getFieldName()][] = [
+					'fld',
+					$fld->getName(),
+					$condition
+				];
 
-				$jq .= '	var fld = $(\''.$this->getField($condition->getFieldName())->getJquerySelectorOnLoad().'\');'.CRLF;
+				$jq .= '	var fld = $(\'' . $this->getField($condition->getFieldName())
+					->getJquerySelectorOnLoad() . '\');' . CRLF;
 				$jq .= $this->_generateDisplayCondition($condition->getOperator(), 'fld', $fld->getName(), $condition->getValue(), $condition->getFieldName());
 			}
 		}
@@ -1221,7 +1296,7 @@ JS;
 
 			$jq .= <<<JS
 
-$('$selector').change(function(e){
+$('$selector').on('change', function(e){
 	var fld = $(e.target);
 
 JS;
@@ -1231,10 +1306,14 @@ JS;
 				$jq .= $this->_generateDisplayCondition($cd[2]->getOperator(), $cd[0], $cd[1], $cd[2]->getValue(), $name);
 			}
 
-			$jq .= CRLF.'});';
+			$jq .= <<<JS
+			
+});
+
+JS;
 		}
 
-        return $jq;
+		return $jq;
 	}
 
 	private function _generateDisplayCondition($operator, $type, $id, $value, $field)
@@ -1349,7 +1428,7 @@ JS;
 				break;
 
 			default:
-				throw new \Exception('Unable to process display condition operator "'.$operator.'"');
+				throw new \Exception('Unable to process display condition operator "' . $operator . '"');
 				break;
 		}
 
