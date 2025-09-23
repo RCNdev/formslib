@@ -48,7 +48,7 @@ abstract class Field
     /**
      * @return static
      */
-    public static function &create($name, Form &$f, Fieldset &$fs = null)
+    public static function &create($name, Form &$f, ?Fieldset &$fs = null)
     {
         $field = new static($name);
         $f->attachField($field);
@@ -149,7 +149,7 @@ abstract class Field
      * Add a validation rule to the field
      *
      * @param string $ruletype Short class name of rule
-     * @param string $ruledfn Definition of the rule
+     * @param string|array $ruledfn Definition of the rule
      * @param string $errormessage Error message to be displayed when validation fails
      * @param boolean $return_rule_oject Should the function return the rule object rather than a fluent interfacea to the field
      *
