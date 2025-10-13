@@ -778,7 +778,7 @@ class formslib_file extends formslib_field
 
 	public function getHTML()
 	{
-		return '<input type="file"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . $this->name . '" value="' . Security::escapeHtml($this->value) . '" />';
+		return '<input type="file"' . $this->_custom_attr() . $this->_class_attr() . ' name="' . Security::escapeHtml($this->name) . '" id="fld_' . Security::escapeHtml($this->name) . '" value="' . Security::escapeHtml($this->value) . '" />';
 	}
 
 	/**

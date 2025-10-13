@@ -1368,7 +1368,6 @@ JS;
 				break;
 
 			case \formslib\Operator::IN:
-
 				$values = json_encode($value);
 
 				$jq .= <<<JS
@@ -1384,6 +1383,24 @@ JS;
 	}
 JS;
 				break;
+
+			case \formslib\Operator::NOT_IN:
+				$values = json_encode($value);
+
+				$jq .= <<<JS
+	var values = $values;
+	
+	if (!values.includes(fld.val()))
+	{
+		$('[data-formslib-owner="{$type}_$id"]').slideDown();
+	}
+	else
+	{
+		$('[data-formslib-owner="{$type}_$id"]').hide();
+	}
+JS;
+				break;
+
 
 			case \formslib\Operator::PRESENT:
 				$jq .= <<<JS

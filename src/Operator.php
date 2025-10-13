@@ -6,6 +6,7 @@ final class Operator
     const EQ = 'eq';
     const NE = 'ne';
     const IN = 'in';
+    const NOT_IN = 'not-in';
     const CHECKED = 'checked';
     const PRESENT = 'present';
     const ANY = 'any';

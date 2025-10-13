@@ -15,9 +15,9 @@ class DisplayCondition
         $this->operator = $operator;
         $this->value = $value;
 
-        if ($operator == Operator::IN && !is_array($value))
+        if (in_array($operator, [Operator::IN, Operator::NOT_IN]) && !is_array($value))
         {
-        	throw new \Exception('When setting an IN display condition, value must be an array');
+        	throw new \Exception('When setting an IN or NOT_IN display condition, value must be an array');
         }
     }
 
@@ -55,6 +55,9 @@ class DisplayCondition
             case Operator::IN:
                 return (isset($vars[$this->field_name]) && in_array($vars[$this->field_name], $this->value));
 
+            case Operator::NOT_IN:
+            	return (!isset($vars[$this->field_name]) || !in_array($vars[$this->field_name], $this->value));
+
             case Operator::CHECKED:
                 return (isset($vars[$this->field_name]));
 
@@ -91,6 +94,10 @@ class DisplayCondition
 
             case Operator::IN:
                 return in_array($field->value, $this->value);
+
+
+            case Operator::NOT_IN:
+            	return !in_array($field->value, $this->value);
 
 
             case Operator::CHECKED:
