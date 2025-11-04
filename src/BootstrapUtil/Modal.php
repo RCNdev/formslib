@@ -137,9 +137,18 @@ JS;
 
 	public function &setSize($size)
 	{
-		if ($size == 'lg') $this->dialogclass = ' modal-lg';
-		elseif ($size == 'sm') $this->dialogclass = ' modal-sm';
-		else $this->dialogclass = '';
+		if ($size == 'lg')
+		{
+			$this->dialogclass = ' modal-lg';
+		}
+		elseif ($size == 'sm')
+		{
+			$this->dialogclass = ' modal-sm';
+		}
+		else
+		{
+			$this->dialogclass = '';
+		}
 
 		return $this;
 	}
@@ -150,7 +159,16 @@ JS;
 	 */
 	protected function _generateCloseButton()
 	{
-		return ($this->hasCloseButton) ? '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' : '';
+		if (!$this->hasCloseButton)
+		{
+			return '';
+		}
+
+		$dismiss = \formslib\GlobalConfig::$bootstrapV5 ? 'data-bs-dismiss' : 'data-dismiss';
+
+		return <<<HTML
+<button type="button" class="close" {$dismiss}="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+HTML;
 	}
 
 	/**
@@ -182,6 +200,12 @@ JS;
 HTML;
 		}
 
+		$htmlHeading = <<<HTML
+        <h{$this->headingLevel} class="modal-title" id="{$this->id}Label">{$this->title}</h{$this->headingLevel}>
+HTML;
+
+		$header = \formslib\GlobalConfig::$bootstrapV5 ? $htmlHeading.PHP_EOL.$this->_generateCloseButton() : $this->_generateCloseButton().PHP_EOL.$htmlHeading;
+
 		return <<<HTML
 
 
@@ -189,8 +213,7 @@ HTML;
   <div class="modal-dialog{$this->dialogclass}" role="document">
     <div class="modal-content">
       <div class="modal-header">
-{$this->_generateCloseButton()}
-        <h{$this->headingLevel} class="modal-title" id="{$this->id}Label">{$this->title}</h{$this->headingLevel}>
+{$header}
       </div>
       <div class="modal-body">
 {$this->body}
