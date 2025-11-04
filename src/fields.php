@@ -203,7 +203,10 @@ class formslib_radio extends formslib_options
 
 		$html = '';
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '<div class="radio">';
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+		{
+		    $html .= '<div class="radio">';
+		}
 
 		foreach ($this->options as $value => $label)
 		{
@@ -236,7 +239,10 @@ class formslib_radio extends formslib_options
 			$html .= '</label> ';
 		}
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '</div><!--/.radio-->';
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+		{
+		    $html .= '</div><!--/.radio-->';
+		}
 
 		return $html;
 	}
@@ -271,7 +277,10 @@ class formslib_radio extends formslib_options
 	{
 	    $html = '';
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '<div class="radio">';
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+		{
+		    $html .= '<div class="radio">';
+		}
 
 		foreach ($this->options as $value => $label)
 		{
@@ -280,18 +289,27 @@ class formslib_radio extends formslib_options
 			$checked = false;
 			if ($this->requireEquivalency)
 			{
-				if ($this->value === $value) $checked = true;
+				if ($this->value === $value)
+				{
+				    $checked = true;
+				}
 			}
 			elseif ($this->ignoreNull)
 			{
-				if (!is_null($this->value) && $this->value == $value) $checked = true;
+				if (!is_null($this->value) && $this->value == $value)
+				{
+				    $checked = true;
+				}
 			}
 			elseif ($this->value == $value)
 			{
 			    $checked = true;
 			}
 
-			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $this->labelclass[] = 'radio-inline';
+			if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+			{
+			    $this->labelclass[] = 'radio-inline';
+			}
 
 			$labelclass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
 
@@ -300,7 +318,10 @@ class formslib_radio extends formslib_options
 			$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelclass . '">'. $icon . '&nbsp;' . Security::escapeHtml($label) . '</label> ';
 		}
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) $html .= '</div><!--/.radio-->';
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+		{
+		    $html .= '</div><!--/.radio-->';
+		}
 
 		return $html;
 	}
@@ -438,7 +459,7 @@ class formslib_checkbox extends formslib_field
 					echo $this->htmlafter;
 					break;
 
-				case FORMSLIB_STYLE_BOOTSTRAP3:
+				case FORMSLIB_STYLE_BOOTSTRAP3: //TODO: [BOOTSTRAP5] Grids
 				    echo $this->htmlbefore;
 				    echo '<div data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">'.CRLF;
 				    echo $this->innerhtmlbefore;
@@ -556,7 +577,7 @@ class formslib_checkbox extends formslib_field
 	{
 		$objVal = ($this->isChecked()) ? true : false;
 
-		return ($objVal);
+		return $objVal;
 	}
 }
 
@@ -1175,7 +1196,10 @@ class formslib_carddate extends formslib_composite
 		for ($i = 1; $i <= 12; $i++)
 		{
 			$html .= '<option value="' . $i . '"';
-			if ($this->composite_values['month'] == $i) $html .= ' selected="selected"';
+			if ($this->composite_values['month'] == $i)
+			{
+			    $html .= ' selected="selected"';
+			}
 			$html .= '>' . sprintf('%02d', $i) . '</option>' . CRLF;
 		}
 		$html .= '</select>' . CRLF;
@@ -1194,7 +1218,10 @@ class formslib_carddate extends formslib_composite
 		{
 			$html .= '<option value="' . $i . '"';
 
-			if ($this->composite_values['year'] == $i) $html .= ' selected="selected"';
+			if ($this->composite_values['year'] == $i)
+			{
+			    $html .= ' selected="selected"';
+			}
 
 			$html .= '>' . $i . '</option>' . CRLF;
 		}
@@ -1356,7 +1383,10 @@ class formslib_time extends formslib_composite
 			if($i == 0)
 			{
 				$html .= '<option value="00"';
-				if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
+				if ($this->composite_values['hour'] == $i)
+				{
+				    $html .= ' selected="selected"';
+				}
 				$html .= '>00</option>' . CRLF;
 
 
@@ -1364,13 +1394,19 @@ class formslib_time extends formslib_composite
 			elseif ($i <10)
 			{
 				$html .= '<option value="0' . $i . '"';
-				if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
+				if ($this->composite_values['hour'] == $i)
+				{
+				    $html .= ' selected="selected"';
+				}
 				$html .= '>0' . $i . '</option>' . CRLF;
 			}
 			else
 			{
 				$html .= '<option value="' . $i . '"';
-				if ($this->composite_values['hour'] == $i) $html .= ' selected="selected"';
+				if ($this->composite_values['hour'] == $i)
+				{
+				    $html .= ' selected="selected"';
+				}
 				$html .= '>' . $i . '</option>' . CRLF;
 			}
 		}
@@ -1390,19 +1426,28 @@ class formslib_time extends formslib_composite
 			if($i == 0)
 			{
 				$html .= '<option value="00"';
-				if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
+				if ($this->composite_values['minute'] == $i)
+				{
+				    $html .= ' selected="selected"';
+				}
 				$html .= '>00</option>' . CRLF;
 			}
 			elseif($i < 10)
 			{
 				$html .= '<option value="0' . $i . '"';
-				if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
+				if ($this->composite_values['minute'] == $i)
+				{
+				    $html .= ' selected="selected"';
+				}
 				$html .= '>0' . $i . '</option>' . CRLF;
 			}
 			else
 			{
 				$html .= '<option value="' . $i . '"';
-				if ($this->composite_values['minute'] == $i) $html .= ' selected="selected"';
+				if ($this->composite_values['minute'] == $i)
+				{
+				    $html .= ' selected="selected"';
+				}
 				$html .= '>' . $i . '</option>' . CRLF;
 			}
 
@@ -1496,7 +1541,7 @@ class formslib_datepicker extends formslib_text
         }
         elseif (isset($this->endyear))
         {
-                    $end = ', endDate: "31/12/'.$this->endyear.'"';
+            $end = ', endDate: "31/12/'.$this->endyear.'"';
         }
         else
         {

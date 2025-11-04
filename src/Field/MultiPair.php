@@ -38,7 +38,13 @@ class MultiPair extends GenericMulti
 		$field->addClass('form-control');
 		$field->addAttr('data-index', $i);
 
-		if ($setValue) $field->composite_values = array(1 => $this->multi_values[$i.'__1'], 2 => $this->multi_values[$i.'__2']);
+		if ($setValue)
+		{
+		    $field->composite_values = [
+		        1 => $this->multi_values[$i.'__1'],
+		        2 => $this->multi_values[$i.'__2']
+		    ];
+		}
 
 		return $field->getHTML() . CRLF;
 	}
@@ -60,7 +66,7 @@ class MultiPair extends GenericMulti
 
 		foreach ($this->indices as $i)
 		{
-			$data[$i] = array($this->multi_values[$i.'__1'], $this->multi_values[$i.'__2']);
+			$data[$i] = [$this->multi_values[$i.'__1'], $this->multi_values[$i.'__2']];
 		}
 
 		return $data;

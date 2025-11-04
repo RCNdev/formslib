@@ -24,7 +24,10 @@ class Hierarchy extends MultiValue
 	{
 		$class_str = 'formslib-multivalue-container';
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3) $class_str .= ' row';
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP5)
+		{
+		    $class_str .= ' row';
+		}
 
 		$output = '<div class="'.$class_str.'">';
 

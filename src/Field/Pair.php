@@ -24,6 +24,8 @@ class Pair extends Composite
 
 		$html = '';
 
+		//TODO: [BOOTSTRAP5] Grids
+
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
 		{
 			$html .= '<div class="row">' . CRLF;
@@ -68,7 +70,7 @@ class Pair extends Composite
 
 	public function &getObjectValue()
 	{
-		$array = array($this->composite_values[1], $this->composite_values[2]);
+		$array = [$this->composite_values[1], $this->composite_values[2]];
 
 		return $array;
 	}

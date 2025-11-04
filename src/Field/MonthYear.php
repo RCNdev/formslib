@@ -9,7 +9,7 @@ class MonthYear extends Composite
 	/** @var \formslib_select */
 	protected $fieldMonth, $fieldYear;
 
-	protected $months = array(
+	protected $months = [
 			'01' => 'January',
 			'02' => 'February',
 			'03' => 'March',
@@ -22,7 +22,7 @@ class MonthYear extends Composite
 			'10' => 'October',
 			'11' => 'November',
 			'12' => 'December',
-	);
+	];
 
 	const RETURN_TYPE_START = 1;
 	const RETURN_TYPE_END = 2;
@@ -31,13 +31,13 @@ class MonthYear extends Composite
 	public function __construct($name)
 	{
 		parent::__construct($name);
-		$this->_set_composites(array(
+		$this->_set_composites([
 			'month',
 			'year'
-		));
+		]);
 
 		$this->fieldMonth = new \formslib_select($name.'__month');
-		$this->fieldMonth->setOptions(array('' => '- Month -') + $this->months);
+		$this->fieldMonth->setOptions(['' => '- Month -'] + $this->months);
 
 		$this->fieldYear = new \formslib_select($name.'__year');
 	}
@@ -59,6 +59,8 @@ class MonthYear extends Composite
 		$this->_prepareOutput();
 
 		$html = '';
+
+		//TODO: [BOOTSTRAP5] Grids
 
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
 		{
@@ -105,8 +107,8 @@ class MonthYear extends Composite
 
 		$this->fieldYear->setOptionsRange($startYear, $endYear, '- Year -');
 
-		$this->addRule('Composite_MonthYearMin', array('month' => $startMonth, 'year' => $startYear), 'Cannot be earlier than '.$this->months[$startMonth].' '.$startYear);
-		$this->addRule('Composite_MonthYearMax', array('month' => $endMonth, 'year' => $endYear), 'Cannot be later than '.$this->months[$endMonth].' '.$endYear);
+		$this->addRule('Composite_MonthYearMin', ['month' => $startMonth, 'year' => $startYear], 'Cannot be earlier than '.$this->months[$startMonth].' '.$startYear);
+		$this->addRule('Composite_MonthYearMax', ['month' => $endMonth, 'year' => $endYear], 'Cannot be later than '.$this->months[$endMonth].' '.$endYear);
 
 		return $this;
 	}

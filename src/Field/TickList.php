@@ -26,6 +26,8 @@ class TickList extends Composite
 
     public function getHTML()
     {
+        //TODO: [BOOTSTRAP5] Grids
+
         if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
         {
             $html = '<div class="formslib_ticklist_container">';

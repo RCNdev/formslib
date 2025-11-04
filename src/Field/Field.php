@@ -242,7 +242,7 @@ abstract class Field
             {
                 $optionalLabel = ' <small class="formslib_optional">'.Security::escapeHtml($this->overrideOptionalText).'</small>';
             }
-            elseif($this->hideOptionalText)
+            elseif ($this->hideOptionalText)
             {
                 $optionalLabel = '';
             }
@@ -263,7 +263,7 @@ abstract class Field
             }
         }
 
-        if (! $this->rawoutput)
+        if (!$this->rawoutput)
         {
             switch ($outputstyle)
             {
@@ -318,11 +318,15 @@ abstract class Field
                     break;
 
                 case FORMSLIB_STYLE_BOOTSTRAP3:
+                case FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL: //TODO: [BOOTSTRAP5] Grids
                     $col_label = ($this->gridRatio > 0) ? $this->gridRatio : 12;
                     $col_field = 12 - $this->gridRatio;
 
                     $group_class_str = implode(' ', $this->group_classes);
-                    if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
+                    if ($group_class_str != '')
+                    {
+                        $group_class_str = ' ' . $group_class_str; // Prepend a space
+                    }
 
                     if (!isset($this->classes['form-control'])
                     	&& !($this instanceof \formslib_radio)
@@ -352,6 +356,7 @@ abstract class Field
                     break;
 
                 case FORMSLIB_STYLE_BOOTSTRAP3_INLINE:
+                case FORMSLIB_STYLE_BOOTSTRAP5_INLINE:
                     $group_class_str = implode(' ', $this->group_classes);
                     if ($group_class_str != '')
                     {
@@ -380,8 +385,12 @@ abstract class Field
                     break;
 
                 case FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL:
+                case FORMSLIB_STYLE_BOOTSTRAP5_VERTICAL:
                     $group_class_str = implode(' ', $this->group_classes);
-                    if ($group_class_str != '') $group_class_str = ' ' . $group_class_str; // Prepend a space
+                    if ($group_class_str != '')
+                    {
+                        $group_class_str = ' ' . $group_class_str; // Prepend a space
+                    }
 
                     if (!isset($this->classes['form-control'])
                     	&& !($this instanceof \formslib_radio) && !($this instanceof \formslib\Field\TickList))

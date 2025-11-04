@@ -91,6 +91,11 @@ class Form
 	public function setOutputStyle($style)
 	{
 		$this->outputstyle = $style;
+
+		if (GlobalConfig::$bootstrapV5 && $this->outputstyle < FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL)
+		{
+		    $this->outputstyle += 3;
+		}
 	}
 
 	public function setSubmitLabel($label)
@@ -160,7 +165,10 @@ class Form
 			throw new \Exception('FORMSLIB ERROR: No such field type "' . $type . '" for field name "' . $name . '"');
 		}
 
-		if (!in_array($type, $this->types_used)) $this->types_used[] = $type;
+		if (!in_array($type, $this->types_used))
+		{
+		    $this->types_used[] = $type;
+		}
 
 		return $field;
 	}
@@ -178,7 +186,10 @@ class Form
 
 		$type = $field->getType();
 
-		if (!in_array($type, $this->types_used)) $this->types_used[] = $type;
+		if (!in_array($type, $this->types_used))
+		{
+		    $this->types_used[] = $type;
+		}
 	}
 
 	/**
@@ -472,6 +483,8 @@ class Form
 				$field->addGroupClass('has-error');
 			}
 
+			//TODO: [BOOTSTRAP5] Error classes
+
 			$field->addClass('formslibinvalid');
 		}
 	}
@@ -595,7 +608,10 @@ class Form
 			$first = true;
 			foreach ($this->classes as $classname)
 			{
-				if (!$first) $class_str .= ' ';
+				if (!$first)
+				{
+				    $class_str .= ' ';
+				}
 				$class_str .= $classname;
 				$first = false;
 			}
@@ -653,6 +669,8 @@ class Form
 	private function _generate_jquery_validation()
 	{
 		$bootstrap3 = ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL);
+
+		//TODO: [BOOTSTRAP5] Error classes
 
 		// Generic stuff
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
@@ -824,6 +842,7 @@ JS;
 			{
 				$classes = 'alert alert-block alert-error';
 			}
+			//TODO: [BOOTSTRAP5] Grids
 			elseif ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
 			{
 				$classes = 'alert alert-block alert-danger';
@@ -958,9 +977,10 @@ JS;
 
 	public function removeField($fieldname)
 	{
-		if (!is_array($fieldname)) $fieldname = array(
-			$fieldname
-		);
+		if (!is_array($fieldname))
+		{
+		    $fieldname = [$fieldname];
+		}
 
 		foreach ($fieldname as $fn)
 		{
@@ -1006,7 +1026,10 @@ JS;
 			{
 				$set_headers[] = $class_set;
 
-				if ($hdr != '') $headers[] = $hdr;
+				if ($hdr != '')
+				{
+				    $headers[] = $hdr;
+				}
 			}
 		}
 
@@ -1078,6 +1101,7 @@ JS;
 		$pre = '';
 		$post = '';
 
+		//TODO: [BOOTSTRAP5] Grids
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
 		{
 			if ($this->submit_grid_ratio > 0)
@@ -1288,7 +1312,10 @@ JS;
 			}
 		}
 
-		if (!count($conditions)) return null;
+		if (!count($conditions))
+		{
+		    return null;
+		}
 
 		foreach ($conditions as $name => $c)
 		{
