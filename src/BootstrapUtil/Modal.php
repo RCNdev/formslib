@@ -165,9 +165,11 @@ JS;
 		}
 
 		$dismiss = \formslib\GlobalConfig::$bootstrapV5 ? 'data-bs-dismiss' : 'data-dismiss';
+		$class = \formslib\GlobalConfig::$bootstrapV5 ? 'btn-close' : 'close';
+		$content = \formslib\GlobalConfig::$bootstrapV5 ? '' : '<span aria-hidden="true">&times;</span>';
 
 		return <<<HTML
-<button type="button" class="close" {$dismiss}="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+<button type="button" class="{$class}" {$dismiss}="modal" aria-label="Close">{$content}</button>
 HTML;
 	}
 
