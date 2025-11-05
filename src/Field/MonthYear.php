@@ -60,12 +60,10 @@ class MonthYear extends Composite
 
 		$html = '';
 
-		//TODO: [BOOTSTRAP5] Grids
-
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL]))
 		{
 			$html .= '<div class="row">' . CRLF;
-			$html .= '<div class="col-xs-6">' . CRLF;
+			$html .= '<div class="col-xs-6 col-6">' . CRLF;
 		}
 		else
 		{
@@ -75,10 +73,10 @@ class MonthYear extends Composite
 		// Month
 		$html .= $this->fieldMonth->getHTML();
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL]))
 		{
 			$html .= '</div>' . CRLF;
-			$html .= '<div class="col-xs-6">' . CRLF;
+			$html .= '<div class="col-xs-6 col-6">' . CRLF;
 		}
 		else
 		{
@@ -89,7 +87,7 @@ class MonthYear extends Composite
 		// Year
 		$html .= $this->fieldYear->getHTML();
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL]))
 		{
 			$html .= '</div><!-- /.col-xs-6 -->' . CRLF;
 			$html .= '</div><!-- /.row -->' . CRLF;

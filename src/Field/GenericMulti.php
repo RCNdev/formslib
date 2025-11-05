@@ -10,7 +10,7 @@ abstract class GenericMulti extends MultiValue
 	protected function _getAddButton()
 	{
 		return <<<HTML
-<div class="col-xs-12 formslib-multiadd">
+<div class="col-xs-12 col-12 formslib-multiadd">
 	<a class="btn btn-sm btn-success" href="#" data-formslib-field="{$this->name}">
 		<i class="fa fa-plus"></i> Add
 	</a>
@@ -23,14 +23,14 @@ HTML;
 		$this->_preProcessValues();
 
 		$html = '<input type="hidden" name="'.$this->name.'__control" value="'.implode(',', $this->indices).'" />'.CRLF;
-		$html .= '<div class="row">';
+		$html .= '<div class="row mb-2">';
 
 		foreach ($this->indices as $i)
 		{
-			$html .= '	<div class="col-xs-12 formslib-multi-item">' . CRLF;
-			$html .= '	<div class="row"><div class="col-xs-11">' . CRLF;
+			$html .= '	<div class="col-xs-12 col-12 formslib-multi-item">' . CRLF;
+			$html .= '	<div class="row"><div class="col-xs-11 col-11">' . CRLF;
 			$html .= $this->getSingleInstance($i, true);
-			$html .= '    </div><div class="col-xs-1"><a class="btn btm-sm btn-danger formslib-multiremove" data-formslib-field="'.$this->name.'" title="Remove" data-index="'.$i.'"><i class="fa fa-times"></i></a></div>';
+			$html .= '    </div><div class="col-xs-1 col-1"><a class="btn btm-sm btn-danger formslib-multiremove" data-formslib-field="'.$this->name.'" title="Remove" data-index="'.$i.'"><i class="fa fa-times"></i></a></div>';
 			$html .= '  </div><!--/.row-->'.CRLF;
 			$html .= '	</div><!--/.col-xs-12-->' . CRLF;
 		}
@@ -51,10 +51,10 @@ HTML;
 		//$path = FORMSLIB_AJAX_SERVICE;
 
 		$html = '';
-		$html .= '	<div class="col-xs-12 formslib-multi-item">' . CRLF;
-		$html .= '	<div class="row"><div class="col-xs-11">' . CRLF;
+		$html .= '	<div class="col-xs-12 col-12 formslib-multi-item">' . CRLF;
+		$html .= '	<div class="row mb-1"><div class="col-xs-11 col-11">' . CRLF;
 		$html .= $this->getSingleInstance('!!new!!');
-		$html .= '    </div><div class="col-xs-1"><a class="btn btm-sm btn-danger formslib-multiremove" data-formslib-field="'.$this->name.'" title="Remove" data-index="!!new!!"><i class="fa fa-times"></i></a></div>';
+		$html .= '    </div><div class="col-xs-1 col-1"><a class="btn btm-sm btn-danger formslib-multiremove" data-formslib-field="'.$this->name.'" title="Remove" data-index="!!new!!"><i class="fa fa-times"></i></a></div>';
 		$html .= '  </div><!--/.row-->'.CRLF;
 		$html .= '	</div><!--/.col-xs-12-->' . CRLF;
 

@@ -68,31 +68,29 @@ class TimeSelect extends Composite
 	{
 	    $html = '';
 
-	    //TODO: [BOOTSTRAP5] Grids
-
-	    if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+	    if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL]))
 	    {
 	        $html .= '<div class="row">' . CRLF;
-	        $html .= '<div class="col-xs-4">' . CRLF;
+	        $html .= '<div class="col-xs-4 col-4">' . CRLF;
 	    }
 
 	    $this->field_hour->addClasses($this->getClasses());
 	    $this->field_hour->value = $this->composite_values['hour'];
 	    $html .= $this->field_hour->getHTML();
 
-	    if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+	    if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL]))
 	    {
 	        $html .= '</div>' . CRLF;
-	        $html .= '<div class="col-xs-4">' . CRLF;
+	        $html .= '<div class="col-xs-4 col-4">' . CRLF;
 	    }
 
 	    $this->field_minute->addClasses($this->getClasses());
 	    $this->field_minute->value = $this->composite_values['minute'];
 	    $html .= $this->field_minute->getHTML();
 
-	    if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+	    if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL]))
 	    {
-	        $html .= '</div><!-- /.col-xs-6 -->' . CRLF;
+	        $html .= '</div><!-- /.col-xs-4 -->' . CRLF;
 	        $html .= '</div><!-- /.row -->' . CRLF;
 	    }
 

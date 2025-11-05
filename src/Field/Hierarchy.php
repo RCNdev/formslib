@@ -24,7 +24,7 @@ class Hierarchy extends MultiValue
 	{
 		$class_str = 'formslib-multivalue-container';
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP5)
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL)
 		{
 		    $class_str .= ' row';
 		}
@@ -83,7 +83,7 @@ class Hierarchy extends MultiValue
 		// TODO: Labelling
 		// echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand . '</label> ' . CRLF;
 
-		$output .=  '	<div class="col-xs-12">' . CRLF;
+		$output .=  '	<div class="col-xs-12 col-12">' . CRLF;
 		$output .= $field->getHTML() . CRLF;
 		$output .=  '	</div><!--/.col-xs-12-->' . CRLF;
 

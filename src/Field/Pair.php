@@ -26,10 +26,10 @@ class Pair extends Composite
 
 		//TODO: [BOOTSTRAP5] Grids
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL, FORMSLIB_STYLE_BOOTSTRAP5_VERTICAL]))
 		{
 			$html .= '<div class="row">' . CRLF;
-			$html .= '<div class="col-xs-6">' . CRLF;
+			$html .= '<div class="col-xs-6 col-6">' . CRLF;
 			$classes = '';
 		}
 		else
@@ -40,10 +40,10 @@ class Pair extends Composite
 		// Key
 		$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr($classes) . ' name="' . $this->name . '__1" value="' . Security::escapeHtml($this->composite_values[1]) . '" />';
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL, FORMSLIB_STYLE_BOOTSTRAP5_VERTICAL]))
 		{
 			$html .= '</div>' . CRLF;
-			$html .= '<div class="col-xs-6">' . CRLF;
+			$html .= '<div class="col-xs-6 col-6">' . CRLF;
 			$classes = '';
 		}
 		else
@@ -54,7 +54,7 @@ class Pair extends Composite
 		// Value
 		$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr($classes) . ' name="' . $this->name . '__2" value="' . Security::escapeHtml($this->composite_values[2]) . '" />';
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL, FORMSLIB_STYLE_BOOTSTRAP5_VERTICAL]))
 		{
 			$html .= '</div><!-- /.col-xs-6 -->' . CRLF;
 			$html .= '</div><!-- /.row -->' . CRLF;
