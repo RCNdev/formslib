@@ -33,8 +33,8 @@ class formslib_text extends formslib_field
 
 	public function getHTML()
 	{
-		$left = ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 && isset($this->buttonlefttype));
-		$right = ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 && isset($this->buttonrighttype));
+		$left = (isset($this->buttonlefttype) && in_array($this->outputstyle, FORMSLIB_STYLES_ALL_BOOTSTRAP));
+		$right = (isset($this->buttonrighttype) && in_array($this->outputstyle, FORMSLIB_STYLES_ALL_BOOTSTRAP));
 
 		$html = '';
 
