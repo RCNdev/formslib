@@ -1027,7 +1027,7 @@ class formslib_date extends formslib_composite
 		}
 		$html .= '</select>' . CRLF;
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL]))
 		{
 			$html .= '</div><!-- /.col-xs-4 -->' . CRLF;
 			$html .= '</div><!-- /.row -->' . CRLF;
