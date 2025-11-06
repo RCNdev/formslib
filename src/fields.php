@@ -1508,7 +1508,7 @@ class formslib_datepicker extends formslib_text
     {
         $html = '<div class="input-group date">';
         $html .= '<input type="text" '.$this->_custom_attr().$this->_class_attr('form-control').' name="'.Security::escapeHtml($this->name).'" id="fld_'.Security::escapeHtml($this->name).'" value="'.Security::escapeHtml($this->value).'">';
-        $html .= '<span class="input-group-addon"><i class="fa fa-calendar"></i></span>';
+        $html .= '<span class="input-group-addon input-group-text"><i class="fa fa-calendar"></i></span>';
         $html .= '</div>';
 
         echo $this->_generateDatepickerJS(); //TODO: Append JS snippet to form
