@@ -959,10 +959,10 @@ class formslib_date extends formslib_composite
 	{
 		$html = '';
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL]))
 		{
 			$html .= '<div class="row">' . CRLF;
-			$html .= '<div class="col-xs-4">' . CRLF;
+			$html .= '<div class="col-xs-4 col-4">' . CRLF;
 			$classes = '';
 		}
 		else
@@ -981,10 +981,10 @@ class formslib_date extends formslib_composite
 		}
 		$html .= '</select>' . CRLF;
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL]))
 		{
 			$html .= '</div>' . CRLF;
-			$html .= '<div class="col-xs-4">' . CRLF;
+			$html .= '<div class="col-xs-4 col-4">' . CRLF;
 			$classes = '';
 		}
 		else
@@ -1002,10 +1002,10 @@ class formslib_date extends formslib_composite
 		}
 		$html .= '</select>' . CRLF;
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL]))
 		{
 			$html .= '</div>' . CRLF;
-			$html .= '<div class="col-xs-4">' . CRLF;
+			$html .= '<div class="col-xs-4 col-4">' . CRLF;
 			$classes = '';
 		}
 		else
@@ -1019,7 +1019,10 @@ class formslib_date extends formslib_composite
 		for ($i = $this->startyear; $i <= $this->endyear; $i++)
 		{
 			$html .= '<option value="' . $i . '"';
-			if ($this->composite_values['year'] == $i) $html .= ' selected="selected"';
+			if ($this->composite_values['year'] == $i)
+			{
+				$html .= ' selected="selected"';
+			}
 			$html .= '>' . $i . '</option>' . CRLF;
 		}
 		$html .= '</select>' . CRLF;
@@ -1135,17 +1138,17 @@ class formslib_uksortcode extends formslib_composite
 	{
 		$html = '';
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL]))
 		{
 			$html .= '<div class="row">' . CRLF;
-			$html .= '<div class="col-xs-4">' . CRLF;
+			$html .= '<div class="col-xs-4 col-4">' . CRLF;
 			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode1') . ' name="' . $this->name . '__1" value="' . Security::escapeHtml($this->composite_values['1']) . '" />';
 			$html .= '</div>' . CRLF;
-			$html .= '<div class="col-xs-4">' . CRLF;
+			$html .= '<div class="col-xs-4 col-4">' . CRLF;
 			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode2') . ' name="' . $this->name . '__2" value="' . Security::escapeHtml($this->composite_values['2']) . '" />';
 // 			$html .= '<div class="input-group"><span class="input-group-addon">-</span><input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode2') . ' name="' . $this->name . '__2" value="' . Security::escapeHtml($this->composite_values['2']) . '" /></div>';
 			$html .= '</div>' . CRLF;
-			$html .= '<div class="col-xs-4">' . CRLF;
+			$html .= '<div class="col-xs-4 col-4">' . CRLF;
 			$html .= '<input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode3') . ' name="' . $this->name . '__3" value="' . Security::escapeHtml($this->composite_values['3']) . '" />';
 // 			$html .= '<div class="input-group"><span class="input-group-addon">-</span><input type="text"' . $this->_custom_attr() . $this->_class_attr('formslib__uksortcode3') . ' name="' . $this->name . '__3" value="' . Security::escapeHtml($this->composite_values['3']) . '" /></div>';
 			$html .= '</div><!-- /.col-xs-4 -->' . CRLF;
@@ -1179,10 +1182,10 @@ class formslib_carddate extends formslib_composite
 	{
 		$html = '';
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL]))
 		{
 			$html .= '<div class="row">' . CRLF;
-			$html .= '<div class="col-xs-3">' . CRLF;
+			$html .= '<div class="col-xs-3 col-3">' . CRLF;
 		}
 
 		// Month
@@ -1199,10 +1202,10 @@ class formslib_carddate extends formslib_composite
 		}
 		$html .= '</select>' . CRLF;
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL]))
 		{
 			$html .= '</div>' . CRLF;
-			$html .= '<div class="col-xs-3">' . CRLF;
+			$html .= '<div class="col-xs-3 col-3">' . CRLF;
 		}
 
 		// Year
@@ -1223,7 +1226,7 @@ class formslib_carddate extends formslib_composite
 
 		$html .= '</select>' . CRLF;
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL]))
 		{
 			$html .= '</div>' . CRLF;
 			$html .= '</div><!--/.row-->'.CRLF;

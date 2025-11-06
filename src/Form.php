@@ -911,7 +911,7 @@ JS;
 
 				echo <<<JS
 $(document).ready(function(){
-	$('form[name="$name"] input[type="submit"]').click(function(e){
+	$('form[name="$name"] input[type="submit"]').on('click', function(e) {
 		var btn = $(e.target);
 
 		btn.parent().append('<a id="submitting" class="$class" disabled="disabled"><i class="fa fa-spinner fa-pulse"></i> Processing...</a>');

@@ -167,7 +167,7 @@ class TickList extends Composite
         {
             $js[] = <<<JS
 $(document).ready(function(){
-	$('.formslib_ticklist_select_all a').click(function(){
+	$('.formslib_ticklist_select_all a').on('click', function() {
         $(this).parents('.formslib_ticklist_container').find('input.formslib_ticklist').prop('checked', true);
         $(this).parents('.formslib_ticklist_select_all').hide();
 		return false;
