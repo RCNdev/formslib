@@ -196,6 +196,7 @@ class formslib_radio extends formslib_options
 	protected $requireEquivalency = false;
 	protected $ignoreNull = false;
 	protected $addDataLabels = false;
+	protected $isInline = false;
 
 	public function getHTML()
 	{
@@ -230,16 +231,33 @@ class formslib_radio extends formslib_options
 				$this->labelclass[] = 'radio-inline';
 			}
 
-			$labelclass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
+			$labelClass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
 
 			$dis_str = ($disabled) ? ' disabled="disabled"' : '';
 
 			$data_str = ($this->addDataLabels) ? ' data-label="'.Security::escapeHtml($label).'"' : '';
 
-			$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelclass . '">';
-			$html .= '<input type="radio" name="' . Security::escapeHtml($this->name) . '" id="' . $id . '"' . $selected .$dis_str.$data_str.$this->_custom_attr().$this->_class_attr(). ' value="' . Security::escapeHtml($value) . '" />';
-			$html .= '&nbsp;' . Security::escapeHtml($label);
-			$html .= '</label> ';
+			if (in_array($this->outputstyle, FORMSLIB_STYLES_ALL_BOOTSTRAP_GE_5))
+			{
+				$classInline = ($this->isInline) ? ' form-check-inline' : '';
+
+				$input = '<input type="radio" name="' . Security::escapeHtml($this->name) . '" id="' . $id . '"' . $selected .$dis_str.$data_str.$this->_custom_attr().$this->_class_attr('form-check-input'). ' value="' . Security::escapeHtml($value) . '" />';
+				$escapedLabel = Security::escapeHtml($label);
+
+				$html .= <<<HTML
+<div class="form-check{$classInline}">
+  {$input}
+  <label class="formslib_label_radio form-check-label{$labelClass}" for="{$id}">{$escapedLabel}</label>
+</div>
+HTML;
+			}
+			else
+			{
+				$html .= '<label for="' . $id . '" class="formslib_label_radio' . $labelClass . '">';
+				$html .= '<input type="radio" name="' . Security::escapeHtml($this->name) . '" id="' . $id . '"' . $selected .$dis_str.$data_str.$this->_custom_attr().$this->_class_attr(). ' value="' . Security::escapeHtml($value) . '" />';
+				$html .= '&nbsp;' . Security::escapeHtml($label);
+				$html .= '</label> ';
+			}
 		}
 
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
@@ -327,6 +345,23 @@ class formslib_radio extends formslib_options
 		}
 
 		return $html;
+	}
+
+	public function &setInline($inline = true)
+	{
+		$this->isInline = $inline;
+
+		return $this;
+	}
+
+	public function display(Form &$form)
+	{
+		if (in_array($form->getOutputStyle(), FORMSLIB_STYLES_ALL_BOOTSTRAP_GE_5))
+		{
+			$this->addLabelClass('pt-0');
+		}
+
+		parent::display($form);
 	}
 }
 
@@ -758,6 +793,7 @@ class formslib_yesno extends formslib_radio
 		parent::__construct($name);
 		$this->addOption('1', 'Yes');
 		$this->addOption('0', 'No');
+		$this->setInline();
 
 		$this->setMandatory();
 	}
