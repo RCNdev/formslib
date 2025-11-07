@@ -204,7 +204,7 @@ class formslib_radio extends formslib_options
 
 		$html = '';
 
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL) //TODO: [BOOTSTRAP5]
+		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
 		{
 		    $html .= '<div class="radio">';
 		}

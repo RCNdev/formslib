@@ -94,7 +94,7 @@ class Form
 
 		if (GlobalConfig::$bootstrapV5 && $this->outputstyle < FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL)
 		{
-		    $this->outputstyle += 3;
+			$this->outputstyle += 3;
 		}
 	}
 
@@ -167,7 +167,7 @@ class Form
 
 		if (!in_array($type, $this->types_used))
 		{
-		    $this->types_used[] = $type;
+			$this->types_used[] = $type;
 		}
 
 		return $field;
@@ -188,7 +188,7 @@ class Form
 
 		if (!in_array($type, $this->types_used))
 		{
-		    $this->types_used[] = $type;
+			$this->types_used[] = $type;
 		}
 	}
 
@@ -482,10 +482,11 @@ class Form
 			{
 				$field->addGroupClass('has-error');
 			}
-
-			//TODO: [BOOTSTRAP5] Error classes
-
-			$field->addClass('formslibinvalid');
+			elseif (in_array($this->outputstyle, FORMSLIB_STYLES_ALL_BOOTSTRAP_GE_5))
+			{
+				$field->addClass('is-invalid');
+				$field->addLabelClass('text-danger');
+			}
 		}
 	}
 
@@ -610,7 +611,7 @@ class Form
 			{
 				if (!$first)
 				{
-				    $class_str .= ' ';
+					$class_str .= ' ';
 				}
 				$class_str .= $classname;
 				$first = false;
@@ -670,8 +671,6 @@ class Form
 	{
 		$bootstrap3 = ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL);
 
-		//TODO: [BOOTSTRAP5] Error classes
-
 		// Generic stuff
 		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
 		{
@@ -705,6 +704,35 @@ $('.formslib_jq_mand').on('blur', function(){
 	{
 		$(this).addClass('formslibinvalid');
 		$(this).parents('.form-group').addClass('has-error');
+	}
+});
+JS;
+		}
+		elseif (in_array($this->outputstyle, FORMSLIB_STYLES_ALL_BOOTSTRAP_GE_5))
+		{
+			$jq = <<<JS
+$(document).ready(function(){
+$('.formslib_jq_mand').on('focus', function(){
+	$(this).removeClass(['formslibinvalid', 'is-invalid']);
+	$(this).parents('.form-group').children('label').removeClass('text-danger');
+	$(this).parent('label').removeClass('text-danger');
+});
+
+$('.formslib_jq_mand').on('blur', function(){
+	if ($(this).val() == '')
+	{
+		$(this).addClass(['formslibinvalid', 'is-invalid']);
+		$(this).parents('.form-group').children('label').addClass('text-danger');
+		$(this).parent('label').addClass('text-danger');
+	}
+});
+
+$('input[type="checkbox"].formslib_jq_mand').on('change', function(){
+	if (!this.checked)
+	{
+		$(this).addClass(['formslibinvalid', 'is-invalid']);
+		$(this).parents('.form-group').children('label').addClass('text-danger');
+		$(this).parent('label').addClass('text-danger');
 	}
 });
 JS;
@@ -978,7 +1006,9 @@ JS;
 	{
 		if (!is_array($fieldname))
 		{
-		    $fieldname = [$fieldname];
+			$fieldname = [
+				$fieldname
+			];
 		}
 
 		foreach ($fieldname as $fn)
@@ -1027,7 +1057,7 @@ JS;
 
 				if ($hdr != '')
 				{
-				    $headers[] = $hdr;
+					$headers[] = $hdr;
 				}
 			}
 		}
@@ -1099,7 +1129,10 @@ JS;
 	{
 		$pre = $post = '';
 
-		if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL]))
+		if (in_array($this->outputstyle, [
+			FORMSLIB_STYLE_BOOTSTRAP3,
+			FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL
+		]))
 		{
 			if ($this->submit_grid_ratio > 0)
 			{
@@ -1109,11 +1142,14 @@ JS;
 				$offset = $this->submit_grid_ratio;
 				$cols = 12 - $offset;
 
-				$pre = '<div class="'.$class.'"><div class="col-'.$infix.'-' . $cols . ' col-'.$infix.'-offset-' . $offset . '">';
+				$pre = '<div class="' . $class . '"><div class="col-' . $infix . '-' . $cols . ' col-' . $infix . '-offset-' . $offset . '">';
 				$post = '</div></div>';
 			}
 		}
-		elseif (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3_INLINE, FORMSLIB_STYLE_BOOTSTRAP5_INLINE]))
+		elseif (in_array($this->outputstyle, [
+			FORMSLIB_STYLE_BOOTSTRAP3_INLINE,
+			FORMSLIB_STYLE_BOOTSTRAP5_INLINE
+		]))
 		{
 			// Append nothing
 		}
@@ -1313,7 +1349,7 @@ JS;
 
 		if (!count($conditions))
 		{
-		    return null;
+			return null;
 		}
 
 		foreach ($conditions as $name => $c)
@@ -1426,7 +1462,6 @@ JS;
 	}
 JS;
 				break;
-
 
 			case \formslib\Operator::PRESENT:
 				$jq .= <<<JS
