@@ -265,7 +265,9 @@ abstract class Field
 
         if (!$this->rawoutput)
         {
-            switch ($outputstyle)
+        	$labelClass = (count($this->labelclass)) ? ' ' . implode(' ', $this->labelclass) : '';
+
+        	switch ($outputstyle)
             {
                 case FORMSLIB_STYLE_P:
                     echo $this->htmlbefore;
@@ -337,7 +339,7 @@ abstract class Field
                     echo $this->htmlbefore . CRLF;
                     echo '<div class="form-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
                     echo $this->innerhtmlbefore . CRLF;
-                    echo '	<label class="control-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand. $optionalLabel . '</label> ' . CRLF;
+                    echo '	<label class="control-label col-sm-'.$col_label.$labelClass.'" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand. $optionalLabel . '</label> ' . CRLF;
                     echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
                     echo '		' . $this->getHTML() . CRLF;
                     if ($this->helpinline)
@@ -372,7 +374,7 @@ abstract class Field
                     echo $this->htmlbefore . CRLF;
                     echo '<div class="form-group' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
                     echo $this->innerhtmlbefore . CRLF;
-                    echo '	<label class="control-label" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand . $optionalLabel . '</label> ' . CRLF;
+                    echo '	<label class="control-label'.$labelClass.'" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand . $optionalLabel . '</label> ' . CRLF;
                     // 					echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
                     echo '		' . $this->getHTML() . CRLF;
                     // 					if ($this->helpinline) echo '		<span class="help-block">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with help inline/help block for BOOTSTRAP3_INLINE
@@ -401,7 +403,7 @@ abstract class Field
                     echo '<div class="form-group mb-2' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
                     echo $this->innerhtmlbefore . CRLF;
 
-                    echo '	<label class="control-label col-form-label" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand . $optionalLabel . '</label> ' . CRLF;
+                    echo '	<label class="control-label col-form-label'.$labelClass.'" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand . $optionalLabel . '</label> ' . CRLF;
 
                     if ($this->helpblock && $this->helpbefore)
                     {
@@ -425,7 +427,7 @@ abstract class Field
                     echo $this->htmlafter . CRLF;
                     break;
 
-                case FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL: //TODO: [BOOTSTRAP5] Grids
+                case FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL:
                 	$col_label = ($this->gridRatio > 0) ? $this->gridRatio : 12;
                 	$col_field = 12 - $this->gridRatio;
 
@@ -443,10 +445,10 @@ abstract class Field
                 	}
 
                 	echo $this->htmlbefore . CRLF;
-                	echo '<div class="row mb-2' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
+                	echo '<div class="form-group row mb-2' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
                 	echo $this->innerhtmlbefore . CRLF;
-                	echo '	<label class="col-form-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand. $optionalLabel . '</label> ' . CRLF;
-                	echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
+                	echo '	<label class="col-form-label col-md-' . $col_label . $labelClass . '" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand. $optionalLabel . '</label> ' . CRLF;
+                	echo '	<div class="col-md-' . $col_field . '">' . CRLF;
                 	echo '		' . $this->getHTML() . CRLF;
                 	if ($this->helpinline)
                 	{
@@ -457,8 +459,8 @@ abstract class Field
                 		echo '		<span class="form-text text-muted">' . $this->helpblock . '</span>' . CRLF;
                 	}
                 	echo $this->innerhtmlafter . CRLF;
-                	echo '	</div><!--/.col-sm-' . $col_field . '-->' . CRLF;
-                	echo '</div><!--/.row-->' . CRLF;
+                	echo '	</div><!--/.col-md-' . $col_field . '-->' . CRLF;
+                	echo '</div><!--/.form-group.row-->' . CRLF;
                 	echo $this->htmlafter . CRLF;
                 	break;
             }
@@ -717,7 +719,7 @@ abstract class Field
                     echo $this->htmlafter . CRLF;
                     break;
 
-                case FORMSLIB_STYLE_BOOTSTRAP3:
+                case FORMSLIB_STYLE_BOOTSTRAP3: //TODO: [BOOTSTRAP5] Grids
                     // TODO: @see p.form-control-static
 
                     $col_label = ($this->gridRatio > 0) ? $this->gridRatio : 12;

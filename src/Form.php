@@ -842,8 +842,7 @@ JS;
 			{
 				$classes = 'alert alert-block alert-error';
 			}
-			//TODO: [BOOTSTRAP5] Grids
-			elseif ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE || $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+			elseif (in_array($this->outputstyle, FORMSLIB_STYLES_ALL_BOOTSTRAP))
 			{
 				$classes = 'alert alert-block alert-danger';
 			}
@@ -1098,28 +1097,28 @@ JS;
 
 	public function getSubmitHtml()
 	{
-		$pre = '';
-		$post = '';
+		$pre = $post = '';
 
-		//TODO: [BOOTSTRAP5] Grids
-		if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3)
+		if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3, FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL]))
 		{
 			if ($this->submit_grid_ratio > 0)
 			{
+				$infix = $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 ? 'sm' : 'md';
+				$class = $this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3 ? 'form-group' : 'row';
+
 				$offset = $this->submit_grid_ratio;
 				$cols = 12 - $offset;
 
-				$pre = '<div class="form-group"><div class="col-sm-' . $cols . ' col-sm-offset-' . $offset . '">';
+				$pre = '<div class="'.$class.'"><div class="col-'.$infix.'-' . $cols . ' col-'.$infix.'-offset-' . $offset . '">';
 				$post = '</div></div>';
 			}
 		}
-		elseif ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_INLINE)
+		elseif (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3_INLINE, FORMSLIB_STYLE_BOOTSTRAP5_INLINE]))
 		{
 			// Append nothing
 		}
 		else
 		{
-			// TODO: Review the proper use of HTML here
 			$pre = '<p>';
 			$post = '</p>';
 		}

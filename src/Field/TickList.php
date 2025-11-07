@@ -26,9 +26,7 @@ class TickList extends Composite
 
     public function getHTML()
     {
-        //TODO: [BOOTSTRAP5] Grids
-
-        if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+        if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL, FORMSLIB_STYLE_BOOTSTRAP5_VERTICAL]))
         {
             $html = '<div class="formslib_ticklist_container">';
         }
@@ -51,7 +49,7 @@ class TickList extends Composite
 
             $input = '';
 
-            if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+            if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL, FORMSLIB_STYLE_BOOTSTRAP5_VERTICAL]))
             {
                 $html .= '<div>';
             }
@@ -63,7 +61,7 @@ class TickList extends Composite
             $html .= $input . $text;
             $html .= '</label>';
 
-            if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+            if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL, FORMSLIB_STYLE_BOOTSTRAP5_VERTICAL]))
             {
                 $html .= '</div><!--/div-->'.CRLF;
             }
@@ -73,7 +71,7 @@ class TickList extends Composite
             }
         }
 
-        if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL)
+        if (in_array($this->outputstyle, [FORMSLIB_STYLE_BOOTSTRAP3_VERTICAL, FORMSLIB_STYLE_BOOTSTRAP5_VERTICAL]))
         {
             $html .= '</div><!--/.formslib_ticklist_container-->';
         }
