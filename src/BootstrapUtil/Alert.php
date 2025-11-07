@@ -8,17 +8,17 @@ use formslib\Utility\Security;
  */
 class Alert
 {
-	const ALERT_SUCCESS = 'success';
-	const ALERT_INFO = 'info';
-	const ALERT_WARNING = 'warning';
-	const ALERT_DANGER = 'danger';
-	const ALERT_ERROR = 'danger';
-	const ALERT_PRIMARY = 'primary';
-	const ALERT_SECONDARY = 'secondary';
-	const ALERT_LIGHT = 'light';
-	const ALERT_DARK = 'dark';
+	public const ALERT_SUCCESS = 'success';
+	public const ALERT_INFO = 'info';
+	public const ALERT_WARNING = 'warning';
+	public const ALERT_DANGER = 'danger';
+	public const ALERT_ERROR = 'danger';
+	public const ALERT_PRIMARY = 'primary';
+	public const ALERT_SECONDARY = 'secondary';
+	public const ALERT_LIGHT = 'light';
+	public const ALERT_DARK = 'dark';
 
-	const ALERT_CONTEXTS = [
+	public const ALERT_CONTEXTS = [
 		self::ALERT_SUCCESS,
 		self::ALERT_INFO,
 		self::ALERT_WARNING,
@@ -47,7 +47,7 @@ class Alert
 
 	public function &setContext($context)
 	{
-		if (!in_array($context, [self::ALERT_CONTEXTS]))
+		if (!in_array($context, self::ALERT_CONTEXTS))
 		{
 			throw new \UnexpectedValueException('Invalid context class');
 		}
