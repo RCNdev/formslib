@@ -872,7 +872,7 @@ JS;
 			}
 			elseif (in_array($this->outputstyle, FORMSLIB_STYLES_ALL_BOOTSTRAP))
 			{
-				$classes = 'alert alert-block alert-danger';
+				$classes = 'alert alert-block alert-danger bg-gradient';
 			}
 			else
 			{
