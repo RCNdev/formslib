@@ -13,6 +13,21 @@ class Alert
 	const ALERT_WARNING = 'warning';
 	const ALERT_DANGER = 'danger';
 	const ALERT_ERROR = 'danger';
+	const ALERT_PRIMARY = 'primary';
+	const ALERT_SECONDARY = 'secondary';
+	const ALERT_LIGHT = 'light';
+	const ALERT_DARK = 'dark';
+
+	const ALERT_CONTEXTS = [
+		self::ALERT_SUCCESS,
+		self::ALERT_INFO,
+		self::ALERT_WARNING,
+		self::ALERT_DANGER,
+		self::ALERT_PRIMARY,
+		self::ALERT_SECONDARY,
+		self::ALERT_LIGHT,
+		self::ALERT_DARK,
+	];
 
 	private $context;
 	private $icon;
@@ -32,7 +47,7 @@ class Alert
 
 	public function &setContext($context)
 	{
-		if (!in_array($context, ['success', 'info', 'warning', 'danger']))
+		if (!in_array($context, [self::ALERT_CONTEXTS]))
 		{
 			throw new \UnexpectedValueException('Invalid context class');
 		}
@@ -73,7 +88,7 @@ class Alert
 
 	public function getHtml()
 	{
-		$html = '<p class="alert alert-'.$this->context.'">';
+		$html = '<p class="alert alert-'.$this->context.' bg-gradient" role="alert">';
 
 		if ($this->icon != '')
 		{
@@ -81,7 +96,7 @@ class Alert
 
 			if (!is_null($this->sronly))
 			{
-				$html .= '<span class="sr-only fa-sr-only">'.$this->sronly.'</span>';
+				$html .= '<span class="sr-only fa-sr-only visually-hidden">'.$this->sronly.'</span>';
 			}
 
 			$html .= ' ';
