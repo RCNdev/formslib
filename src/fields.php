@@ -1582,6 +1582,15 @@ HTML;
 
 		return $this->getObjectValue()->format($this->emaildateformat);
     }
+
+    public function &setMandatory($mandatory = true)
+    {
+        $this->mandatory = $mandatory;
+
+        // Don't add validation classes like the parent function would
+
+        return $this;
+    }
 }
 
 class formslib_dateselecttime extends formslib_composite
