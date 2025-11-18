@@ -764,7 +764,7 @@ JS;
 				if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
 				{
 					$jq .= <<<JS
-$('[name=$name]').on('focus', function(){
+$('[name={$name}]').on('focus', function(){
 	$(this).removeClass('formslibinvalid');
 	$(this).parent().parent().removeClass('error');
 });
@@ -773,7 +773,7 @@ JS;
 				elseif ($bootstrap3)
 				{
 					$jq .= <<<JS
-$('[name=$name]').on('focus', function(){
+$('[name={$name}]').on('focus', function(){
 	$(this).removeClass('formslibinvalid');
 	$(this).parents('.form-group').removeClass('has-error');
 });
@@ -782,7 +782,7 @@ JS;
 				else
 				{
 					$jq .= <<<JS
-$('[name=$name]').on('focus', function(){
+$('[name={$name}]').on('focus', function(){
 	$(this).removeClass('formslibinvalid');
 });
 JS;
@@ -791,7 +791,7 @@ JS;
 				foreach ($conditions as $condition)
 				{
 					$jq .= <<<JS
-$('[name=$name]').on('blur', function(){
+$('[name={$name}]').on('blur', function(){
 	val = $(this).val();
 
 	if (val == '')
@@ -799,9 +799,10 @@ $('[name=$name]').on('blur', function(){
 		return;
 	}
 
+    {$condition}
+
 JS;
 
-					$jq .= $condition;
 
 					if ($this->outputstyle == FORMSLIB_STYLE_BOOTSTRAP)
 					{
