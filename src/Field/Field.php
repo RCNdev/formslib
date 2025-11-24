@@ -719,7 +719,7 @@ abstract class Field
                     echo $this->htmlafter . CRLF;
                     break;
 
-                case FORMSLIB_STYLE_BOOTSTRAP3: //TODO: [BOOTSTRAP5] Grids
+                case FORMSLIB_STYLE_BOOTSTRAP3:
                     // TODO: @see p.form-control-static
 
                     $col_label = ($this->gridRatio > 0) ? $this->gridRatio : 12;
@@ -757,6 +757,44 @@ abstract class Field
                     echo '</div><!--/.form-group-->' . CRLF;
                     echo $this->htmlafter . CRLF;
                     break;
+
+                case FORMSLIB_STYLE_BOOTSTRAP5_HORIZONTAL:
+
+                	$col_label = ($this->gridRatio > 0) ? $this->gridRatio : 12;
+                	$col_field = 12 - $this->gridRatio;
+
+                	$group_class_str = implode(' ', $this->group_classes);
+                	if ($group_class_str != '')
+                	{
+                		$group_class_str = ' ' . $group_class_str; // Prepend a space
+                	}
+
+                	if (!isset($this->classes['form-control'])
+                		&& !($this instanceof \formslib_radio)
+                		&& !($this instanceof \formslib\Field\TickList))
+                	{
+                		$this->addClass('form-control');
+                	}
+
+                	echo $this->htmlbefore . CRLF;
+                	echo '<div class="form-group row mb-2' . $group_class_str . '" data-formslib-owner="fld_' . Security::escapeHtml($this->name) . '">' . CRLF;
+                	echo $this->innerhtmlbefore . CRLF;
+                	echo '	<label class="col-form-label col-sm-' . $col_label . '" for="fld_' . Security::escapeHtml($this->name) . '">' . $this->getLabelInnerHtml() . $mand . '</label> ' . CRLF;
+                	echo '	<div class="col-sm-' . $col_field . '">' . CRLF;
+                	echo '		' . $this->getHTMLReadOnly() . CRLF;
+                	if ($this->helpinline)
+                	{
+                		echo '		<span class="form-text text-muted">' . $this->helpinline . '</span>' . CRLF; // TODO: Something better with help inline
+                	}
+                	if ($this->helpblock)
+                	{
+                		echo '		<span class="form-text text-muted">' . $this->helpblock . '</span>' . CRLF;
+                	}
+                	echo $this->innerhtmlafter . CRLF;
+                	echo '	</div><!--/.col-sm-' . $col_field . '-->' . CRLF;
+                	echo '</div><!--/.form-group-->' . CRLF;
+                	echo $this->htmlafter . CRLF;
+                	break;
             }
         }
         else
