@@ -42,7 +42,7 @@ HTML;
 		return $html;
 	}
 
-	abstract protected function getSingleInstance($i);
+	abstract protected function getSingleInstance($i, $setValue = false);
 
 	public function getJs()
 	{
