@@ -1507,7 +1507,7 @@ class formslib_datepicker extends formslib_text
 <script type="text/javascript">
 $(document).ready(function()
 {
-    var escapedId = $.escapeSelector('{$id}');
+    var escapedId = CSS.escape('{$id}');
     $('input#fld_'+escapedId).parent().datepicker({
         weekStart: 1,
         language: "en-GB",
