@@ -20,7 +20,7 @@ class MultiUniversal extends GenericMulti
 	{
 		if (!class_exists($class_name))
 		{
-			throw new \OutOfBoundsException('Class "'.$class_name.'" did not exist');
+			throw new \OutOfBoundsException("Class '$class_name' did not exist");
 		}
 
 		$this->field_class = $class_name;
@@ -37,7 +37,7 @@ class MultiUniversal extends GenericMulti
 
 	protected function getSingleInstance($i, $setValue = false)
 	{
-		$field = new $this->field_class($this->name.'__'.$i);
+		$field = new $this->field_class("{$this->name}__{$i}");
 		$field->forceOutputStyle($this->outputstyle)
 		->addClass('form-control')
 		->addAttr('data-index', $i);

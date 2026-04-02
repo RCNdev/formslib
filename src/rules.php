@@ -246,19 +246,34 @@ class formslib_rule_composite_date_min extends formslib_rule
 
 	public function evaluate($value)
 	{
-		if ($value['year'] < $this->ruledfn['year']) return false;
+		if ($value['year'] < $this->ruledfn['year'])
+		{
+			return false;
+		}
 
-		if ($value['year'] > $this->ruledfn['year']) return true;
+		if ($value['year'] > $this->ruledfn['year'])
+		{
+			return true;
+		}
 
 		// Current year
 
-		if ($value['month'] < $this->ruledfn['month']) return false;
+		if ($value['month'] < $this->ruledfn['month'])
+		{
+			return false;
+		}
 
-		if ($value['month'] > $this->ruledfn['month']) return true;
+		if ($value['month'] > $this->ruledfn['month'])
+		{
+			return true;
+		}
 
 		// Current month
 
-		if ($value['day'] >= $this->ruledfn['day']) return true;
+		if ($value['day'] >= $this->ruledfn['day'])
+		{
+			return true;
+		}
 
 		return false;
 	}
@@ -269,19 +284,34 @@ class formslib_rule_composite_date_max extends formslib_rule
 
 	public function evaluate($value)
 	{
-		if ($value['year'] > $this->ruledfn['year']) return false;
+		if ($value['year'] > $this->ruledfn['year'])
+		{
+			return false;
+		}
 
-		if ($value['year'] < $this->ruledfn['year']) return true;
+		if ($value['year'] < $this->ruledfn['year'])
+		{
+			return true;
+		}
 
 		// Current year
 
-		if ($value['month'] > $this->ruledfn['month']) return false;
+		if ($value['month'] > $this->ruledfn['month'])
+		{
+			return false;
+		}
 
-		if ($value['month'] < $this->ruledfn['month']) return true;
+		if ($value['month'] < $this->ruledfn['month'])
+		{
+			return true;
+		}
 
 		// Current month
 
-		if ($value['day'] <= $this->ruledfn['day']) return true;
+		if ($value['day'] <= $this->ruledfn['day'])
+		{
+			return true;
+		}
 
 		return false;
 	}
@@ -386,7 +416,6 @@ class formslib_rule_date_format extends formslib_rule
 		{
 			case 'uk':
 				return (preg_match('|^[0-9]{2}/[0-9]{2}/[0-9]{4}$|', trim($value)));
-				break;
 
 			default:
 				throw new Exception('Unknown date format');

@@ -118,7 +118,7 @@ class Form
 
 		if (isset($this->fields[$name]))
 		{
-			throw new \Exception('FORMSLIB ERROR: Duplicate field name: ' . $name);
+			throw new \Exception("FORMSLIB ERROR: Duplicate field name: $name");
 		}
 
 		if (strpos($type, '\\') !== false)
@@ -128,7 +128,7 @@ class Form
 		else
 		{
 			$classnamespace = 'formslib\Field\\' . $type;
-			$classname = 'formslib_' . $type;
+			$classname = "formslib_$type";
 		}
 
 		if (class_exists($classnamespace))
@@ -137,7 +137,7 @@ class Form
 			$field = new $classnamespace($name);
 			if (!is_object($field))
 			{
-				throw new \Exception('FORMSLIB ERROR: Failed to create field object for: ' . $name);
+				throw new \Exception("FORMSLIB ERROR: Failed to create field object for: $name");
 			}
 
 			$this->fields[$name] = &$field;
@@ -152,7 +152,7 @@ class Form
 			}
 			else
 			{
-				throw new \Exception('FORMSLIB ERROR: Failed to create field object for: ' . $name);
+				throw new \Exception("FORMSLIB ERROR: Failed to create field object for: $name");
 			}
 		}
 		else
@@ -160,7 +160,10 @@ class Form
 			throw new \Exception('FORMSLIB ERROR: No such field type "' . $type . '" for field name "' . $name . '"');
 		}
 
-		if (!in_array($type, $this->types_used)) $this->types_used[] = $type;
+		if (!in_array($type, $this->types_used))
+		{
+		    $this->types_used[] = $type;
+		}
 
 		return $field;
 	}
@@ -171,14 +174,17 @@ class Form
 
 		if (isset($this->fields[$name]))
 		{
-			throw new \Exception('FORMSLIB ERROR: Duplicate field name: ' . $name);
+			throw new \Exception("FORMSLIB ERROR: Duplicate field name: $name");
 		}
 
 		$this->fields[$name] = &$field;
 
 		$type = $field->getType();
 
-		if (!in_array($type, $this->types_used)) $this->types_used[] = $type;
+		if (!in_array($type, $this->types_used))
+		{
+		    $this->types_used[] = $type;
+		}
 	}
 
 	/**
@@ -595,7 +601,10 @@ class Form
 			$first = true;
 			foreach ($this->classes as $classname)
 			{
-				if (!$first) $class_str .= ' ';
+				if (!$first)
+				{
+				    $class_str .= ' ';
+				}
 				$class_str .= $classname;
 				$first = false;
 			}
@@ -958,9 +967,7 @@ JS;
 
 	public function removeField($fieldname)
 	{
-		if (!is_array($fieldname)) $fieldname = array(
-			$fieldname
-		);
+		if (!is_array($fieldname)) $fieldname = [$fieldname];
 
 		foreach ($fieldname as $fn)
 		{
@@ -1006,7 +1013,10 @@ JS;
 			{
 				$set_headers[] = $class_set;
 
-				if ($hdr != '') $headers[] = $hdr;
+				if ($hdr != '')
+				{
+				    $headers[] = $hdr;
+				}
 			}
 		}
 

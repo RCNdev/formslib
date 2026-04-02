@@ -68,7 +68,10 @@ class Pair extends Composite
 
 	public function &getObjectValue()
 	{
-		$array = array($this->composite_values[1], $this->composite_values[2]);
+		$array = [
+		    $this->composite_values[1],
+		    $this->composite_values[2]
+		];
 
 		return $array;
 	}

@@ -1475,7 +1475,7 @@ class formslib_datepicker extends formslib_text
 
     protected function _generateDatepickerJS()
     {
-        $id = $this->name; //TODO: Properly escape for JS
+        $id = json_encode($this->name);
 
         if (isset($this->startdate))
         {
@@ -1496,7 +1496,7 @@ class formslib_datepicker extends formslib_text
         }
         elseif (isset($this->endyear))
         {
-                    $end = ', endDate: "31/12/'.$this->endyear.'"';
+            $end = ', endDate: "31/12/'.$this->endyear.'"';
         }
         else
         {
@@ -1507,7 +1507,7 @@ class formslib_datepicker extends formslib_text
 <script type="text/javascript">
 $(document).ready(function()
 {
-    var escapedId = CSS.escape('{$id}');
+    var escapedId = CSS.escape({$id});
     $('input#fld_'+escapedId).parent().datepicker({
         weekStart: 1,
         language: "en-GB",
